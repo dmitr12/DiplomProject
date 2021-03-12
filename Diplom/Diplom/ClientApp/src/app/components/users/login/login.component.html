@@ -1,0 +1,25 @@
+<div class="row mt-5 mr-3 ml-3" style="min-width:300px">
+  <div class="col-sm-3 col-md-4"></div>
+  <form class="card col-sm-6 col-md-4" [formGroup]="form" (ngSubmit)="login()">
+    <div class="card-content">
+      <span class="card-title center-align">Вход в приложение</span>
+      <div class="input-field">
+        <input id="login" required type="email" formControlName="login" [ngClass]="{invalid: form.get('login').invalid && form.get('login').dirty}">
+        <label for="login">Login/Email:</label>
+        <span class="helper-text red-text" *ngIf="form.get('login').invalid && form.get('login').dirty">
+          <span *ngIf="form.get('login').errors['required']">Поле не заполнено</span>
+        </span>
+      </div>
+      <div class="input-field">
+        <input id="password" required type="password" formControlName="password" [ngClass]="{invalid: form.get('password').invalid && form.get('password').dirty}">
+        <label for="password">Пароль:</label>
+        <span class="helper-text red-text" *ngIf="form.get('password').invalid && form.get('password').dirty">
+          <span *ngIf="form.get('password').errors['required']">Поле не заполнено</span>
+        </span>
+      </div>
+    </div>
+    <div class="card-action center-align">
+      <button type="submit" class="btn white-text waves-effect waves-light" [disabled]="form.invalid">Войти</button>
+    </div>
+  </form>
+</div>
