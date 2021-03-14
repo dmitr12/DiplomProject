@@ -3,6 +3,9 @@ import {AbstractControl, FormControl, FormGroup, ValidationErrors, Validators} f
 import {Router} from "@angular/router";
 import {AuthService} from "../../../services/auth/auth.service";
 import {UserRegistration} from "../../../models/users/userRegistration";
+import {LoaderService} from "../../../services/loader/loader.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {config} from "rxjs";
 
 @Component({
   selector: 'app-register',
@@ -21,10 +24,16 @@ export class RegisterComponent implements OnInit {
   }, this.matchingPasswords);
 
   constructor(private authService: AuthService,
-              private router: Router) {
+              public loaderService: LoaderService,
+              private router: Router,
+              private matSnackBar: MatSnackBar) {
   }
 
   ngOnInit() {
+  }
+
+  openSnackBar(){
+    this.matSnackBar.open("Error", "Создание аккаунта", {duration: 2000})
   }
 
   matchingPasswords(c: AbstractControl): ValidationErrors | null {
@@ -47,12 +56,17 @@ export class RegisterComponent implements OnInit {
     this.authService.register(new UserRegistration(this.formRegister.value.email, this.formRegister.value.userName,
       this.formRegister.value.passwords.password)).subscribe((res: any) => {
       if (res && res.msg) {
-        alert(res.msg);
+        this.matSnackBar.open(res.msg, '', {duration: 3000, panelClass: 'custom-snack-bar'})
       } else {
         this.router.navigate(['']);
       }
     }, error => {
-      alert('При отправке запроса возникла ошибка, статусный код ' + error.status);
+        if(error.status != 0){
+          this.matSnackBar.open(`При отправке запроса возникла ошибка, статусный код ${error.status}`, '', {duration: 3000, panelClass: 'custom-snack-bar'});
+        }
+        else{
+          this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar'});
+        }
     });
   }
 }

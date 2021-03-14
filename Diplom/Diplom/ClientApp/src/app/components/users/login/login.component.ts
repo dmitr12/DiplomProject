@@ -3,6 +3,8 @@ import {AuthService} from "../../../services/auth/auth.service";
 import {Router} from "@angular/router";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {UserAuthentication} from "../../../models/users/userAuthentication";
+import {LoaderService} from "../../../services/loader/loader.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-login',
@@ -17,7 +19,9 @@ export class LoginComponent implements OnInit {
   });
 
   constructor(private authService: AuthService,
-              private router: Router) { }
+              public loaderService: LoaderService,
+              private router: Router,
+              private matSnackBar: MatSnackBar) { }
 
   ngOnInit() {
   }
@@ -27,9 +31,15 @@ export class LoginComponent implements OnInit {
       this.router.navigate(['']);
     }, error => {
       if (error.status == 401)
-        alert("Неверный логин или пароль");
-      else
-        alert("Возникла ошибка, статусный код "+error.status)
+        this.matSnackBar.open('Неверный логин или пароль', '', {duration: 3000, panelClass: 'custom-snack-bar'})
+      else{
+        if(error.status != 0){
+          this.matSnackBar.open(`При отправке запроса возникла ошибка, статусный код ${error.status}`, '', {duration: 3000, panelClass: 'custom-snack-bar'});
+        }
+        else{
+          this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar'});
+        }
+      }
     });
   }
 }

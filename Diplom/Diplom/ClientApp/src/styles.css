@@ -1,5 +1,7 @@
 @import "~materialize-css/dist/css/materialize.min.css";
 @import "~bootstrap/dist/css/bootstrap.min.css";
+@import "../node_modules/@angular/material/prebuilt-themes/indigo-pink.css";
+
 
 .input-field input:focus + label {
   color:#9414d9 !important;
@@ -24,3 +26,27 @@ a:hover{
   cursor: default;
 }
 
+.mat-progress-container{
+  position: absolute;
+  width: 100%;
+  height: 91%;
+  z-index: 99;
+}
+
+.custom-snack-bar{
+  color: white;
+  background-color: #9414d9;
+  margin: 0 !important;
+  position: absolute;
+  right: 1%;
+  top: 10%;
+}
+
+.container-auth {
+  min-height: 100vh;
+  min-width: 100vw;
+  background-color: #ededed;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
