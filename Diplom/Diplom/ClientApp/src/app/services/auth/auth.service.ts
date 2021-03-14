@@ -6,8 +6,9 @@ import {UserAuthentication} from "../../models/users/userAuthentication";
 import {Observable} from "rxjs";
 import {environment} from "../../../environments/environment";
 import {tap} from "rxjs/operators";
-import {TokenMessage} from "../../models/tokens/token";
+import {Token, TokenMessage} from "../../models/tokens/token";
 import {UserRegistration} from "../../models/users/userRegistration";
+import jwt_decode from 'jwt-decode';
 
 export const ACCESS_TOKEN="access_token";
 
@@ -40,6 +41,18 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem(ACCESS_TOKEN);
-    // this.router.navigate(['auth']);
+    this.router.navigate(['auth']);
+  }
+
+  getCurrentUserName() {
+    return jwt_decode<Token>(localStorage.getItem(ACCESS_TOKEN)!).unique_name;
+  }
+
+  getCurrentUserId() {
+    return jwt_decode<Token>(localStorage.getItem(ACCESS_TOKEN)!).sub;
+  }
+
+  getCurrentUserRole() {
+    return jwt_decode<Token>(localStorage.getItem(ACCESS_TOKEN)!).role;
   }
 }

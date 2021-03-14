@@ -22,6 +22,9 @@ import {AuthGuard} from "./guards/auth-guard";
 import { PlaylistComponent } from './components/musics/playlist/playlist.component';
 import {MatButtonModule} from "@angular/material/button";
 import {MatListModule} from "@angular/material/list";
+import {MatMenuModule} from "@angular/material/menu";
+import {MatSelectModule} from "@angular/material/select";
+import { TestComponent } from './components/test/test.component';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN);
@@ -35,6 +38,7 @@ export function tokenGetter() {
     RegisterComponent,
     ApplayoutComponent,
     PlaylistComponent,
+    TestComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -60,6 +64,8 @@ export function tokenGetter() {
         path: '', component: ApplayoutComponent, canActivate: [AuthGuard], children: [
           {path: '', redirectTo: 'playlist', pathMatch: 'full'},
           {path: 'playlist', component: PlaylistComponent},
+          {path: 'test', component: TestComponent},
+
           // { path: 'searchmusic', component: SearchMusicComponent },
           // { path: 'editmusic/:id', component: EditmusicComponent },
           // { path: 'musicinfo/:id', component: MusicinfoComponent }
@@ -71,7 +77,9 @@ export function tokenGetter() {
     MatIconModule,
     MatSidenavModule,
     MatButtonModule,
-    MatListModule
+    MatListModule,
+    MatMenuModule,
+    MatSelectModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true}

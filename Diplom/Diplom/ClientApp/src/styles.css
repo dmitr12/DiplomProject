@@ -1,24 +1,5 @@
-@import "~materialize-css/dist/css/materialize.min.css";
-@import "~bootstrap/dist/css/bootstrap.min.css";
 @import "../node_modules/@angular/material/prebuilt-themes/indigo-pink.css";
-
-
-.input-field input:focus + label {
-  color:#9414d9 !important;
-}
-
-.input-field input:focus {
-  border-bottom: 1px solid #9414d9 !important;
-  box-shadow: 0 1px 0 0 #9414d9 !important
-}
-
-.btn, .btn:focus{
-  background-color: #9414d9;
-}
-
-.btn:hover{
-  background-color: #a120b3;
-}
+@import "~bootstrap/dist/css/bootstrap.min.css";
 
 a:hover{
   text-decoration: none;

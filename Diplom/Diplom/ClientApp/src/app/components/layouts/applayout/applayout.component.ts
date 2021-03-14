@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {AuthService} from "../../../services/auth/auth.service";
+import {MatMenuTrigger} from "@angular/material/menu";
 
 @Component({
   selector: 'app-applayout',
@@ -9,12 +11,20 @@ export class ApplayoutComponent implements OnInit {
 
   public isMenuOpen = false;
 
-  constructor() { }
+  constructor(
+    public authService: AuthService
+  ) { }
+
+
 
   ngOnInit() {
   }
 
   onSidenavClick() {
     this.isMenuOpen = false;
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }
