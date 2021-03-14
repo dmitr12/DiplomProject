@@ -15,6 +15,13 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {InterceptorService} from "./services/loader/interceptor.service";
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { ApplayoutComponent } from './components/layouts/applayout/applayout.component';
+import {MatIconModule} from "@angular/material/icon";
+import {MatSidenavModule} from "@angular/material/sidenav";
+import {AuthGuard} from "./guards/auth-guard";
+import { PlaylistComponent } from './components/musics/playlist/playlist.component';
+import {MatButtonModule} from "@angular/material/button";
+import {MatListModule} from "@angular/material/list";
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN);
@@ -26,6 +33,8 @@ export function tokenGetter() {
     AuthlayoutComponent,
     LoginComponent,
     RegisterComponent,
+    ApplayoutComponent,
+    PlaylistComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -47,9 +56,22 @@ export function tokenGetter() {
           {path: 'register', component: RegisterComponent}
         ]
       },
+      {
+        path: '', component: ApplayoutComponent, canActivate: [AuthGuard], children: [
+          {path: '', redirectTo: 'playlist', pathMatch: 'full'},
+          {path: 'playlist', component: PlaylistComponent},
+          // { path: 'searchmusic', component: SearchMusicComponent },
+          // { path: 'editmusic/:id', component: EditmusicComponent },
+          // { path: 'musicinfo/:id', component: MusicinfoComponent }
+        ]
+      }
     ]),
     BrowserAnimationsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatButtonModule,
+    MatListModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true}

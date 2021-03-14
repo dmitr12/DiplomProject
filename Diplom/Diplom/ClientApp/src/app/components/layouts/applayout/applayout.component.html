@@ -1,0 +1,26 @@
+<div class="page-container">
+  <header>
+    <div>
+      <button mat-button class="menu-button" (click)="sidenav.toggle()">
+        <mat-icon>{{isMenuOpen? 'menu_open' : 'menu'}}</mat-icon>
+      </button>
+      <a class="tst" routerLink="/">
+        <span class="app-title">Menu</span>
+      </a>
+    </div>
+  </header>
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #sidenav autoFocus="autofocus" mode="over" [(opened)]="isMenuOpen" class="sidenav" (click)="onSidenavClick()">
+      <ul id="nav-mobile">
+        <li routerLinkActive="active"><a class="waves-effect waves-purple" routerLink="/playlist">My music</a></li>
+      </ul>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <main>
+        <router-outlet></router-outlet>
+      </main>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
+
+

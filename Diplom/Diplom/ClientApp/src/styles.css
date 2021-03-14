@@ -42,11 +42,5 @@ a:hover{
   top: 10%;
 }
 
-.container-auth {
-  min-height: 100vh;
-  min-width: 100vw;
-  background-color: #ededed;
-}
-
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
