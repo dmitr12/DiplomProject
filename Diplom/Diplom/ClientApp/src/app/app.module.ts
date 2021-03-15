@@ -24,7 +24,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatListModule} from "@angular/material/list";
 import {MatMenuModule} from "@angular/material/menu";
 import {MatSelectModule} from "@angular/material/select";
-import { TestComponent } from './components/test/test.component';
+import { AudioplayerComponent } from './components/audioplayer/audioplayer.component';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN);
@@ -38,7 +38,7 @@ export function tokenGetter() {
     RegisterComponent,
     ApplayoutComponent,
     PlaylistComponent,
-    TestComponent,
+    AudioplayerComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -64,7 +64,6 @@ export function tokenGetter() {
         path: '', component: ApplayoutComponent, canActivate: [AuthGuard], children: [
           {path: '', redirectTo: 'playlist', pathMatch: 'full'},
           {path: 'playlist', component: PlaylistComponent},
-          {path: 'test', component: TestComponent},
 
           // { path: 'searchmusic', component: SearchMusicComponent },
           // { path: 'editmusic/:id', component: EditmusicComponent },
