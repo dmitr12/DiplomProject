@@ -26,6 +26,9 @@ import {MatMenuModule} from "@angular/material/menu";
 import {MatSelectModule} from "@angular/material/select";
 import { AudioplayerComponent } from './components/audioplayer/audioplayer.component';
 import {MatToolbarModule} from "@angular/material/toolbar";
+import { AddmusicformComponent } from './components/musics/addmusicform/addmusicform.component';
+import {MatDialogModule} from "@angular/material/dialog";
+import {NgxFileDropModule} from "ngx-file-drop";
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN);
@@ -40,52 +43,56 @@ export function tokenGetter() {
     ApplayoutComponent,
     PlaylistComponent,
     AudioplayerComponent,
+    AddmusicformComponent,
   ],
-  imports: [
-    BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatProgressBarModule,
-    MatSnackBarModule,
-    JwtModule.forRoot({
-      config: {
-        tokenGetter
-      }
-    }),
-    RouterModule.forRoot([
-      {
-        path: 'auth', component: AuthlayoutComponent, children: [
-          {path: '', redirectTo: 'login', pathMatch: 'full'},
-          {path: 'login', component: LoginComponent},
-          {path: 'register', component: RegisterComponent}
-        ]
-      },
-      {
-        path: '', component: ApplayoutComponent, canActivate: [AuthGuard], children: [
-          {path: '', redirectTo: 'playlist', pathMatch: 'full'},
-          {path: 'playlist', component: PlaylistComponent},
+    imports: [
+        BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
+        HttpClientModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatProgressBarModule,
+        MatSnackBarModule,
+        JwtModule.forRoot({
+            config: {
+                tokenGetter
+            }
+        }),
+        RouterModule.forRoot([
+            {
+                path: 'auth', component: AuthlayoutComponent, children: [
+                    {path: '', redirectTo: 'login', pathMatch: 'full'},
+                    {path: 'login', component: LoginComponent},
+                    {path: 'register', component: RegisterComponent}
+                ]
+            },
+            {
+                path: '', component: ApplayoutComponent, canActivate: [AuthGuard], children: [
+                    {path: '', redirectTo: 'playlist', pathMatch: 'full'},
+                    {path: 'playlist', component: PlaylistComponent},
 
-          // { path: 'searchmusic', component: SearchMusicComponent },
-          // { path: 'editmusic/:id', component: EditmusicComponent },
-          // { path: 'musicinfo/:id', component: MusicinfoComponent }
-        ]
-      }
-    ]),
-    BrowserAnimationsModule,
-    MatProgressSpinnerModule,
-    MatIconModule,
-    MatSidenavModule,
-    MatButtonModule,
-    MatListModule,
-    MatMenuModule,
-    MatSelectModule,
-    MatToolbarModule,
-  ],
+                    // { path: 'searchmusic', component: SearchMusicComponent },
+                    // { path: 'editmusic/:id', component: EditmusicComponent },
+                    // { path: 'musicinfo/:id', component: MusicinfoComponent }
+                ]
+            }
+        ]),
+        BrowserAnimationsModule,
+        MatProgressSpinnerModule,
+        MatIconModule,
+        MatSidenavModule,
+        MatButtonModule,
+        MatListModule,
+        MatMenuModule,
+        MatSelectModule,
+        MatToolbarModule,
+        MatDialogModule,
+        NgxFileDropModule,
+    ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true}
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [AddmusicformComponent]
 })
 export class AppModule {
 }

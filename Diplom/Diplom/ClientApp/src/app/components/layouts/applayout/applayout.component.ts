@@ -5,6 +5,7 @@ import {Observable} from "rxjs";
 import {map, shareReplay} from "rxjs/operators";
 import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
 import {AudioService} from "../../../services/player/audio.service";
+import {LoaderService} from "../../../services/loader/loader.service";
 
 @Component({
   selector: 'app-applayout',
@@ -18,6 +19,7 @@ export class ApplayoutComponent implements OnInit {
   constructor(
     public authService: AuthService,
     private breakpointObserver: BreakpointObserver,
+    public loaderService: LoaderService,
     public audioService: AudioService
   ) { }
 

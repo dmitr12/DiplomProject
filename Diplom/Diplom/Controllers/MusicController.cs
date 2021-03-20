@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Diplom.Interfaces;
 using Diplom.Managers;
 using Diplom.Models;
+using Diplom.Models.GenreModels;
 using Diplom.Models.MusicModels;
 using Diplom.Models.UserModels;
 using Diplom.Utils;
@@ -33,6 +34,12 @@ namespace Diplom.Controllers
             this.musicManager = musicManager;
             this.cloudService = cloudService;
             dbx = new DropboxClient(options.Value.DropBoxToken);
+        }
+
+        [HttpGet("ListMusicGenres")]
+        public List<MusicGenre> GetMusicGenres()
+        {
+            return musicManager.GetMusicGenresList().Result;
         }
 
         [HttpPost("AddMusic")]

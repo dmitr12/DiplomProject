@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {AudioService} from "../../../services/player/audio.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {MusicService} from "../../../services/music/music.service";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {AddmusicformComponent} from "../addmusicform/addmusicform.component";
 
 @Component({
   selector: 'app-playlist',
@@ -10,9 +12,12 @@ import {MusicService} from "../../../services/music/music.service";
 })
 export class PlaylistComponent implements OnInit {
 
+  dialogSource: any;
+
   constructor(
     private audioService: AudioService,
-    private musicService: MusicService
+    private musicService: MusicService,
+    private dialog: MatDialog
   ) { }
 
   form: FormGroup;
@@ -73,5 +78,11 @@ export class PlaylistComponent implements OnInit {
 
   click(){
     this.audioService.openFile(1,"https://www.dropbox.com/s/1u1eci75uk6e5zr/TestLogin_18.3.2021%2021%3A30%3A2_m.mp3?dl=1",'TestMusic')
+  }
+
+  callAdd() {
+    const dialogConfig = new MatDialogConfig();
+    this.dialogSource = this.dialog.open(AddmusicformComponent, dialogConfig);
+    // this.dialogSource.afterClosed().subscribe();
   }
 }

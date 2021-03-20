@@ -23,5 +23,36 @@ a:hover{
   top: 10%;
 }
 
+.mat-select-panel {
+  border-radius: 0 !important;
+  border: 1px solid #9414d9;
+}
+
+.mat-form-field.mat-focused .mat-form-field-ripple{
+  background-color: #9414d9;
+}
+
+.mat-form-field.mat-focused.mat-primary .mat-select-arrow {
+  color: #9414d9;
+}
+
+.mat-form-field.mat-focused span.mat-form-field-label-wrapper label {
+  color:#9414d9 !important;
+}
+
+.fileDropZoneClass {
+  height: 75px;
+  background: white;
+  border: 1px solid #9414d9;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fileDropContent{
+  color: #9414d9;
+}
+
 html, body { height: 100%; overflow-x: hidden;  }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

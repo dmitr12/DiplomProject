@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
+import {Observable} from "rxjs";
+import {MusicGenreInfo} from "../../models/musics/musicGenreInfo";
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +12,10 @@ export class MusicService {
   constructor(
     private http: HttpClient
   ) { }
+
+  getMusicGenres(): Observable<MusicGenreInfo[]>{
+    return this.http.get<MusicGenreInfo[]>(`${environment.url}api/music/ListMusicGenres`);
+  }
 
   addmusic(formData: FormData) {
     return this.http.post(`${environment.url}api/music/AddMusic`, formData);

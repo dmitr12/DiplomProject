@@ -1,5 +1,6 @@
 ﻿using Diplom.Interfaces;
 using Diplom.Models;
+using Diplom.Models.GenreModels;
 using Diplom.Models.MusicModels;
 using Diplom.Models.UserModels;
 using Diplom.Utils;
@@ -27,6 +28,11 @@ namespace Diplom.Managers
             this.config = config;
             this.cloudService = cloudService;
             this.options = options;
+        }
+
+        public async Task<List<MusicGenre>> GetMusicGenresList()
+        {
+            return await db.MusicGenres.ToListAsync();
         }
 
         public async Task<IActionResult> AddMusic(AddMusicModel model, int userId)
