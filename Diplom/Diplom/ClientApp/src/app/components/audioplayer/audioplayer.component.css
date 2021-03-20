@@ -1,6 +1,7 @@
 .player {
   background-color: #9414d9;
   min-width: 300px;
+  width: 100%;
 }
 
 .time{
@@ -24,7 +25,7 @@
 }
 
 .input-range-music {
-  width: 100vw;
+  width: 100%;
   margin: 5px;
 }
 

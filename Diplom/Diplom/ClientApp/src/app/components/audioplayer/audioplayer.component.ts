@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {AudioService} from "../../services/audio.service";
+import {AudioService} from "../../services/player/audio.service";
 
 @Component({
   selector: 'app-audioplayer',
@@ -7,8 +7,6 @@ import {AudioService} from "../../services/audio.service";
   styleUrls: ['./audioplayer.component.css']
 })
 export class AudioplayerComponent implements OnInit {
-
-  isHidden = true;
 
   constructor(
     public audioService: AudioService

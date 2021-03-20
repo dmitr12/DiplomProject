@@ -25,6 +25,7 @@ import {MatListModule} from "@angular/material/list";
 import {MatMenuModule} from "@angular/material/menu";
 import {MatSelectModule} from "@angular/material/select";
 import { AudioplayerComponent } from './components/audioplayer/audioplayer.component';
+import {MatToolbarModule} from "@angular/material/toolbar";
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN);
@@ -78,7 +79,8 @@ export function tokenGetter() {
     MatButtonModule,
     MatListModule,
     MatMenuModule,
-    MatSelectModule
+    MatSelectModule,
+    MatToolbarModule,
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true}

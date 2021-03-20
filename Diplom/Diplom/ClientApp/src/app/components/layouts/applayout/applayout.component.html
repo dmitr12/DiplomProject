@@ -1,6 +1,6 @@
 <div class="page-container">
   <header>
-    <div>
+    <div style="display: flex; align-items: center">
       <button mat-button class="menu-button" (click)="sidenav.toggle()">
         <mat-icon>{{isMenuOpen? 'menu_open' : 'menu'}}</mat-icon>
       </button>
@@ -9,7 +9,7 @@
       </a>
     </div>
     <div>
-      <button mat-button class="menu-button" [matMenuTriggerFor]="menu">
+      <button mat-button class="menu-button" [matMenuTriggerFor]="menu" class="align-content-end">
         <span style="margin-right: 10px">{{authService.getCurrentUserName()}}</span>
         <mat-icon>person</mat-icon>
         <mat-icon>arrow_drop_down</mat-icon>
@@ -23,24 +23,47 @@
     </div>
   </header>
   <mat-sidenav-container class="sidenav-container">
-    <mat-sidenav #sidenav autoFocus="autofocus" mode="over" [autoFocus]="false" [(opened)]="isMenuOpen" class="sidenav" (click)="onSidenavClick()">
+    <mat-sidenav fixedInViewport #sidenav autoFocus="autofocus" mode="over" [autoFocus]="false" [(opened)]="isMenuOpen" class="sidenav" (click)="onSidenavClick()">
+      <mat-toolbar class="toolbr">Menu</mat-toolbar>
         <div routerLinkActive="active">
           <a mat-menu-item routerLink="/playlist">
             <mat-icon>audiotrack</mat-icon>
             <span>My music</span>
           </a>
         </div>
+      <div routerLinkActive="active">
+        <a mat-menu-item routerLink="/playlist">
+          <mat-icon>audiotrack</mat-icon>
+          <span>My music</span>
+        </a>
+      </div>
+      <div routerLinkActive="active">
+        <a mat-menu-item routerLink="/playlist">
+          <mat-icon>audiotrack</mat-icon>
+          <span>My music</span>
+        </a>
+      </div>
+      <div routerLinkActive="active">
+        <a mat-menu-item routerLink="/playlist">
+          <mat-icon>audiotrack</mat-icon>
+          <span>My music</span>
+        </a>
+      </div>
+      <div routerLinkActive="active">
+        <a mat-menu-item routerLink="/playlist">
+          <mat-icon>audiotrack</mat-icon>
+          <span>My music</span>
+        </a>
+      </div>
     </mat-sidenav>
     <mat-sidenav-content>
-      <main>
+      <main [ngClass]="{
+      'main-with-player': audioService.isVisible === true,
+      'main-without-player': audioService.isVisible === false
+      }">
         <router-outlet></router-outlet>
       </main>
+      <app-audioplayer style="position: fixed; bottom: 0; width: 100vw; z-index: 10"></app-audioplayer>
     </mat-sidenav-content>
   </mat-sidenav-container>
-  <div>
-    <app-audioplayer></app-audioplayer>
-  </div>
 </div>
-
-
-

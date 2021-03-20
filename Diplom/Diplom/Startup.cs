@@ -1,6 +1,7 @@
 using Diplom.Interfaces;
 using Diplom.Managers;
 using Diplom.Models;
+using Diplom.Services;
 using Diplom.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -33,6 +34,9 @@ namespace Diplom
             });
             services.AddScoped<IGeneratorToken, TokenManager>();
             services.AddScoped<UserManager>();
+            services.AddScoped<MusicManager>();
+            services.AddSingleton<ICloudService, CloudService>();
+            services.Configure<DropBoxOptions>(Configuration.GetSection("DropBoxOptions"));
             services.Configure<AuthOptions>(Configuration.GetSection("Auth"));
             services.AddCors(options =>
             {

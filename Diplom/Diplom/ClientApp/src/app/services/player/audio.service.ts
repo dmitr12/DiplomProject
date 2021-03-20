@@ -1,5 +1,6 @@
 import { Injectable} from '@angular/core';
 import * as moment from 'moment';
+import {environment} from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +10,7 @@ export class AudioService {
   constructor() { }
 
   audioObj = new Audio();
+  isVisible = false;
 
   currentTime = '00:00';
   duration='00:00';
@@ -19,11 +21,13 @@ export class AudioService {
   currentAudioFileName = '';
 
   openFile(idM: number, url: string, name: string) {
+    this.isVisible = true
     this.duration = '00:00';
     this.currentAudioFileName = url;
     this.idMusic = idM;
     this.audioName = name;
     this.audioObj.src = url;
+    // this.audioObj.src = `${environment.url}api/music`
     this.audioObj.preload = "auto"
     this.audioObj.load();
     this.play();
@@ -49,6 +53,7 @@ export class AudioService {
     this.duration = "00:00";
     this.currentTime = "00:00";
     this.isPlaying = false;
+    this.isVisible = false;
   }
 
   pause() {
@@ -69,29 +74,32 @@ export class AudioService {
   }
 
   mouseDown() {
-    clearTimeout(this.delay);
-    this.audioObj.pause();
+    if(this.audioObj.currentTime != 0){
+      clearTimeout(this.delay);
+      this.audioObj.pause();
+    }
   }
 
   mouseUp(ev: any) {
-    var value = ev.target.value;
-    var parsed = parseFloat(value);
-    this.audioObj.currentTime = parsed;
-    this.audioObj.play();
-    this.updateProgress();
+    if(this.audioObj.currentTime != 0){
+      var value = ev.target.value;
+      var parsed = parseFloat(value);
+      this.audioObj.currentTime = parsed;
+      this.audioObj.play();
+      this.updateProgress();
+    }
   }
 
   updateProgress() {
-
-    console.log(this.audioObj.currentTime);
-
-    this.currentTime = this.timeFormat(this.audioObj.currentTime);
-    if (this.timeFormat(this.audioObj.duration)!='Invalid date') {
-      this.duration = this.timeFormat(this.audioObj.duration);
-    }
-    this.delay = setTimeout(() => {
-      this.updateProgress();
-    }, 1000);
+      console.log(this.audioObj.currentTime);
+      console.log(this.audioObj.seeking)
+      this.currentTime = this.timeFormat(this.audioObj.currentTime);
+      if (this.timeFormat(this.audioObj.duration) != 'Invalid date') {
+        this.duration = this.timeFormat(this.audioObj.duration);
+      }
+      this.delay = setTimeout(() => {
+        this.updateProgress();
+      }, 1000);
   }
 
   mute() {

@@ -2,11 +2,28 @@
 
 <button (click)="click()">check</button>
 
-<div>asdsad</div>
-<div>asdsad</div><div>asdsad</div><div>asdsad</div><div>asdsad</div><div>asdsad</div><div>asdsad</div><div>asdsad</div><div>asdsad</div><div>asdsad</div><div>asdsad</div><div>asdsad</div><div>asdsad</div>
-<div>asdsad</div>
-<div>asdsad</div>
-<div>asdsad</div><div>asdsad</div>
-<div>asdsad</div>
-<div>asdsad</div><div>asdsad</div><div>asdsad</div><div>asdsad</div><div>asdsad</div>
-<div>Hello, chuch</div>
+<form class="card col-md-10" [formGroup]="form" (ngSubmit)="add()">
+  <input id="musicName" required type="text" formControlName="musicName">
+  <input id="musicGenreId" required type="number" formControlName="musicGenreId">
+  <input id="musicFileName" required type="file" accept=".mp3" formControlName="musicFileName" (change)="changeMusicFile($event.target.files)">
+  <input id="musicImageName" type="file" accept=".jpg, .png" formControlName="musicImageName" (change)="changeImageFile($event.target.files)">
+  <button type="submit" class="btn waves-effect waves-purple" [disabled]="form.invalid">Добавить</button>
+
+</form>
+<div>asda</div>
+<div>asda</div>
+<div>asda</div>
+<div>asda</div>
+<div>asda</div>
+<div>asda</div>
+<div>asda</div>
+<div>asda</div>
+<div>asda</div>
+<div>asda</div>
+<div>asda</div>
+<div>asda</div>
+<div>asda</div>
+<div>asda</div>
+<div>asda</div>
+<div>asda</div>
+<div>sdasdasdas</div>

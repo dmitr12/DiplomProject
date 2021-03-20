@@ -1,4 +1,4 @@
-<div class="player" [hidden]="audioService.audioObj.src === ''">
+<div class="player" [hidden]="audioService.audioObj.src === ''" style="border-top: 1px solid white; padding: 0px 18px">
   <div class="audio-name">{{audioService.audioName}}</div>
   <div class="align-items-center" style="display:inline-flex; width:100%;">
     <div *ngIf="!audioService.isPlaying">

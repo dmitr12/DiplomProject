@@ -16,11 +16,21 @@
   background: #9414d9;
   color: white;
   padding: 18px 24px;
-
   font-size: 14px;
   font-weight: bold;
   display: flex;
   justify-content: space-between;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.toolbr{
+  background: #9414d9;
+  font-size: 14px;
+  color: white;
+  padding: 0 24px;
 }
 
 .page-container header .menu-button, .menu-button:focus, .menu-button:hover{
@@ -51,10 +61,6 @@
   text-align: left;
 }
 
-.sidenav-container main{
-  padding: 18px 24px;
-}
-
 .container-app {
   min-height: 100vh;
   min-width: 100vw;
@@ -69,4 +75,20 @@
 .active a .mat-icon{
   color: white;
 }
+
+.player{
+  flex: 1;
+  position: fixed;
+  margin-top: 60px;
+  z-index: 10;
+}
+
+.main-with-player{
+  padding: 85px 24px 75px 24px;
+}
+
+.main-without-player{
+  padding: 85px 24px 0 24px;
+}
+
 
