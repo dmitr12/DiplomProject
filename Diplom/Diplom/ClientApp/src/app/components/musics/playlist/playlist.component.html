@@ -1,14 +1,29 @@
-<p>playlist works!</p>
+<div class="mat-spinner-container" *ngIf="!loaded">
+  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+</div>
 
-<button (click)="click()">check</button>
+<div *ngIf="loaded">
+  <p>playlist works!</p>
 
-<form class="card col-md-10" [formGroup]="form" (ngSubmit)="add()">
-  <input id="musicName" required type="text" formControlName="musicName">
-  <input id="musicGenreId" required type="number" formControlName="musicGenreId">
-  <input id="musicFileName" required type="file" accept=".mp3" formControlName="musicFileName" (change)="changeMusicFile($event.target.files)">
-  <input id="musicImageName" type="file" accept=".jpg, .png" formControlName="musicImageName" (change)="changeImageFile($event.target.files)">
-  <button type="submit" class="btn waves-effect waves-purple" [disabled]="form.invalid">Добавить</button>
+ <div *ngFor="let music of musics">
+   <div class="music-card" (click)="check($event)" style="min-width: 200px">
+     <div class="row">
+       <div class="image-container">
+         <img src="{{music.musicImageUrl}}">
+       </div>
+       <div class="content-container" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis">
+         <div class="header">{{music.userId}}</div>
+         <div class="description">{{music.musicName}}</div>
+       </div>
+       <div class="edit_menu" style="display: flex; align-items: center; padding: 8px; position: absolute; right: 30px" (click)="clickM()">
+         <mat-icon style="cursor: default" class="edit_menu waves-effect waves-purple" mat-flat-button>more_vert</mat-icon>
+       </div>
+     </div>
+   </div>
 
-</form>
+ </div>
 
-<button (click)="callAdd()">add music</button>
+
+  <button (click)="callAdd()">add music</button>
+</div>
+

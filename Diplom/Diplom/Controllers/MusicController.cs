@@ -42,6 +42,13 @@ namespace Diplom.Controllers
             return musicManager.GetMusicGenresList().Result;
         }
 
+        [HttpGet("ListMusicsByUserId")]
+        [Authorize(Roles = "1")]
+        public List<Music> GetMusicsByUserId()
+        {
+            return musicManager.GetMusicsByUserId(UserId).Result;
+        }
+
         [HttpPost("AddMusic")]
         [Authorize(Roles = "1")]
         public IActionResult AddMusic([FromForm] AddMusicModel model)

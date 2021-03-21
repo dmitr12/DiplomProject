@@ -4,6 +4,9 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {MusicService} from "../../../services/music/music.service";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {AddmusicformComponent} from "../addmusicform/addmusicform.component";
+import {Music} from "../../../models/musics/music";
+import {finalize} from "rxjs/operators";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-playlist',
@@ -13,76 +16,48 @@ import {AddmusicformComponent} from "../addmusicform/addmusicform.component";
 export class PlaylistComponent implements OnInit {
 
   dialogSource: any;
+  musics: Music[] = [];
+  loaded = false;
 
   constructor(
     private audioService: AudioService,
     private musicService: MusicService,
+    private matSnackBar: MatSnackBar,
     private dialog: MatDialog
   ) { }
 
-  form: FormGroup;
-  formData: FormData;
-
   ngOnInit() {
-    this.formData = new FormData();
-
-    this.form = new FormGroup({
-      musicName: new FormControl(null, [Validators.required, Validators.maxLength(100)]),
-      musicFileName: new FormControl(null, [Validators.required]),
-      musicImageName: new FormControl(null),
-      musicGenreId: new FormControl(null, [Validators.required])
-    })
-
-  }
-
-  changeImageFile(files: any) {
-    this.formData.delete("MusicImageFile");
-    this.formData.append("MusicImageFile", files[0], files[0].name);
-  }
-
-  changeMusicFile(files: any) {
-    this.formData.delete("MusicFile");
-    this.formData.append("MusicFile", files[0], files[0].name);
-  }
-
-  add() {
-    let fileImageName;
-    let fileMusicName = this.musicService.getFileNameByPath(this.form.value.musicFileName);
-    if (this.form.value.musicImageName===null)
-      fileImageName = '';
-    else
-      fileImageName = this.musicService.getFileNameByPath(this.form.value.musicImageName)
-    if (!this.musicService.checkFileFormat(fileMusicName, "mp3")) {
-      alert('Выбран неверный формат аудозаписи')
-      return;
-    }
-    if (fileImageName) {
-      if (!this.musicService.checkFileFormat(fileImageName, 'png') && !this.musicService.checkFileFormat(fileImageName, 'jpg')) {
-        alert('Выбран неверный формат изображения')
-        return;
+    this.musicService.getMusicsByUserId().pipe(finalize(()=>this.loaded = true)).subscribe(
+      (res: Music[])=>{
+        this.musics = res;
+        console.log(this.musics)
+      }, error => {
+        if (error.status != 0) {
+          this.matSnackBar.open(`При получении музыки возникла ошибка, статусный код ${error.status}`, '', {
+            duration: 3000,
+            panelClass: 'custom-snack-bar'
+          });
+        } else {
+          this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar'});
+        }
       }
-    }
-    this.formData.delete("MusicGenreId");
-    this.formData.delete("MusicName");
-    this.formData.append("MusicGenreId", this.form.value.musicGenreId);
-    this.formData.append("MusicName", this.form.value.musicName);
-    this.musicService.addmusic(this.formData).subscribe((response: any) => {
-        if(response && response.msg)
-          alert(response.msg)
-      else
-        alert('added')
-      },
-      err => alert('Статусный код '+err.status),
-    );
-  }
-
-  click(){
-    this.audioService.openFile(1,"https://www.dropbox.com/s/1u1eci75uk6e5zr/TestLogin_18.3.2021%2021%3A30%3A2_m.mp3?dl=1",'TestMusic')
+    )
   }
 
   callAdd() {
     const dialogConfig = new MatDialogConfig();
     this.dialogSource = this.dialog.open(AddmusicformComponent, dialogConfig);
     // this.dialogSource.afterClosed().subscribe();
+  }
+
+  check(event: Event) {
+    if(!event.target.className.includes('edit_menu'))
+    {
+      alert('play music')
+    }
+  }
+
+  clickM() {
+    alert('menu')
   }
 }

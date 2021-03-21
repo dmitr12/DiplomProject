@@ -3,10 +3,8 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {MusicService} from "../../../services/music/music.service";
 import {MusicGenreInfo} from "../../../models/musics/musicGenreInfo";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {Observable} from "rxjs";
 import {finalize} from "rxjs/operators";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {NgxFileDropEntry} from "ngx-file-drop";
 import {LoaderService} from "../../../services/loader/loader.service";
 
 @Component({

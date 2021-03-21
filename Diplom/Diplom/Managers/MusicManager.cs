@@ -35,6 +35,11 @@ namespace Diplom.Managers
             return await db.MusicGenres.ToListAsync();
         }
 
+        public async Task<List<Music>> GetMusicsByUserId(int userId)
+        {
+            return await db.Musics.Where(m=>m.UserId == userId).ToListAsync();
+        }
+
         public async Task<IActionResult> AddMusic(AddMusicModel model, int userId)
         {
             User user = await db.Users.FindAsync(userId);

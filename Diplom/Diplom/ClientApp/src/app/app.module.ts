@@ -28,7 +28,6 @@ import { AudioplayerComponent } from './components/audioplayer/audioplayer.compo
 import {MatToolbarModule} from "@angular/material/toolbar";
 import { AddmusicformComponent } from './components/musics/addmusicform/addmusicform.component';
 import {MatDialogModule} from "@angular/material/dialog";
-import {NgxFileDropModule} from "ngx-file-drop";
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN);
@@ -86,7 +85,6 @@ export function tokenGetter() {
         MatSelectModule,
         MatToolbarModule,
         MatDialogModule,
-        NgxFileDropModule,
     ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true}
