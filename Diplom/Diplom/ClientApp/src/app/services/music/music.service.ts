@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpResponse} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
 import {Observable} from "rxjs";
 import {MusicGenreInfo} from "../../models/musics/musicGenreInfo";
@@ -19,11 +19,19 @@ export class MusicService {
   }
 
   getMusicsByUserId(): Observable<Music[]>{
-    return this.http.get<Music[]>(`${environment.url}api/music/ListMusicsByUserId`)
+    return this.http.get<Music[]>(`${environment.url}api/music/ListMusicsByUserId`);
+  }
+
+  getPartOfMusicsByUserId(lastIndex: number): Observable<Music[]>{
+    return this.http.get<Music[]>(`${environment.url}api/music/GetPartOfMusicsPyUserId/${lastIndex}`);
   }
 
   addmusic(formData: FormData) {
     return this.http.post(`${environment.url}api/music/AddMusic`, formData);
+  }
+
+  deleteMusic(idMusic: number):Observable<any>{
+    return this.http.delete(`${environment.url}api/music/DeleteMusic/${idMusic}`)
   }
 
   getFileNameByPath(path: string):string {

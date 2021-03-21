@@ -1,0 +1,36 @@
+.edit_menu{
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+}
+
+.mat-menu-item{
+  cursor: default;
+}
+
+.edit_item_menu{
+  transition: all .3s;
+}
+
+.edit_item_menu{
+  color: #11d62b;
+}
+
+.edit_item_menu mat-icon{
+  color: #11d62b;
+}
+
+.delete_item_menu{
+  transition: all .3s;
+}
+
+.delete_item_menu{
+  color: #fa053e;
+}
+
+.delete_item_menu mat-icon{
+  color: #fa053e;
+}
+

@@ -19,15 +19,26 @@ a:hover{
   align-items: center;
   justify-content: center;
   height: 70vh;
+  width: 95vw;
+  position: fixed;
 }
 
 .mat-progress-spinner circle, .mat-spinner circle {
   stroke: #9414d9;
 }
 
-.custom-snack-bar{
+.custom-snack-bar-success{
   color: white;
-  background-color: #9414d9;
+  background-color: #11d62b;
+  margin: 0 !important;
+  position: absolute;
+  right: 1%;
+  top: 10%;
+}
+
+.custom-snack-bar-error{
+  color: white;
+  background-color: #fa053e;
   margin: 0 !important;
   position: absolute;
   right: 1%;
@@ -67,9 +78,6 @@ a:hover{
 
 .music-card{
   border: 1px solid #d6d2d2;
-  display: flex;
-  align-items: center;
-  padding: 15px;
   margin-bottom: 10px;
   transition: all .3s;
 }
@@ -79,12 +87,7 @@ a:hover{
   color: #9414d9;
 }
 
-.music-card .image-container{
-  width: 50px;
-  padding: 0 10px;
-}
-
-.music-card .image-container img{
+.music-card img{
   width: 50px;
   height: 50px;
   border-radius: 50px
@@ -102,5 +105,5 @@ a:hover{
   font-size: 12px;
 }
 
-html, body { height: 100%; overflow-x: hidden;  }
+html, body { height: 100%; overflow-x: hidden; overflow-y: hidden}
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

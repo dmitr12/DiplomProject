@@ -40,6 +40,11 @@ namespace Diplom.Managers
             return await db.Musics.Where(m=>m.UserId == userId).ToListAsync();
         }
 
+        public async Task<List<Music>> GetPartOfMusicsByUserId(int userId, int count, int lastIndex)
+        {
+            return await db.Musics.Where(m => m.UserId == userId && m.MusicId > lastIndex).Take(count).ToListAsync();
+        }
+
         public async Task<IActionResult> AddMusic(AddMusicModel model, int userId)
         {
             User user = await db.Users.FindAsync(userId);
@@ -78,6 +83,28 @@ namespace Diplom.Managers
             {
                 return new StatusCodeResult(500);
             }
+        }
+
+        public async Task<IActionResult> DeleteMusic(int musicId, int UserId)
+        {
+            Music music = await db.Musics.Where(m=>m.MusicId==musicId && m.UserId==UserId).FirstOrDefaultAsync();
+            if (music != null)
+            {
+                try
+                {
+                    await cloudService.DeleteFile("", music.MusicFileName);
+                    if (music.MusicImageName != $"{options.Value.DefaultMusicImageFile}")
+                        await cloudService.DeleteFile("", music.MusicImageName);
+                    db.Musics.Remove(music);
+                    await db.SaveChangesAsync();
+                    return new OkResult();
+                }
+                catch
+                {
+                    return new StatusCodeResult(500);
+                }
+            }
+            return new NotFoundResult();
         }
     }
 }

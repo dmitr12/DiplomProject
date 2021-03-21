@@ -25,15 +25,12 @@ namespace Diplom.Controllers
     public class MusicController : ControllerBase
     {
         private readonly MusicManager musicManager;
-        private readonly ICloudService cloudService;
-        private DropboxClient dbx;
+        private readonly int CountMusics = 10;
         private int UserId => int.Parse(User.Claims.Single(cl => cl.Type == ClaimTypes.NameIdentifier).Value);
 
-        public MusicController(MusicManager musicManager, ICloudService cloudService, IOptions<DropBoxOptions> options)
+        public MusicController(MusicManager musicManager)
         {
             this.musicManager = musicManager;
-            this.cloudService = cloudService;
-            dbx = new DropboxClient(options.Value.DropBoxToken);
         }
 
         [HttpGet("ListMusicGenres")]
@@ -49,11 +46,25 @@ namespace Diplom.Controllers
             return musicManager.GetMusicsByUserId(UserId).Result;
         }
 
+        [HttpGet("GetPartOfMusicsPyUserId/{lastIndex}")]
+        [Authorize(Roles = "1")]
+        public List<Music> GetPartOfListMusic(int lastIndex)
+        {
+            return musicManager.GetPartOfMusicsByUserId(UserId, CountMusics, lastIndex).Result;
+        }
+
         [HttpPost("AddMusic")]
         [Authorize(Roles = "1")]
         public IActionResult AddMusic([FromForm] AddMusicModel model)
         {
             return musicManager.AddMusic(model, UserId).Result;
+        }
+
+        [HttpDelete("DeleteMusic/{idMusic}")]
+        [Authorize(Roles = "1")]
+        public IActionResult DeleteMusic(int idMusic)
+        {
+            return musicManager.DeleteMusic(idMusic, UserId).Result;
         }
 
         //[HttpGet]

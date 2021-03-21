@@ -1,0 +1,13 @@
+<div style="width: 100%;" *ngIf="loaderService.isLoading | async">
+  <mat-progress-bar color="warn" mode="query"></mat-progress-bar>
+</div>
+
+<div>
+  <h5 mat-dialog-title class="center-align">Подтвердите удаление выбранной записи</h5>
+  <mat-dialog-content>
+    <div class="center-align">
+      <button class="btn waves-effect waves-light" [disabled]="postingQuery" (click)="delete()" style="background-color: #11d62b; margin-right: 20px;">Удалить</button>
+      <button mat-dialog-close="false" class="btn waves-effect waves-light" [disabled]="postingQuery" style="background-color: #fa053e;">Отмена</button>
+    </div>
+  </mat-dialog-content>
+</div>

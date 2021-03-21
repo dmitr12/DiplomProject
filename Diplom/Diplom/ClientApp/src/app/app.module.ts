@@ -28,6 +28,9 @@ import { AudioplayerComponent } from './components/audioplayer/audioplayer.compo
 import {MatToolbarModule} from "@angular/material/toolbar";
 import { AddmusicformComponent } from './components/musics/addmusicform/addmusicform.component';
 import {MatDialogModule} from "@angular/material/dialog";
+import {InfiniteScrollModule} from "ngx-infinite-scroll";
+import { MusicCardComponent } from './shared/music-card/music-card.component';
+import { DeletemusicformComponent } from './components/musics/deletemusicform/deletemusicform.component';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN);
@@ -43,6 +46,8 @@ export function tokenGetter() {
     PlaylistComponent,
     AudioplayerComponent,
     AddmusicformComponent,
+    MusicCardComponent,
+    DeletemusicformComponent,
   ],
     imports: [
         BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -85,12 +90,13 @@ export function tokenGetter() {
         MatSelectModule,
         MatToolbarModule,
         MatDialogModule,
+        InfiniteScrollModule,
     ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true}
   ],
   bootstrap: [AppComponent],
-  entryComponents: [AddmusicformComponent]
+  entryComponents: [AddmusicformComponent, DeletemusicformComponent]
 })
 export class AppModule {
 }
