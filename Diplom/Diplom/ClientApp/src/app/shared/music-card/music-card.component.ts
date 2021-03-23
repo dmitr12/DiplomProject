@@ -1,8 +1,9 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Music} from "../../models/musics/music";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {AddmusicformComponent} from "../../components/musics/addmusicform/addmusicform.component";
 import {DeletemusicformComponent} from "../../components/musics/deletemusicform/deletemusicform.component";
+import {EditmusicformComponent} from "../../components/musics/editmusicform/editmusicform.component";
+import {AudioService} from "../../services/player/audio.service";
 
 @Component({
   selector: 'app-music-card',
@@ -11,36 +12,49 @@ import {DeletemusicformComponent} from "../../components/musics/deletemusicform/
 })
 export class MusicCardComponent implements OnInit {
 
-  @Input() data: Music
+  @Input() data: Music;
+  @Output() onDeleted = new EventEmitter<number>();
+  @Output() onEdited = new EventEmitter<Music>();
   dialogSource: any;
 
   constructor(
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private audioService: AudioService
   ) { }
 
   ngOnInit() {
   }
 
+  edit() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = this.data;
+    this.dialogSource = this.dialog.open(EditmusicformComponent, dialogConfig);
+    this.dialogSource.afterClosed().subscribe(result=>{
+      if (result !== 'false'){
+        if(this.audioService.idMusic == this.data.musicId)
+          this.audioService.clearMusic();
+        this.onEdited.emit(this.data);
+      }
+    });
+  }
 
-  check(event: any) {
+  delete() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = this.data.musicId;
+    this.dialogSource = this.dialog.open(DeletemusicformComponent, dialogConfig);
+    this.dialogSource.afterClosed().subscribe(result=>{
+      if (result !== 'false'){
+        if(this.audioService.idMusic == this.data.musicId)
+          this.audioService.clearMusic()
+        this.onDeleted.emit(this.data.musicId);
+      }
+    });
+  }
+
+  play(event: any) {
     if(!event.target.className.includes('edit_menu'))
     {
-      alert('play music')
+      this.audioService.openFile(this.data.musicId, this.data.musicUrl, this.data.musicName)
     }
-  }
-
-  clickM() {
-    alert('menu')
-  }
-
-  edit(musicId: number) {
-
-  }
-
-  delete(musicId: number) {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.data = musicId;
-    this.dialogSource = this.dialog.open(DeletemusicformComponent, dialogConfig);
-    // this.dialogSource.afterClosed().subscribe();
   }
 }

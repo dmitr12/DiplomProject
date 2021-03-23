@@ -1,45 +1,45 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {MusicService} from "../../../services/music/music.service";
 import {MusicGenreInfo} from "../../../models/musics/musicGenreInfo";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {finalize} from "rxjs/operators";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {MusicService} from "../../../services/music/music.service";
 import {LoaderService} from "../../../services/loader/loader.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {Music} from "../../../models/musics/music";
+import {finalize} from "rxjs/operators";
 
 @Component({
-  selector: 'app-addmusicform',
-  templateUrl: './addmusicform.component.html',
-  styleUrls: ['./addmusicform.component.css']
+  selector: 'app-editmusicform',
+  templateUrl: './editmusicform.component.html',
+  styleUrls: ['./editmusicform.component.css']
 })
-
-export class AddmusicformComponent implements OnInit {
+export class EditmusicformComponent implements OnInit {
 
   genres: MusicGenreInfo[] = [];
   loaded = false;
   postingQuery = false;
 
-  form = new FormGroup({
-    musicName: new FormControl(null, [Validators.required, Validators.maxLength(100)]),
-    musicFileName: new FormControl(null, [Validators.required]),
-    musicImageName: new FormControl(null),
-    musicGenreId: new FormControl(null, [Validators.required])
-  })
-
+  form: any;
   formData: FormData;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public data: Music,
+    private dialogSource: MatDialogRef<EditmusicformComponent>,
     private musicService: MusicService,
-    private matSnackBar: MatSnackBar,
     public loaderService: LoaderService,
-    private dialogSource: MatDialogRef<AddmusicformComponent>
+    private matSnackBar: MatSnackBar
   ) {
     dialogSource.disableClose = true;
+    this.form = new FormGroup({
+      musicName: new FormControl(data.musicName, [Validators.required, Validators.maxLength(100)]),
+      musicFileName: new FormControl(null),
+      musicImageName: new FormControl(null),
+      musicGenreId: new FormControl(data.musicGenreId, [Validators.required])
+    })
   }
-
   ngOnInit() {
     this.formData = new FormData();
+    this.formData.append("Id", this.data.musicId.toString())
     this.musicService.getMusicGenres().pipe(finalize(() => this.loaded = true)).subscribe((res: MusicGenreInfo[]) => {
       this.genres = res;
     }, error => {
@@ -64,16 +64,22 @@ export class AddmusicformComponent implements OnInit {
     this.formData.append("MusicFile", event.target.files[0], event.target.files[0].name);
   }
 
-  addMusic() {
+  editMusic() {
     let fileImageName;
-    let fileMusicName = this.musicService.getFileNameByPath(this.form.value.musicFileName);
+    let fileMusicName;
     if (this.form.value.musicImageName === null)
       fileImageName = '';
     else
       fileImageName = this.musicService.getFileNameByPath(this.form.value.musicImageName)
-    if (!this.musicService.checkFileFormat(fileMusicName, "mp3")) {
-      this.matSnackBar.open(`Выбран неверный формат аудиозаписи`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
-      return;
+    if (this.form.value.musicFileName === null)
+      fileMusicName = '';
+    else
+      fileMusicName = this.musicService.getFileNameByPath(this.form.value.musicFileName)
+    if (fileImageName) {
+      if (!this.musicService.checkFileFormat(fileMusicName, "mp3")) {
+        this.matSnackBar.open(`Выбран неверный формат аудиозаписи`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
+        return;
+      }
     }
     if (fileImageName) {
       if (!this.musicService.checkFileFormat(fileImageName, 'png') && !this.musicService.checkFileFormat(fileImageName, 'jpg')) {
@@ -86,14 +92,15 @@ export class AddmusicformComponent implements OnInit {
     this.formData.append("MusicGenreId", this.form.value.musicGenreId);
     this.formData.append("MusicName", this.form.value.musicName);
     this.postingQuery = true;
-    this.musicService.addmusic(this.formData).subscribe((response: any) => {
-      this.postingQuery = false;
-      if(response && response.id){
-        this.matSnackBar.open(`Запись успешно добавлена`, '', {duration: 3000, panelClass: 'custom-snack-bar-success'});
-        this.dialogSource.close(response.id);
-      }
-      else if (response && response.msg)
-        this.matSnackBar.open(`${response.msg}`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
+    this.musicService.editMusic(this.formData).subscribe((response: any) => {
+        this.postingQuery = false;
+        if(response && response.msg){
+          this.matSnackBar.open(`${response.msg}`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
+        }
+        else{
+          this.matSnackBar.open(`Запись успешно обновлена`, '', {duration: 3000, panelClass: 'custom-snack-bar-success'});
+          this.dialogSource.close();
+        }
       },
       error => {
         this.postingQuery = false;
@@ -103,8 +110,8 @@ export class AddmusicformComponent implements OnInit {
         else{
           this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
         }
-    }
+      }
     );
   }
-}
 
+}

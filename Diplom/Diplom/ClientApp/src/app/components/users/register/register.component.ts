@@ -56,16 +56,16 @@ export class RegisterComponent implements OnInit {
     this.authService.register(new UserRegistration(this.formRegister.value.email, this.formRegister.value.userName,
       this.formRegister.value.passwords.password)).subscribe((res: any) => {
       if (res && res.msg) {
-        this.matSnackBar.open(res.msg, '', {duration: 3000, panelClass: 'custom-snack-bar'})
+        this.matSnackBar.open(res.msg, '', {duration: 3000, panelClass: 'custom-snack-bar-error'})
       } else {
         this.router.navigate(['']);
       }
     }, error => {
         if(error.status != 0){
-          this.matSnackBar.open(`При отправке запроса возникла ошибка, статусный код ${error.status}`, '', {duration: 3000, panelClass: 'custom-snack-bar'});
+          this.matSnackBar.open(`При отправке запроса возникла ошибка, статусный код ${error.status}`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
         }
         else{
-          this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar'});
+          this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
         }
     });
   }

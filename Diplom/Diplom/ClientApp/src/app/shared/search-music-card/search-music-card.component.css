@@ -1,0 +1,26 @@
+.search-music-card{
+  margin-bottom: 20px;
+}
+
+.search-music-card:hover{
+  box-shadow: 0 8px 8px 8px rgba(0,0,0,.2), 0 8px 8px 0 rgba(0,0,0,.14), 0 8px 8px 0 rgba(0,0,0,.12) !important;
+  transform: translate3d(0,0,0);
+  transition: background .4s cubic-bezier(.25,.8,.25,1),box-shadow 280ms cubic-bezier(.4,0,.2,1);
+}
+
+.search-music-card mat-card-header{
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden
+}
+
+.login{
+  font-weight: bold;
+  color: black
+}
+
+.musicname {
+  margin-bottom: 0;
+}
+

@@ -1,0 +1,30 @@
+<div class="mat-spinner-container" *ngIf="!loaded">
+  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+</div>
+
+<div>
+  <button (click)="checkss()" >checkss</button>
+  <p>playlist works!</p>
+  <button (click)="addMusic()">add music</button>
+</div>
+
+<div *ngIf="loaded && musics.length == 0" style="display: flex; align-items: center; justify-content: center; height: 65vh">
+  Список пуст
+</div>
+
+  <div *ngIf="loaded && musics.length > 0">
+    <div  class="search-results"
+          infiniteScroll
+          [infiniteScrollDistance]="2"
+          [infiniteScrollThrottle]="50"
+          [scrollWindow]="false"
+          (scrolled)="onScroll($event)" style="overflow-y: hidden; overflow: auto">
+      <div *ngFor="let music of musics">
+        <app-music-card [data]="music" (onDeleted)="onMusicDeleted($event)" (onEdited)="onMusicEdited($event)"></app-music-card>
+      </div>
+      <div style="width: 100%;" *ngIf="!scrollLoaded">
+        <mat-progress-bar color="warn" mode="query"></mat-progress-bar>
+      </div>
+    </div>
+  </div>
+

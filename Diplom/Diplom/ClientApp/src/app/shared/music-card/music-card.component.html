@@ -1,22 +1,22 @@
-<div class="d-flex music-card" (click)="check($event)">
+
+
+<div class="d-flex music-card" (click)="play($event)">
   <div class="pl-2 pb-2 pt-2">
     <img src="{{data.musicImageUrl}}">
   </div>
-  <div class="pb-2 pt-2">
-    <div class="content-container">
-      <div class="header">{{data.userId}}</div>
-      <div class="description">{{data.musicName}}</div>
-    </div>
+  <div class="pb-2 pt-2 pr-2 content-container" style="white-space: pre-wrap;">
+    <div class="header">{{data.userId}}</div>
+    <div class="description" style="word-wrap: break-word;">{{data.musicName}}</div>
   </div>
   <button mat-button class="ml-auto p-2 edit_menu" [matMenuTriggerFor]="menu">
     <mat-icon class="edit_menu">more_vert</mat-icon>
   </button>
   <mat-menu #menu="matMenu">
-    <button class="edit_item_menu" mat-menu-item (click)="edit(data.musicId)">
+    <button class="edit_item_menu" mat-menu-item (click)="edit()">
       <mat-icon>edit</mat-icon>
       <span>Edit</span>
     </button>
-    <button class="delete_item_menu" mat-menu-item (click)="delete(data.musicId)">
+    <button class="delete_item_menu" mat-menu-item (click)="delete()">
       <mat-icon>delete</mat-icon>
       <span>Delete</span>
     </button>

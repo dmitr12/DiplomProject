@@ -1,0 +1,17 @@
+<div class="row">
+  <div class="col-6 col-md-4 col-lg-3" *ngFor="let item of items | paginate: {id: 'listing_pagination',
+  itemsPerPage: 20,
+  currentPage: page,
+  totalItems: totalRecords}">
+    <mat-card class="search-music-card">
+      <mat-card-header>
+        <img mat-card-avatar src="https://www.dropbox.com/s/2h36y9k9ceirljn/TestLogin_music_22.3.2021%2019%3A17%3A59_m%20%282%29.jpg?dl=1">
+        <mat-card-subtitle class="login">Shiba Inu</mat-card-subtitle>
+        <mat-card-subtitle class="musicname">ba Inu</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+  </div>
+</div>
+<div style="text-align:center" *ngIf="items.length>0">
+  <pagination-controls id="listing_pagination" maxSize="5" directionLinks="true" (pageChange)="page=$event"></pagination-controls>
+</div>

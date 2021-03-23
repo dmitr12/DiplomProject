@@ -1,0 +1,46 @@
+<div style="width: 100%;" *ngIf="loaderService.isLoading | async">
+  <mat-progress-bar color="warn" mode="query"></mat-progress-bar>
+</div>
+
+<div *ngIf="!loaded">
+  <p>Loading...</p>
+</div>
+
+<div *ngIf="loaded">
+  <h4 mat-dialog-title class="center-align">Изменение музыки</h4>
+  <mat-dialog-content>
+    <form [formGroup]="form" (ngSubmit)="editMusic()">
+      <div class="input-field">
+        <input id="musicName" type="text" required formControlName="musicName">
+        <label for="musicName" class="active">*Название музыки</label>
+        <span class="helper-text red-text" *ngIf="form.get('musicName').invalid && form.get('musicName').dirty">
+          <span *ngIf="form.get('musicName').errors['required']">поле необходимо заполнить</span>
+          <span *ngIf="form.get('musicName').errors['maxlength'] && form.get('musicName').errors['maxlength']['requiredLength']">Максимум {{form.get('musicName').errors['maxlength']['requiredLength']}} символов</span>
+        </span>
+      </div>
+      <mat-form-field class="input-field" style="width: 100%">
+        <mat-select formControlName="musicGenreId" placeholder="*Genre">
+          <mat-option *ngFor="let genre of genres" [value]="genre.musicGenreId">
+            {{genre.genreName}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div class="input-field">
+        <div>
+          <span *ngIf="!form.value.musicFileName">Оставить старый файл записи</span>
+        </div>
+        <input id="musicFileName" type="file" accept=".mp3" formControlName="musicFileName" (change)="changeMusicFile($event)">
+      </div>
+      <div class="input-field" style="margin-bottom: 30px">
+        <div>
+          <span *ngIf="!form.value.musicImageName">Оставить старый файл изображения</span>
+        </div>
+        <input id="musicImageName" type="file" accept=".jpg, .png" formControlName="musicImageName" (change)="changeImageFile($event)">
+      </div>
+      <div class="center-align">
+        <button class="btn waves-effect waves-light" [disabled]='form?.invalid || postingQuery' style="background-color: #11d62b; margin-right: 20px;">Изменить</button>
+        <button mat-dialog-close="false" class="btn waves-effect waves-light" [disabled]="postingQuery" style="background-color: #fa053e;">Отмена</button>
+      </div>
+    </form>
+  </mat-dialog-content>
+</div>

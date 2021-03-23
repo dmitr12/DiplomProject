@@ -31,13 +31,13 @@ export class LoginComponent implements OnInit {
       this.router.navigate(['']);
     }, error => {
       if (error.status == 401)
-        this.matSnackBar.open('Неверный логин или пароль', '', {duration: 3000, panelClass: 'custom-snack-bar'})
+        this.matSnackBar.open('Неверный логин или пароль', '', {duration: 3000, panelClass: 'custom-snack-bar-error'})
       else{
         if(error.status != 0){
-          this.matSnackBar.open(`При отправке запроса возникла ошибка, статусный код ${error.status}`, '', {duration: 3000, panelClass: 'custom-snack-bar'});
+          this.matSnackBar.open(`При отправке запроса возникла ошибка, статусный код ${error.status}`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
         }
         else{
-          this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar'});
+          this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
         }
       }
     });

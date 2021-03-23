@@ -34,6 +34,7 @@ export class DeletemusicformComponent implements OnInit {
     this.musicService.deleteMusic(this.data).pipe(finalize(()=>{this.loaded = true; this.postingQuery = false})).subscribe(
       (res: any)=>{
         this.matSnackBar.open(`Запись успешно удалена`, '', {duration: 3000, panelClass: 'custom-snack-bar-success'});
+        this.dialogSource.close();
       }, error => {
         if (error.status != 0) {
           this.matSnackBar.open(`При удалении музыки возникла ошибка, статусный код ${error.status}`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'

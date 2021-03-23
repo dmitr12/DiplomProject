@@ -18,21 +18,46 @@ namespace Diplom.Managers
     public class MusicManager
     {
         private readonly DataBaseContext db;
-        private readonly IConfiguration config;
         private readonly ICloudService cloudService;
         private readonly IOptions<DropBoxOptions> options;
 
-        public MusicManager(DataBaseContext db, IConfiguration config, ICloudService cloudService, IOptions<DropBoxOptions> options)
+        public MusicManager(DataBaseContext db, ICloudService cloudService, IOptions<DropBoxOptions> options)
         {
             this.db = db;
-            this.config = config;
             this.cloudService = cloudService;
             this.options = options;
         }
 
+        public async Task<List<MusicInfo>> GetFilteredList(string musicName, int genreId)
+        {
+            var filter = new{ MusicName = musicName == null ? "" : musicName, GenreId = genreId };
+            string musicNameFilter = filter.MusicName.Length > 0 ? filter.MusicName : string.Empty;
+            string musicGenreFilter = filter.GenreId > 0 ? filter.GenreId.ToString() : "%";
+            List<MusicInfo> res = new List<MusicInfo>();
+            res = await db.Musics.Where(m => EF.Functions.Like(m.MusicName, $"%{musicNameFilter}%")
+               & EF.Functions.Like(m.MusicGenreId.ToString(), $"{musicGenreFilter}")).Join(db.Users, m => m.UserId, u => u.UserId, (m, u) => new MusicInfo
+               {
+                   Id = m.MusicId,
+                   Name = m.MusicName,
+                   MusicFileName = m.MusicFileName,
+                   MusicUrl = m.MusicUrl,
+                   MusicImageName = m.MusicImageName,
+                   ImageUrl = m.MusicImageUrl,
+                   GenreId = m.MusicGenreId,
+                   UserId = u.UserId,
+                   UserLogin = u.Login
+               }).ToListAsync();
+            return res;
+        }
+
+        public async Task<Music> GetMusic(int musicId)
+        {
+            return await db.Musics.FindAsync(musicId);
+        }
+
         public async Task<List<MusicGenre>> GetMusicGenresList()
         {
-            return await db.MusicGenres.ToListAsync();
+            return await db.MusicGenres.OrderBy(g=>g.GenreName).ToListAsync();
         }
 
         public async Task<List<Music>> GetMusicsByUserId(int userId)
@@ -65,7 +90,7 @@ namespace Diplom.Managers
                     sharingLinkImage = await cloudService.AddFile("", $"{user.Login}_music_{dateTimeNow}_" + model.MusicImageFile.FileName, model.MusicImageFile.OpenReadStream());
                 }
                 sharingLinkMusic = await cloudService.AddFile("", musicFileName, model.MusicFile.OpenReadStream());
-                db.Musics.Add(new Music
+                var music = new Music
                 {
                     MusicName = model.MusicName,
                     MusicFileName = musicFileName,
@@ -75,7 +100,49 @@ namespace Diplom.Managers
                     UserId = user.UserId,
                     DateOfPublication = DateTime.Now.Date,
                     MusicGenreId = model.MusicGenreId
-                });
+                };
+                db.Musics.Add(music);
+                await db.SaveChangesAsync();
+                return new OkObjectResult(new {id = music.MusicId});
+            }
+            catch
+            {
+                return new StatusCodeResult(500);
+            }
+        }
+
+        public async Task<IActionResult> EditMusic(EditMusicModel model, int UserId)
+        {
+            string musicFileName, imageFileName;
+            User user = await db.Users.FindAsync(UserId);
+            Music music = await db.Musics.FindAsync(model.Id);
+            string dateTimeNow = $"{DateTime.Now.Day}.{DateTime.Now.Month}.{DateTime.Now.Year} {DateTime.Now.Hour}:{DateTime.Now.Minute}:{DateTime.Now.Second}";
+            if (await db.Musics.Where(m => m.UserId == user.UserId && m.MusicName == model.MusicName).FirstOrDefaultAsync() != null)
+                return new OkObjectResult(new { msg = $"У вас уже есть запись с названием {model.MusicName}" });
+            try
+            {
+                if (model.MusicFile != null)
+                {
+                    musicFileName = $"{user.Login}_{dateTimeNow}_" + model.MusicFile.FileName;
+                    music.MusicUrl = await cloudService.EditFile("", music.MusicFileName, "", musicFileName, model.MusicFile.OpenReadStream());
+                    music.MusicFileName = musicFileName;
+                }
+                if (model.MusicImageFile != null)
+                {
+                    imageFileName = $"{user.Login}_music_{dateTimeNow}_" + model.MusicImageFile.FileName;
+                    if (music.MusicImageName != $"{options.Value.DefaultMusicImageFile}")
+                    {
+                        music.MusicImageUrl = await cloudService.EditFile("", music.MusicImageName, "", imageFileName, model.MusicImageFile.OpenReadStream());
+                        music.MusicImageName = imageFileName;
+                    }
+                    else
+                    {
+                        music.MusicImageUrl = await cloudService.AddFile("", imageFileName, model.MusicImageFile.OpenReadStream());
+                        music.MusicImageName = imageFileName;
+                    }
+                }
+                music.MusicName = model.MusicName;
+                music.MusicGenreId = model.MusicGenreId;
                 await db.SaveChangesAsync();
                 return new OkResult();
             }

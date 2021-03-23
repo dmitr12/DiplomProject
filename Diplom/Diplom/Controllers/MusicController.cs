@@ -33,10 +33,30 @@ namespace Diplom.Controllers
             this.musicManager = musicManager;
         }
 
+        [HttpGet("FilterMusic")]
+        public List<MusicInfo> GetFilteredList(string musicName, int genreId)
+        {
+            try
+            {
+                return musicManager.GetFilteredList(musicName, genreId).Result;
+            }
+            catch
+            {
+                Response.StatusCode = 500;
+            }
+            return new List<MusicInfo>();
+        }
+
         [HttpGet("ListMusicGenres")]
         public List<MusicGenre> GetMusicGenres()
         {
             return musicManager.GetMusicGenresList().Result;
+        }
+
+        [HttpGet("GetMusic/{musicId}")]
+        public Music GetMusic(int musicId)
+        {
+            return musicManager.GetMusic(musicId).Result;
         }
 
         [HttpGet("ListMusicsByUserId")]
@@ -58,6 +78,13 @@ namespace Diplom.Controllers
         public IActionResult AddMusic([FromForm] AddMusicModel model)
         {
             return musicManager.AddMusic(model, UserId).Result;
+        }
+
+        [HttpPut("EditMusic")]
+        [Authorize(Roles = "1")]
+        public IActionResult EditMusic([FromForm] EditMusicModel model)
+        {
+            return musicManager.EditMusic(model, UserId).Result;
         }
 
         [HttpDelete("DeleteMusic/{idMusic}")]

@@ -1,3 +1,5 @@
+import {User} from "../users/user";
+
 export class Music{
   musicId: number;
   musicName: string;
@@ -8,4 +10,5 @@ export class Music{
   userId: number;
   dateOfPublication: string;
   musicGenreId: number;
+  user: User
 }

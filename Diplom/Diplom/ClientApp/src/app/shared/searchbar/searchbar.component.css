@@ -1,0 +1,6 @@
+
+.search_button{
+  cursor: default;
+  display: flex;
+  transition: all .3s;
+}

@@ -19,7 +19,7 @@ import { ApplayoutComponent } from './components/layouts/applayout/applayout.com
 import {MatIconModule} from "@angular/material/icon";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {AuthGuard} from "./guards/auth-guard";
-import { PlaylistComponent } from './components/musics/playlist/playlist.component';
+import { PlaylistComponent } from './pages/playlist/playlist.component';
 import {MatButtonModule} from "@angular/material/button";
 import {MatListModule} from "@angular/material/list";
 import {MatMenuModule} from "@angular/material/menu";
@@ -31,6 +31,13 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {InfiniteScrollModule} from "ngx-infinite-scroll";
 import { MusicCardComponent } from './shared/music-card/music-card.component';
 import { DeletemusicformComponent } from './components/musics/deletemusicform/deletemusicform.component';
+import { EditmusicformComponent } from './components/musics/editmusicform/editmusicform.component';
+import { SearchbarComponent } from './shared/searchbar/searchbar.component';
+import { SearchComponent } from './pages/search/search.component';
+import {MatInputModule} from "@angular/material/input";
+import { SearchMusicCardComponent } from './shared/search-music-card/search-music-card.component';
+import {MatCardModule} from "@angular/material/card";
+import {NgxPaginationModule} from 'ngx-pagination'
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN);
@@ -48,6 +55,10 @@ export function tokenGetter() {
     AddmusicformComponent,
     MusicCardComponent,
     DeletemusicformComponent,
+    EditmusicformComponent,
+    SearchbarComponent,
+    SearchComponent,
+    SearchMusicCardComponent,
   ],
     imports: [
         BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -73,6 +84,7 @@ export function tokenGetter() {
                 path: '', component: ApplayoutComponent, canActivate: [AuthGuard], children: [
                     {path: '', redirectTo: 'playlist', pathMatch: 'full'},
                     {path: 'playlist', component: PlaylistComponent},
+                    {path: 'search', component: SearchComponent},
 
                     // { path: 'searchmusic', component: SearchMusicComponent },
                     // { path: 'editmusic/:id', component: EditmusicComponent },
@@ -91,12 +103,15 @@ export function tokenGetter() {
         MatToolbarModule,
         MatDialogModule,
         InfiniteScrollModule,
+        MatInputModule,
+        MatCardModule,
+        NgxPaginationModule
     ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true}
   ],
   bootstrap: [AppComponent],
-  entryComponents: [AddmusicformComponent, DeletemusicformComponent]
+  entryComponents: [AddmusicformComponent, DeletemusicformComponent, EditmusicformComponent]
 })
 export class AppModule {
 }

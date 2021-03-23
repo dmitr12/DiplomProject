@@ -9,7 +9,7 @@
       </a>
     </div>
     <div>
-      <button mat-button class="menu-button" [matMenuTriggerFor]="menu" class="align-content-end">
+      <button mat-button class="menu-button" [matMenuTriggerFor]="menu" class="align-content-end pr-0">
         <span style="margin-right: 10px">{{authService.getCurrentUserName()}}</span>
         <mat-icon>person</mat-icon>
         <mat-icon>arrow_drop_down</mat-icon>
@@ -25,34 +25,16 @@
   <mat-sidenav-container class="sidenav-container">
     <mat-sidenav fixedInViewport #sidenav autoFocus="autofocus" mode="over" [autoFocus]="false" [(opened)]="isMenuOpen" class="sidenav" (click)="onSidenavClick()">
       <mat-toolbar class="toolbr">Menu</mat-toolbar>
-        <div routerLinkActive="active">
+        <div routerLinkActive="active" class="pt-2">
           <a mat-menu-item routerLink="/playlist">
             <mat-icon>audiotrack</mat-icon>
             <span>My music</span>
           </a>
         </div>
       <div routerLinkActive="active">
-        <a mat-menu-item routerLink="/playlist">
-          <mat-icon>audiotrack</mat-icon>
-          <span>My music</span>
-        </a>
-      </div>
-      <div routerLinkActive="active">
-        <a mat-menu-item routerLink="/playlist">
-          <mat-icon>audiotrack</mat-icon>
-          <span>My music</span>
-        </a>
-      </div>
-      <div routerLinkActive="active">
-        <a mat-menu-item routerLink="/playlist">
-          <mat-icon>audiotrack</mat-icon>
-          <span>My music</span>
-        </a>
-      </div>
-      <div routerLinkActive="active">
-        <a mat-menu-item routerLink="/playlist">
-          <mat-icon>audiotrack</mat-icon>
-          <span>My music</span>
+        <a mat-menu-item routerLink="/search">
+          <mat-icon>search</mat-icon>
+          <span>Search</span>
         </a>
       </div>
     </mat-sidenav>
@@ -61,7 +43,7 @@
       'main-with-player': audioService.isVisible === true,
       'main-without-player': audioService.isVisible === false
       }">
-        <router-outlet></router-outlet>
+        <router-outlet style="overflow-y: hidden"></router-outlet>
       </main>
       <app-audioplayer style="position: fixed; bottom: 0; width: 100vw; z-index: 10"></app-audioplayer>
     </mat-sidenav-content>
