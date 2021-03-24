@@ -4,6 +4,7 @@ import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {DeletemusicformComponent} from "../../components/musics/deletemusicform/deletemusicform.component";
 import {EditmusicformComponent} from "../../components/musics/editmusicform/editmusicform.component";
 import {AudioService} from "../../services/player/audio.service";
+import {MusicInfo} from "../../models/musics/musicInfo";
 
 @Component({
   selector: 'app-music-card',
@@ -12,9 +13,9 @@ import {AudioService} from "../../services/player/audio.service";
 })
 export class MusicCardComponent implements OnInit {
 
-  @Input() data: Music;
+  @Input() data: MusicInfo;
   @Output() onDeleted = new EventEmitter<number>();
-  @Output() onEdited = new EventEmitter<Music>();
+  @Output() onEdited = new EventEmitter<MusicInfo>();
   dialogSource: any;
 
   constructor(
@@ -31,7 +32,7 @@ export class MusicCardComponent implements OnInit {
     this.dialogSource = this.dialog.open(EditmusicformComponent, dialogConfig);
     this.dialogSource.afterClosed().subscribe(result=>{
       if (result !== 'false'){
-        if(this.audioService.idMusic == this.data.musicId)
+        if(this.audioService.idMusic == this.data.id)
           this.audioService.clearMusic();
         this.onEdited.emit(this.data);
       }
@@ -40,13 +41,13 @@ export class MusicCardComponent implements OnInit {
 
   delete() {
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.data = this.data.musicId;
+    dialogConfig.data = this.data.id;
     this.dialogSource = this.dialog.open(DeletemusicformComponent, dialogConfig);
     this.dialogSource.afterClosed().subscribe(result=>{
       if (result !== 'false'){
-        if(this.audioService.idMusic == this.data.musicId)
+        if(this.audioService.idMusic == this.data.id)
           this.audioService.clearMusic()
-        this.onDeleted.emit(this.data.musicId);
+        this.onDeleted.emit(this.data.id);
       }
     });
   }
@@ -54,7 +55,7 @@ export class MusicCardComponent implements OnInit {
   play(event: any) {
     if(!event.target.className.includes('edit_menu'))
     {
-      this.audioService.openFile(this.data.musicId, this.data.musicUrl, this.data.musicName)
+      this.audioService.openFile(this.data.id, this.data.musicUrl, this.data.name)
     }
   }
 }

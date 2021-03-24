@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {MusicGenreInfo} from "../../models/musics/musicGenreInfo";
+import {MusicInfo} from "../../models/musics/musicInfo";
 
 @Component({
   selector: 'app-search-music-card',
@@ -7,10 +9,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SearchMusicCardComponent implements OnInit {
 
-  items=[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-
-  totalRecords: string;
-  page: number = 1;
+  @Input() data: MusicInfo;
 
   constructor() { }
 

@@ -6,6 +6,7 @@ import {AddmusicformComponent} from "../../components/musics/addmusicform/addmus
 import {Music} from "../../models/musics/music";
 import {finalize} from "rxjs/operators";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {MusicInfo} from "../../models/musics/musicInfo";
 
 @Component({
   selector: 'app-playlist',
@@ -18,7 +19,7 @@ export class PlaylistComponent implements OnInit {
   private scrollElem: any;
 
   dialogSource: any;
-  musics: Music[] = [];
+  musics: MusicInfo[] = [];
   loaded = false;
   scrollLoaded = false;
   lastIndex = -1;
@@ -38,10 +39,10 @@ export class PlaylistComponent implements OnInit {
       this.loaded = true;
       this.scrollLoaded = true
     })).subscribe(
-      (res: Music[]) => {
+      (res: MusicInfo[]) => {
         this.musics = res;
         if(res.length>0){
-          this.lastIndex = res[res.length - 1].musicId;
+          this.lastIndex = res[res.length - 1].id;
         }
       }, error => {
         if (error.status != 0) {
@@ -61,7 +62,7 @@ export class PlaylistComponent implements OnInit {
     this.dialogSource = this.dialog.open(AddmusicformComponent, dialogConfig);
     this.dialogSource.afterClosed().subscribe(result => {
       if (result !== 'false'){
-        this.musicService.getMusic(result).pipe(finalize(()=> this.loaded = true)).subscribe((res:Music)=>{
+        this.musicService.getMusic(result).pipe(finalize(()=> this.loaded = true)).subscribe((res:MusicInfo)=>{
           this.loaded = false;
           this.musics = this.musics.concat(res);
         }, error => {
@@ -91,10 +92,10 @@ export class PlaylistComponent implements OnInit {
       this.scrollLoaded = true;
       this.notScrolly = true
     })).subscribe(
-      (res: Music[]) => {
+      (res: MusicInfo[]) => {
         if (res.length > 0) {
           this.musics = this.musics.concat(res);
-          this.lastIndex = res[res.length - 1].musicId;
+          this.lastIndex = res[res.length - 1].id;
         } else {
           this.notEmptyMusic = false;
         }
@@ -117,15 +118,15 @@ export class PlaylistComponent implements OnInit {
 
   onMusicDeleted(id: number) {
     this.loaded = false;
-    const index = this.musics.indexOf(this.musics.filter(m=>m.musicId == id)[0]);
+    const index = this.musics.indexOf(this.musics.filter(m=>m.id == id)[0]);
     this.musics.splice(index, 1);
     this.loaded = true;
   }
 
-  onMusicEdited(music: Music) {
-    this.musicService.getMusic(music.musicId).pipe(finalize(()=> this.loaded = true)).subscribe((res:Music)=>{
+  onMusicEdited(music: MusicInfo) {
+    this.musicService.getMusic(music.id).pipe(finalize(()=> this.loaded = true)).subscribe((res:MusicInfo)=>{
       this.loaded = false;
-      const index = this.musics.indexOf(this.musics.filter(m=>m.musicId == music.musicId)[0]);
+      const index = this.musics.indexOf(this.musics.filter(m=>m.id == music.id)[0]);
       this.musics[index] = res;
     }, error => {
       if (error.status != 0) {

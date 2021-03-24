@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {FilterMusicModel} from "../../models/musics/filterMusicModel";
 import {MusicService} from "../../services/music/music.service";
+import {MusicGenreInfo} from "../../models/musics/musicGenreInfo";
+import {MatSelect, MatSelectChange} from "@angular/material/select";
 
 @Component({
   selector: 'app-searchbar',
@@ -9,12 +11,13 @@ import {MusicService} from "../../services/music/music.service";
 })
 export class SearchbarComponent implements OnInit {
 
-  someList=[
-    "1",
-    '2',
-    '3',
-    '4'
-  ]
+  @ViewChild("inputSearch", {static: false})
+  inputSearch: ElementRef;
+  @Input() musicGenreList: MusicGenreInfo[] = [];
+  @Output() onSearch = new EventEmitter<FilterMusicModel>();
+
+  genreSelectEmpty = true;
+  genreId = 0;
 
   constructor(
     private musicService: MusicService
@@ -24,8 +27,14 @@ export class SearchbarComponent implements OnInit {
   }
 
   search() {
-    this.musicService.getFilteredMusicList(new FilterMusicModel('m', 3)).subscribe(res=>{
-      console.log(res);
-    })
+    this.onSearch.emit(new FilterMusicModel(this.inputSearch.nativeElement.value, this.genreId));
+  }
+
+  genreChanged(event: MatSelectChange) {
+    this.inputSearch.nativeElement.value = ''
+    if(event.value){
+      this.genreId = event.value;
+      this.genreSelectEmpty = false;
+    }
   }
 }

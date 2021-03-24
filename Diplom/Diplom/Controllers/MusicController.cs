@@ -54,21 +54,21 @@ namespace Diplom.Controllers
         }
 
         [HttpGet("GetMusic/{musicId}")]
-        public Music GetMusic(int musicId)
+        public MusicInfo GetMusic(int musicId)
         {
             return musicManager.GetMusic(musicId).Result;
         }
 
         [HttpGet("ListMusicsByUserId")]
         [Authorize(Roles = "1")]
-        public List<Music> GetMusicsByUserId()
+        public List<MusicInfo> GetMusicsByUserId()
         {
             return musicManager.GetMusicsByUserId(UserId).Result;
         }
 
         [HttpGet("GetPartOfMusicsPyUserId/{lastIndex}")]
         [Authorize(Roles = "1")]
-        public List<Music> GetPartOfListMusic(int lastIndex)
+        public List<MusicInfo> GetPartOfListMusic(int lastIndex)
         {
             return musicManager.GetPartOfMusicsByUserId(UserId, CountMusics, lastIndex).Result;
         }

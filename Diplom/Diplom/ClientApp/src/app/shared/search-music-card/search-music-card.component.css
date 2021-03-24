@@ -1,5 +1,6 @@
 .search-music-card{
   margin-bottom: 20px;
+  cursor: default;
 }
 
 .search-music-card:hover{

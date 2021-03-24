@@ -1,2 +1,31 @@
-<app-searchbar></app-searchbar>
-<app-search-music-card></app-search-music-card>
+<div class="mat-spinner-container" *ngIf="!loadedPage">
+  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+</div>
+<div *ngIf="loadedPage">
+  <app-searchbar [musicGenreList]="genres" (onSearch)="search($event)"></app-searchbar>
+  <div class="mat-spinner-container" *ngIf="!loadedSearch">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+  <div *ngIf="musics.length == 0" style="display: flex; align-items: center; justify-content: center">
+    Список пуст
+  </div>
+  <div class="row" *ngIf="loadedSearch">
+    <div class="col-6 col-md-4 col-lg-3" *ngFor="let music of musics | paginate: {id: 'listing_musics',
+  itemsPerPage: itemsPage,
+  currentPage: page,
+  totalItems: totalRecords}">
+      <app-search-music-card [data]="music"></app-search-music-card>
+    </div>
+  </div>
+  <div style="text-align:center" *ngIf="musics.length>itemsPage">
+    <pagination-controls id="listing_musics"
+                         maxSize="8"
+                         directionLinks="true"
+                         previousLabel="Назад"
+                         nextLabel="Далее"
+                         autoHide="true"
+                         (pageChange)="page=$event">
+    </pagination-controls>
+  </div>
+</div>
+

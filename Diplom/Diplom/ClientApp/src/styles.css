@@ -110,5 +110,22 @@ a:hover{
   box-shadow: inset 0 1px 1px rgba(148, 20, 217, 0.075), 0 0 8px rgba(148, 20, 217, 0.6);
 }
 
+.ngx-pagination {
+  padding-left: 0px !important;
+}
+
+.ngx-pagination .current,
+.btn-info {
+  background: #9414d9 !important;
+  border: transparent !important;
+  border-radius: 20px !important;
+}
+
+.ngx-pagination .current:hover {
+  background: #9414d9 !important;
+  border-radius: 20px !important;
+  border: transparent !important;
+}
+
 html, body { height: 100%; overflow-x: hidden;}
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

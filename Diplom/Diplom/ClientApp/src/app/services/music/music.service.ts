@@ -25,16 +25,16 @@ export class MusicService {
     return this.http.get<MusicGenreInfo[]>(`${environment.url}api/music/ListMusicGenres`);
   }
 
-  getMusicsByUserId(): Observable<Music[]>{
-    return this.http.get<Music[]>(`${environment.url}api/music/ListMusicsByUserId`);
+  getMusicsByUserId(): Observable<MusicInfo[]>{
+    return this.http.get<MusicInfo[]>(`${environment.url}api/music/ListMusicsByUserId`);
   }
 
-  getMusic(id: number): Observable<Music>{
-    return this.http.get<Music>(`${environment.url}api/music/GetMusic/${id}`);
+  getMusic(id: number): Observable<MusicInfo>{
+    return this.http.get<MusicInfo>(`${environment.url}api/music/GetMusic/${id}`);
   }
 
-  getPartOfMusicsByUserId(lastIndex: number): Observable<Music[]>{
-    return this.http.get<Music[]>(`${environment.url}api/music/GetPartOfMusicsPyUserId/${lastIndex}`);
+  getPartOfMusicsByUserId(lastIndex: number): Observable<MusicInfo[]>{
+    return this.http.get<MusicInfo[]>(`${environment.url}api/music/GetPartOfMusicsPyUserId/${lastIndex}`);
   }
 
   addmusic(formData: FormData) {

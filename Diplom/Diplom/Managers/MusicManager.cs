@@ -50,9 +50,20 @@ namespace Diplom.Managers
             return res;
         }
 
-        public async Task<Music> GetMusic(int musicId)
+        public async Task<MusicInfo> GetMusic(int musicId)
         {
-            return await db.Musics.FindAsync(musicId);
+            return await db.Musics.Where(m=>m.MusicId == musicId).Join(db.Users, m => m.UserId, u => u.UserId, (m, u) => new MusicInfo
+            {
+                Id = m.MusicId,
+                Name = m.MusicName,
+                MusicFileName = m.MusicFileName,
+                MusicUrl = m.MusicUrl,
+                MusicImageName = m.MusicImageName,
+                ImageUrl = m.MusicImageUrl,
+                GenreId = m.MusicGenreId,
+                UserId = u.UserId,
+                UserLogin = u.Login
+            }).FirstOrDefaultAsync();
         }
 
         public async Task<List<MusicGenre>> GetMusicGenresList()
@@ -60,14 +71,36 @@ namespace Diplom.Managers
             return await db.MusicGenres.OrderBy(g=>g.GenreName).ToListAsync();
         }
 
-        public async Task<List<Music>> GetMusicsByUserId(int userId)
+        public async Task<List<MusicInfo>> GetMusicsByUserId(int userId)
         {
-            return await db.Musics.Where(m=>m.UserId == userId).ToListAsync();
+            return await db.Musics.Where(m => m.UserId == userId).Join(db.Users, m => m.UserId, u => u.UserId, (m, u) => new MusicInfo
+               {
+                   Id = m.MusicId,
+                   Name = m.MusicName,
+                   MusicFileName = m.MusicFileName,
+                   MusicUrl = m.MusicUrl,
+                   MusicImageName = m.MusicImageName,
+                   ImageUrl = m.MusicImageUrl,
+                   GenreId = m.MusicGenreId,
+                   UserId = u.UserId,
+                   UserLogin = u.Login
+               }).ToListAsync();
         }
 
-        public async Task<List<Music>> GetPartOfMusicsByUserId(int userId, int count, int lastIndex)
+        public async Task<List<MusicInfo>> GetPartOfMusicsByUserId(int userId, int count, int lastIndex)
         {
-            return await db.Musics.Where(m => m.UserId == userId && m.MusicId > lastIndex).Take(count).ToListAsync();
+            return await db.Musics.Where(m => m.UserId == userId && m.MusicId > lastIndex).Join(db.Users, m => m.UserId, u => u.UserId, (m, u) => new MusicInfo
+            {
+                Id = m.MusicId,
+                Name = m.MusicName,
+                MusicFileName = m.MusicFileName,
+                MusicUrl = m.MusicUrl,
+                MusicImageName = m.MusicImageName,
+                ImageUrl = m.MusicImageUrl,
+                GenreId = m.MusicGenreId,
+                UserId = u.UserId,
+                UserLogin = u.Login
+            }).Take(count).ToListAsync();
         }
 
         public async Task<IActionResult> AddMusic(AddMusicModel model, int userId)

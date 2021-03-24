@@ -1,12 +1,10 @@
-
-
 <div class="d-flex music-card" (click)="play($event)">
   <div class="pl-2 pb-2 pt-2">
-    <img src="{{data.musicImageUrl}}">
+    <img src="{{data.imageUrl}}">
   </div>
   <div class="pb-2 pt-2 pr-2 content-container" style="white-space: pre-wrap;">
-    <div class="header">{{data.userId}}</div>
-    <div class="description" style="word-wrap: break-word;">{{data.musicName}}</div>
+    <div class="header">{{data.userLogin}}</div>
+    <div class="description" style="word-wrap: break-word;">{{data.name}}</div>
   </div>
   <button mat-button class="ml-auto p-2 edit_menu" [matMenuTriggerFor]="menu">
     <mat-icon class="edit_menu">more_vert</mat-icon>

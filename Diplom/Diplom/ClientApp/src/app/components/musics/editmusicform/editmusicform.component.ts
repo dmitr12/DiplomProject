@@ -5,8 +5,8 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {MusicService} from "../../../services/music/music.service";
 import {LoaderService} from "../../../services/loader/loader.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {Music} from "../../../models/musics/music";
 import {finalize} from "rxjs/operators";
+import {MusicInfo} from "../../../models/musics/musicInfo";
 
 @Component({
   selector: 'app-editmusicform',
@@ -23,7 +23,7 @@ export class EditmusicformComponent implements OnInit {
   formData: FormData;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: Music,
+    @Inject(MAT_DIALOG_DATA) public data: MusicInfo,
     private dialogSource: MatDialogRef<EditmusicformComponent>,
     private musicService: MusicService,
     public loaderService: LoaderService,
@@ -31,15 +31,15 @@ export class EditmusicformComponent implements OnInit {
   ) {
     dialogSource.disableClose = true;
     this.form = new FormGroup({
-      musicName: new FormControl(data.musicName, [Validators.required, Validators.maxLength(100)]),
+      musicName: new FormControl(data.name, [Validators.required, Validators.maxLength(100)]),
       musicFileName: new FormControl(null),
       musicImageName: new FormControl(null),
-      musicGenreId: new FormControl(data.musicGenreId, [Validators.required])
+      musicGenreId: new FormControl(data.genreId, [Validators.required])
     })
   }
   ngOnInit() {
     this.formData = new FormData();
-    this.formData.append("Id", this.data.musicId.toString())
+    this.formData.append("Id", this.data.id.toString())
     this.musicService.getMusicGenres().pipe(finalize(() => this.loaded = true)).subscribe((res: MusicGenreInfo[]) => {
       this.genres = res;
     }, error => {
