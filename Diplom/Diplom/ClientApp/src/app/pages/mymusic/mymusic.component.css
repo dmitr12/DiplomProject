@@ -1,0 +1,12 @@
+.active{
+  border-bottom: 1px solid #9414d9;
+}
+
+.active a{
+  color: #9414d9;
+}
+
+.active a mat-icon{
+  color: #9414d9;
+}
+

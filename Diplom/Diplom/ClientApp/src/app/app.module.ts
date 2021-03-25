@@ -37,7 +37,9 @@ import { SearchComponent } from './pages/search/search.component';
 import {MatInputModule} from "@angular/material/input";
 import { SearchMusicCardComponent } from './shared/search-music-card/search-music-card.component';
 import {MatCardModule} from "@angular/material/card";
-import {NgxPaginationModule} from 'ngx-pagination'
+import {NgxPaginationModule} from 'ngx-pagination';
+import {MymusicComponent} from "./pages/mymusic/mymusic.component";
+import { FavouritemusicsComponent } from './pages/favouritemusics/favouritemusics.component';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN);
@@ -59,6 +61,8 @@ export function tokenGetter() {
     SearchbarComponent,
     SearchComponent,
     SearchMusicCardComponent,
+    MymusicComponent,
+    FavouritemusicsComponent,
   ],
     imports: [
         BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -82,8 +86,12 @@ export function tokenGetter() {
             },
             {
                 path: '', component: ApplayoutComponent, canActivate: [AuthGuard], children: [
-                    {path: '', redirectTo: 'playlist', pathMatch: 'full'},
-                    {path: 'playlist', component: PlaylistComponent},
+                    {path: '', redirectTo: 'mymusic', pathMatch: 'full'},
+                    {path: 'mymusic', component: MymusicComponent, children: [
+                        {path: '', redirectTo: 'playlist', pathMatch: 'full'},
+                        {path: 'playlist', component: PlaylistComponent},
+                        {path: 'favorite', component: FavouritemusicsComponent}
+                      ]},
                     {path: 'search', component: SearchComponent},
 
                     // { path: 'searchmusic', component: SearchMusicComponent },
