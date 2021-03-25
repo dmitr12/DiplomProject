@@ -40,6 +40,8 @@ import {MatCardModule} from "@angular/material/card";
 import {NgxPaginationModule} from 'ngx-pagination';
 import {MymusicComponent} from "./pages/mymusic/mymusic.component";
 import { FavouritemusicsComponent } from './pages/favouritemusics/favouritemusics.component';
+import { MusicinfoComponent } from './pages/musicinfo/musicinfo.component';
+import {RatingModule} from "ng-starrating";
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN);
@@ -63,6 +65,7 @@ export function tokenGetter() {
     SearchMusicCardComponent,
     MymusicComponent,
     FavouritemusicsComponent,
+    MusicinfoComponent,
   ],
     imports: [
         BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -87,16 +90,15 @@ export function tokenGetter() {
             {
                 path: '', component: ApplayoutComponent, canActivate: [AuthGuard], children: [
                     {path: '', redirectTo: 'mymusic', pathMatch: 'full'},
-                    {path: 'mymusic', component: MymusicComponent, children: [
-                        {path: '', redirectTo: 'playlist', pathMatch: 'full'},
-                        {path: 'playlist', component: PlaylistComponent},
-                        {path: 'favorite', component: FavouritemusicsComponent}
-                      ]},
+                    {
+                        path: 'mymusic', component: MymusicComponent, children: [
+                            {path: '', redirectTo: 'playlist', pathMatch: 'full'},
+                            {path: 'playlist', component: PlaylistComponent},
+                            {path: 'favorite', component: FavouritemusicsComponent}
+                        ]
+                    },
                     {path: 'search', component: SearchComponent},
-
-                    // { path: 'searchmusic', component: SearchMusicComponent },
-                    // { path: 'editmusic/:id', component: EditmusicComponent },
-                    // { path: 'musicinfo/:id', component: MusicinfoComponent }
+                    {path: 'musicinfo/:id', component: MusicinfoComponent}
                 ]
             }
         ]),
@@ -113,7 +115,8 @@ export function tokenGetter() {
         InfiniteScrollModule,
         MatInputModule,
         MatCardModule,
-        NgxPaginationModule
+        NgxPaginationModule,
+        RatingModule
     ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true}

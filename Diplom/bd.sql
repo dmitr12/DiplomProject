@@ -51,9 +51,10 @@ DateOfPublication date not null,
 MusicGenreId int references MusicGenres(MusicGenreId) not null
 )
 go 
-create table UserMusicLikes(
+create table MusicStarRatings(
 MusicId int not null,
 UserId int not null,
+Rating int not null,
 primary key(MusicId, UserId),
 foreign key (MusicId) references Musics(MusicId) on delete cascade,
 foreign key (UserId) references Users(UserId) on delete cascade,

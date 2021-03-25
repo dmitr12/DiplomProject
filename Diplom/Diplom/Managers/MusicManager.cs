@@ -2,6 +2,7 @@
 using Diplom.Models;
 using Diplom.Models.GenreModels;
 using Diplom.Models.MusicModels;
+using Diplom.Models.RatingModels;
 using Diplom.Models.UserModels;
 using Diplom.Utils;
 using Microsoft.AspNetCore.Mvc;
@@ -52,7 +53,11 @@ namespace Diplom.Managers
 
         public async Task<MusicInfo> GetMusic(int musicId)
         {
-            return await db.Musics.Where(m=>m.MusicId == musicId).Join(db.Users, m => m.UserId, u => u.UserId, (m, u) => new MusicInfo
+            double sumRating = 0;
+            var rating = await db.MusicStarRatings.Where(r => r.MusicId == musicId).ToListAsync();
+            foreach (var entity in rating)
+                sumRating += entity.Rating;
+            var musicInfo = await db.Musics.Where(m=>m.MusicId == musicId).Join(db.Users, m => m.UserId, u => u.UserId, (m, u) => new MusicInfo
             {
                 Id = m.MusicId,
                 Name = m.MusicName,
@@ -62,8 +67,15 @@ namespace Diplom.Managers
                 ImageUrl = m.MusicImageUrl,
                 GenreId = m.MusicGenreId,
                 UserId = u.UserId,
-                UserLogin = u.Login
+                UserLogin = u.Login,
+                DateOfPublication = m.DateOfPublication
             }).FirstOrDefaultAsync();
+            musicInfo.GenreName = db.MusicGenres.Find(musicInfo.GenreId).GenreName;
+            if (sumRating == 0)
+                musicInfo.Rating = sumRating;
+            else
+                musicInfo.Rating = Math.Round(sumRating / rating.Count, 1);
+            return musicInfo;
         }
 
         public async Task<List<MusicGenre>> GetMusicGenresList()
@@ -99,7 +111,7 @@ namespace Diplom.Managers
                 ImageUrl = m.MusicImageUrl,
                 GenreId = m.MusicGenreId,
                 UserId = u.UserId,
-                UserLogin = u.Login
+                UserLogin = u.Login,
             }).Take(count).ToListAsync();
         }
 
@@ -150,8 +162,6 @@ namespace Diplom.Managers
             User user = await db.Users.FindAsync(UserId);
             Music music = await db.Musics.FindAsync(model.Id);
             string dateTimeNow = $"{DateTime.Now.Day}.{DateTime.Now.Month}.{DateTime.Now.Year} {DateTime.Now.Hour}:{DateTime.Now.Minute}:{DateTime.Now.Second}";
-            if (await db.Musics.Where(m => m.UserId == user.UserId && m.MusicName == model.MusicName).FirstOrDefaultAsync() != null)
-                return new OkObjectResult(new { msg = $"У вас уже есть запись с названием {model.MusicName}" });
             try
             {
                 if (model.MusicFile != null)
@@ -205,6 +215,24 @@ namespace Diplom.Managers
                 }
             }
             return new NotFoundResult();
+        }
+
+        public async Task<IActionResult> RateMusic(MusicStarRating model)
+        {
+            try
+            {
+                var entity = await db.MusicStarRatings.FindAsync(model.MusicId, model.UserId);
+                if (entity == null)
+                    db.MusicStarRatings.Add(new MusicStarRating { MusicId = model.MusicId, UserId = model.UserId, Rating = model.Rating });
+                else
+                    entity.Rating = model.Rating;
+                await db.SaveChangesAsync();
+                return new OkResult();
+            }
+            catch
+            {
+                return new StatusCodeResult(500);
+            }
         }
     }
 }

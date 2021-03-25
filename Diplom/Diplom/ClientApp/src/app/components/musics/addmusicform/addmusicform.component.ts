@@ -6,6 +6,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {finalize} from "rxjs/operators";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {LoaderService} from "../../../services/loader/loader.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-addmusicform',
@@ -33,6 +34,7 @@ export class AddmusicformComponent implements OnInit {
     private musicService: MusicService,
     private matSnackBar: MatSnackBar,
     public loaderService: LoaderService,
+    private router: Router,
     private dialogSource: MatDialogRef<AddmusicformComponent>
   ) {
     dialogSource.disableClose = true;
@@ -97,6 +99,9 @@ export class AddmusicformComponent implements OnInit {
       },
       error => {
         this.postingQuery = false;
+        if(error.status == 401){
+          this.router.navigate(['auth']);
+        }
         if(error.status != 0){
           this.matSnackBar.open(`При отправке запроса возникла ошибка, статусный код ${error.status}`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
         }

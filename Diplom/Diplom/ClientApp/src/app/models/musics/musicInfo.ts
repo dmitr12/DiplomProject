@@ -6,6 +6,9 @@ export class MusicInfo {
   musicImageName: string;
   imageUrl: string;
   genreId: number;
+  genreName: string;
   userId: number;
   userLogin: string;
+  rating: number;
+  dateOfPublication: Date;
 }

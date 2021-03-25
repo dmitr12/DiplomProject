@@ -1,6 +1,6 @@
 ﻿using Diplom.Models.GenreModels;
-using Diplom.Models.LikeModels;
 using Diplom.Models.MusicModels;
+using Diplom.Models.RatingModels;
 using Diplom.Models.RoleModels;
 using Diplom.Models.UserModels;
 using Microsoft.EntityFrameworkCore;
@@ -17,13 +17,13 @@ namespace Diplom.Models
         public DbSet<MusicGenre> MusicGenres { get; set; }
         public DbSet<Music> Musics { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
-        public DbSet<UserMusicLike> UserMusicLikes { get; set; }
+        public DbSet<MusicStarRating> MusicStarRatings { get; set; }
 
         public DataBaseContext(DbContextOptions<DataBaseContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserMusicLike>().HasKey(um => new { um.MusicId, um.UserId });
+            modelBuilder.Entity<MusicStarRating>().HasKey(um => new { um.MusicId, um.UserId });
         }
     }
 }

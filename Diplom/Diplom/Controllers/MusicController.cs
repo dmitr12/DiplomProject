@@ -9,6 +9,7 @@ using Diplom.Managers;
 using Diplom.Models;
 using Diplom.Models.GenreModels;
 using Diplom.Models.MusicModels;
+using Diplom.Models.RatingModels;
 using Diplom.Models.UserModels;
 using Diplom.Utils;
 using Dropbox.Api;
@@ -54,6 +55,7 @@ namespace Diplom.Controllers
         }
 
         [HttpGet("GetMusic/{musicId}")]
+        [Authorize(Roles = "1")]
         public MusicInfo GetMusic(int musicId)
         {
             return musicManager.GetMusic(musicId).Result;
@@ -92,6 +94,14 @@ namespace Diplom.Controllers
         public IActionResult DeleteMusic(int idMusic)
         {
             return musicManager.DeleteMusic(idMusic, UserId).Result;
+        }
+
+        [HttpPost("RateMusic")]
+        public IActionResult RateMusic(MusicStarRating model)
+        {
+            if (ModelState.IsValid)
+                return musicManager.RateMusic(model).Result;
+            return BadRequest();
         }
 
         //[HttpGet]

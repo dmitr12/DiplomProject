@@ -14,7 +14,7 @@
   itemsPerPage: itemsPage,
   currentPage: page,
   totalItems: totalRecords}">
-      <app-search-music-card [data]="music"></app-search-music-card>
+      <app-search-music-card [data]="music" (click)="getMusicInfo(music.id)"></app-search-music-card>
     </div>
   </div>
   <div style="text-align:center" *ngIf="musics.length>itemsPage">

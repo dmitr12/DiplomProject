@@ -7,6 +7,7 @@ import {Music} from "../../models/musics/music";
 import {finalize} from "rxjs/operators";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MusicInfo} from "../../models/musics/musicInfo";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-playlist',
@@ -30,6 +31,7 @@ export class PlaylistComponent implements OnInit {
     public audioService: AudioService,
     private musicService: MusicService,
     private matSnackBar: MatSnackBar,
+    private router: Router,
     private dialog: MatDialog
   ) {
   }
@@ -45,6 +47,9 @@ export class PlaylistComponent implements OnInit {
           this.lastIndex = res[res.length - 1].id;
         }
       }, error => {
+        if(error.status == 401){
+          this.router.navigate(['auth']);
+        }
         if (error.status != 0) {
           this.matSnackBar.open(`При получении музыки возникла ошибка, статусный код ${error.status}`, '', {
             duration: 3000,
@@ -66,6 +71,9 @@ export class PlaylistComponent implements OnInit {
           this.loaded = false;
           this.musics = this.musics.concat(res);
         }, error => {
+          if(error.status == 401){
+            this.router.navigate(['auth']);
+          }
           if (error.status != 0) {
             this.matSnackBar.open(`При получении музыки возникла ошибка, статусный код ${error.status}`, '', {
               duration: 3000,

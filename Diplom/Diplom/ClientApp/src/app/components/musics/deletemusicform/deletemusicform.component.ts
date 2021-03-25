@@ -5,6 +5,7 @@ import {finalize} from "rxjs/operators";
 import {Music} from "../../../models/musics/music";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {LoaderService} from "../../../services/loader/loader.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-deletemusicform',
@@ -21,6 +22,7 @@ export class DeletemusicformComponent implements OnInit {
     private dialogSource: MatDialogRef<DeletemusicformComponent>,
     private musicService: MusicService,
     public loaderService: LoaderService,
+    private router: Router,
     private matSnackBar: MatSnackBar
   ) {
     dialogSource.disableClose = true;
@@ -36,6 +38,9 @@ export class DeletemusicformComponent implements OnInit {
         this.matSnackBar.open(`Запись успешно удалена`, '', {duration: 3000, panelClass: 'custom-snack-bar-success'});
         this.dialogSource.close();
       }, error => {
+        if(error.status == 401){
+          this.router.navigate(['auth']);
+        }
         if (error.status != 0) {
           this.matSnackBar.open(`При удалении музыки возникла ошибка, статусный код ${error.status}`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'
           });

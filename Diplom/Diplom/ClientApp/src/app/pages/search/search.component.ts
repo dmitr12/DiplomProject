@@ -5,6 +5,7 @@ import {finalize} from "rxjs/operators";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {FilterMusicModel} from "../../models/musics/filterMusicModel";
 import {MusicInfo} from "../../models/musics/musicInfo";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-search',
@@ -23,6 +24,7 @@ export class SearchComponent implements OnInit {
 
   constructor(
     private musicService: MusicService,
+    private router: Router,
     private matSnackBar: MatSnackBar
   ) { }
 
@@ -46,6 +48,9 @@ export class SearchComponent implements OnInit {
     this.musicService.getFilteredMusicList(event).pipe(finalize(()=>this.loadedSearch = true)).subscribe((res: MusicInfo[])=>{
       this.musics = res;
     }, error => {
+      if(error.status == 401){
+        this.router.navigate(['auth']);
+      }
       if (error.status != 0) {
         this.matSnackBar.open(`При поиске музыки возникла ошибка, статусный код ${error.status}`, '', {
           duration: 3000,
@@ -55,5 +60,9 @@ export class SearchComponent implements OnInit {
         this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
       }
     })
+  }
+
+  getMusicInfo(id: number) {
+    this.router.navigate(['musicinfo', `${id}`])
   }
 }

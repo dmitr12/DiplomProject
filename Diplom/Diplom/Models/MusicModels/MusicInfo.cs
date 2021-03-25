@@ -14,8 +14,10 @@ namespace Diplom.Models.MusicModels
         public string MusicImageName { get; set; }
         public string ImageUrl { get; set; }
         public int GenreId { get; set; }
+        public string GenreName { get; set; }
         public int UserId { get; set; }
         public string UserLogin { get; set; }
-        public int[] IdOfUsersLike { get; set; }
+        public double Rating { get; set; }
+        public DateTime DateOfPublication { get; set; }
     }
 }
