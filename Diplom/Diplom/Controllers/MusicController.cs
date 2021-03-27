@@ -16,6 +16,7 @@ using Dropbox.Api;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
@@ -26,12 +27,15 @@ namespace Diplom.Controllers
     public class MusicController : ControllerBase
     {
         private readonly MusicManager musicManager;
+        private readonly IHubContext<SignalHub> hubContext;
         private readonly int CountMusics = 10;
+        private readonly string RatedMusic = "RatedMusic";
         private int UserId => int.Parse(User.Claims.Single(cl => cl.Type == ClaimTypes.NameIdentifier).Value);
 
-        public MusicController(MusicManager musicManager)
+        public MusicController(MusicManager musicManager, IHubContext<SignalHub> hubContext)
         {
             this.musicManager = musicManager;
+            this.hubContext = hubContext;
         }
 
         [HttpGet("FilterMusic")]
@@ -97,11 +101,14 @@ namespace Diplom.Controllers
         }
 
         [HttpPost("RateMusic")]
-        public IActionResult RateMusic(MusicStarRating model)
+        public async Task<IActionResult> RateMusic(MusicStarRating model)
         {
-            if (ModelState.IsValid)
-                return musicManager.RateMusic(model).Result;
-            return BadRequest();
+            var ratedResult = musicManager.RateMusic(model).Result;
+            if (ratedResult.RatedMusic)
+            {
+                await hubContext.Clients.All.SendAsync(RatedMusic, ratedResult);
+            }
+            return StatusCode(200, ratedResult);
         }
 
         //[HttpGet]

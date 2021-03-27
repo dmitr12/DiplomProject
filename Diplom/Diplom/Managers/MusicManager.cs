@@ -68,7 +68,8 @@ namespace Diplom.Managers
                 GenreId = m.MusicGenreId,
                 UserId = u.UserId,
                 UserLogin = u.Login,
-                DateOfPublication = m.DateOfPublication
+                DateOfPublication = m.DateOfPublication,
+                CountRatings = rating.Count
             }).FirstOrDefaultAsync();
             musicInfo.GenreName = db.MusicGenres.Find(musicInfo.GenreId).GenreName;
             if (sumRating == 0)
@@ -217,8 +218,9 @@ namespace Diplom.Managers
             return new NotFoundResult();
         }
 
-        public async Task<IActionResult> RateMusic(MusicStarRating model)
+        public async Task<RatedMusicResult> RateMusic(MusicStarRating model)
         {
+            RatedMusicResult result = new RatedMusicResult();
             try
             {
                 var entity = await db.MusicStarRatings.FindAsync(model.MusicId, model.UserId);
@@ -227,12 +229,19 @@ namespace Diplom.Managers
                 else
                     entity.Rating = model.Rating;
                 await db.SaveChangesAsync();
-                return new OkResult();
+                double sumRating = 0;
+                var rating = await db.MusicStarRatings.Where(r => r.MusicId == model.MusicId).ToListAsync();
+                foreach (var r in rating)
+                    sumRating += r.Rating;
+                result.Rating = Math.Round(sumRating / rating.Count, 1);
+                result.CountRatings = rating.Count;
+                result.RatedMusic = true;
             }
             catch
             {
-                return new StatusCodeResult(500);
+                result.RatedMusic = false;
             }
+            return result;
         }
     }
 }

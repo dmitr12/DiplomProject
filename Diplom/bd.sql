@@ -60,3 +60,12 @@ foreign key (MusicId) references Musics(MusicId) on delete cascade,
 foreign key (UserId) references Users(UserId) on delete cascade,
 )
 go
+create table MusicComments(
+IdComment uniqueidentifier primary key default newid(),
+Comment varchar(max) not null,
+CommentDate datetime not null,
+UserId int references Users(UserId) not null,
+MusicId int references Musics(MusicId) not null,
+ParentIdComment uniqueidentifier
+)
+go

@@ -18,6 +18,7 @@ namespace Diplom.Models.MusicModels
         public int UserId { get; set; }
         public string UserLogin { get; set; }
         public double Rating { get; set; }
+        public int CountRatings { get; set; }
         public DateTime DateOfPublication { get; set; }
     }
 }

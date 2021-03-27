@@ -1,4 +1,5 @@
-﻿using Diplom.Models.GenreModels;
+﻿using Diplom.Models.CommentModels;
+using Diplom.Models.GenreModels;
 using Diplom.Models.MusicModels;
 using Diplom.Models.RatingModels;
 using Diplom.Models.RoleModels;
@@ -18,12 +19,14 @@ namespace Diplom.Models
         public DbSet<Music> Musics { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<MusicStarRating> MusicStarRatings { get; set; }
+        public DbSet<MusicComment> MusicComments { get; set; }
 
         public DataBaseContext(DbContextOptions<DataBaseContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<MusicStarRating>().HasKey(um => new { um.MusicId, um.UserId });
+            modelBuilder.Entity<MusicStarRating>().HasKey(r => new { r.MusicId, r.UserId });
+            modelBuilder.Entity<MusicComment>().HasKey(c => c.IdComment);
         }
     }
 }

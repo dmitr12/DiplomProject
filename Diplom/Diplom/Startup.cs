@@ -61,6 +61,7 @@ namespace Diplom
                     ValidateLifetime = true
                 };
             });
+            services.AddSignalR();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -87,6 +88,11 @@ namespace Diplom
 
             app.UseCors();
             app.UseAuthorization();
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<SignalHub>("/hub");
+            });
 
             app.UseEndpoints(endpoints =>
             {
