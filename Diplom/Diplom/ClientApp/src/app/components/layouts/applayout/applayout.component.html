@@ -1,4 +1,4 @@
-<div class="page-container">
+<div class="page-container" *ngIf="pageLoaded">
   <header>
     <div style="display: flex; align-items: center">
       <button mat-button class="menu-button" (click)="sidenav.toggle()">
@@ -9,11 +9,11 @@
       </a>
     </div>
     <div>
-      <button mat-button class="menu-button" [matMenuTriggerFor]="menu" class="align-content-end pr-0">
-        <span style="margin-right: 10px">{{authService.getCurrentUserName()}}</span>
-        <mat-icon>person</mat-icon>
+      <mat-card class="profile" [matMenuTriggerFor]="menu">
+        <span style="margin-right: 10px">{{userInfo.login}}</span>
+        <img mat-card-avatar src="{{userInfo.avatar}}">
         <mat-icon>arrow_drop_down</mat-icon>
-      </button>
+      </mat-card>
       <mat-menu #menu="matMenu">
         <button mat-menu-item (click)="logout()">
           <mat-icon>logout</mat-icon>

@@ -67,57 +67,57 @@ export function tokenGetter() {
     FavouritemusicsComponent,
     MusicinfoComponent,
   ],
-    imports: [
-        BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
-        HttpClientModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatProgressBarModule,
-        MatSnackBarModule,
-        JwtModule.forRoot({
-            config: {
-                tokenGetter
-            }
-        }),
-        RouterModule.forRoot([
-            {
-                path: 'auth', component: AuthlayoutComponent, children: [
-                    {path: '', redirectTo: 'login', pathMatch: 'full'},
-                    {path: 'login', component: LoginComponent},
-                    {path: 'register', component: RegisterComponent}
-                ]
-            },
-            {
-                path: '', component: ApplayoutComponent, canActivate: [AuthGuard], children: [
-                    {path: '', redirectTo: 'mymusic', pathMatch: 'full'},
-                    {
-                        path: 'mymusic', component: MymusicComponent, children: [
-                            {path: '', redirectTo: 'playlist', pathMatch: 'full'},
-                            {path: 'playlist', component: PlaylistComponent},
-                            {path: 'favorite', component: FavouritemusicsComponent}
-                        ]
-                    },
-                    {path: 'search', component: SearchComponent},
-                    {path: 'musicinfo/:id', component: MusicinfoComponent}
-                ]
-            }
-        ]),
-        BrowserAnimationsModule,
-        MatProgressSpinnerModule,
-        MatIconModule,
-        MatSidenavModule,
-        MatButtonModule,
-        MatListModule,
-        MatMenuModule,
-        MatSelectModule,
-        MatToolbarModule,
-        MatDialogModule,
-        InfiniteScrollModule,
-        MatInputModule,
-        MatCardModule,
-        NgxPaginationModule,
-        RatingModule
-    ],
+  imports: [
+    BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatProgressBarModule,
+    MatSnackBarModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter
+      }
+    }),
+    RouterModule.forRoot([
+      {
+        path: 'auth', component: AuthlayoutComponent, children: [
+          {path: '', redirectTo: 'login', pathMatch: 'full'},
+          {path: 'login', component: LoginComponent},
+          {path: 'register', component: RegisterComponent}
+        ]
+      },
+      {
+        path: '', component: ApplayoutComponent, canActivate: [AuthGuard], children: [
+          {path: '', redirectTo: 'mymusic', pathMatch: 'full'},
+          {
+            path: 'mymusic', component: MymusicComponent, children: [
+              {path: '', redirectTo: 'playlist', pathMatch: 'full'},
+              {path: 'playlist', component: PlaylistComponent},
+              {path: 'favorite', component: FavouritemusicsComponent}
+            ]
+          },
+          {path: 'search', component: SearchComponent},
+          {path: 'musicinfo/:id', component: MusicinfoComponent}
+        ]
+      }
+    ]),
+    BrowserAnimationsModule,
+    MatProgressSpinnerModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatButtonModule,
+    MatListModule,
+    MatMenuModule,
+    MatSelectModule,
+    MatToolbarModule,
+    MatDialogModule,
+    InfiniteScrollModule,
+    MatInputModule,
+    MatCardModule,
+    NgxPaginationModule,
+    RatingModule,
+  ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true}
   ],

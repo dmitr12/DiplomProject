@@ -17,10 +17,12 @@ namespace Diplom.Managers
 
         private DataBaseContext db;
         private readonly IGeneratorToken generatorToken;
-        public UserManager(DataBaseContext db, IGeneratorToken generatorToken)
+        private readonly IOptions<DropBoxOptions> options;
+        public UserManager(DataBaseContext db, IGeneratorToken generatorToken, IOptions<DropBoxOptions> options)
         {
             this.db = db;
             this.generatorToken = generatorToken;
+            this.options = options;
         }
         public async Task<string> GetToken(AuthModel model)
         {
@@ -47,7 +49,8 @@ namespace Diplom.Managers
                 Login = model.Login,
                 Password = HashClass.GetHash(model.Password),
                 RoleId = 1,
-                IsMailConfirmed = false
+                IsMailConfirmed = false,
+                Avatar = options.Value.DefaultUserImageLink
             };
             try
             {
@@ -59,7 +62,23 @@ namespace Diplom.Managers
             {
                 return new BadRequestObjectResult(ex.InnerException.Message);
             }
+        }
 
+        public async Task<UserInfo> GetUserInfo(int userId)
+        {
+            var userInfo = await db.Users.Where(u=>u.UserId == userId).Select(u=> new UserInfo { 
+                UserId = u.UserId,
+                RoleId = u.RoleId,
+                Login = u.Login,
+                Name = u.Name,
+                IsMailConfirmed = u.IsMailConfirmed,
+                Surname = u.Surname,
+                Avatar = u.Avatar,
+                City = u.City,
+                Country = u.Country,
+                Mail = u.Mail
+            }).FirstOrDefaultAsync();
+            return userInfo;
         }
     }
 }

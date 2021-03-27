@@ -91,4 +91,19 @@
   padding: 85px 30px 0 30px;
 }
 
+.profile{
+  padding: 0;
+  margin: 0;
+  background-color: #9414d9;
+  display: flex;
+  align-items: center;
+  color: white;
+  transition: all .3s !important;
+  box-shadow: none !important;
+  cursor: default;
+}
+
+.profile:hover{
+  background-color: #711bb3;
+}
 

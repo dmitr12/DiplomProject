@@ -9,6 +9,7 @@ import {tap} from "rxjs/operators";
 import {Token, TokenMessage} from "../../models/tokens/token";
 import {UserRegistration} from "../../models/users/userRegistration";
 import jwt_decode from 'jwt-decode';
+import {UserInfo} from "../../models/users/userInfo";
 
 export const ACCESS_TOKEN="access_token";
 
@@ -54,5 +55,9 @@ export class AuthService {
 
   getCurrentUserRole() {
     return jwt_decode<Token>(localStorage.getItem(ACCESS_TOKEN)!).role;
+  }
+
+  getUserInfo(): Observable<UserInfo>{
+    return this.httpClient.get<UserInfo>(`${environment.url}api/user/userinfo`)
   }
 }

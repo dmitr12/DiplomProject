@@ -18,7 +18,7 @@
       </div>
       <div class="mt-auto pl-3 d-flex" style="align-items: center">
         <div>Рейтинг:</div>
-        <star-rating class="pl-1" [value]="musicInfo.rating" [totalstars]="5" disabled checkedcolor="red" uncheckedcolor="black" [readonly]="false" size="24px"
+        <star-rating class="pl-1" [value]="musicInfo.rating" [totalstars]="5" disabled checkedcolor="red" uncheckedcolor="black" [readonly]="false" size="20px"
                      (rate)="onRate($event)"></star-rating>
         <div>{{musicInfo.rating}}</div>
       </div>
@@ -35,7 +35,7 @@
     </div>
 
     <div>
-      <img src="{{musicInfo.imageUrl}}" class="img-title">
+      <img src="{{musicInfo.imageUrl}}" class="img-title pr-2">
     </div>
 <!--    <div class="ml-2">-->
 <!--      <div>Название: {{musicInfo.name}}</div>-->

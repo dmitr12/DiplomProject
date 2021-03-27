@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Diplom.Managers;
 using Diplom.Models.UserModels;
@@ -15,6 +16,7 @@ namespace Diplom.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserManager userManager;
+        private int UserId => int.Parse(User.Claims.Single(cl => cl.Type == ClaimTypes.NameIdentifier).Value);
 
         public UserController(UserManager userManager)
         {
@@ -41,6 +43,13 @@ namespace Diplom.Controllers
                 return userManager.Register(model).Result;
             }
             return BadRequest();
+        }
+
+        [HttpGet("UserInfo")]
+        [Authorize]
+        public UserInfo GetUserInfo()
+        {
+            return userManager.GetUserInfo(UserId).Result;
         }
     }
 }
