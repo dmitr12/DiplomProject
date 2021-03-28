@@ -43,6 +43,7 @@ import { FavouritemusicsComponent } from './pages/favouritemusics/favouritemusic
 import { MusicinfoComponent } from './pages/musicinfo/musicinfo.component';
 import {RatingModule} from "ng-starrating";
 import {SignalrService} from "./services/signalr/signalr.service";
+import { CommentCardComponent } from './shared/comment-card/comment-card.component';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN);
@@ -67,6 +68,7 @@ export function tokenGetter() {
     MymusicComponent,
     FavouritemusicsComponent,
     MusicinfoComponent,
+    CommentCardComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),

@@ -3,7 +3,6 @@ import {HttpClient, HttpParams, HttpResponse} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
 import {Observable} from "rxjs";
 import {MusicGenreInfo} from "../../models/musics/musicGenreInfo";
-import {Music} from "../../models/musics/music";
 import {FilterMusicModel} from "../../models/musics/filterMusicModel";
 import {MusicInfo} from "../../models/musics/musicInfo";
 
@@ -15,7 +14,6 @@ export class MusicService {
   constructor(
     private http: HttpClient
   ) {
-    this.searchEmitter = new EventEmitter<number>();
   }
 
   getFilteredMusicList(filter: FilterMusicModel): Observable<MusicInfo[]> {

@@ -214,7 +214,7 @@ namespace Diplom.Managers
                     await db.SaveChangesAsync();
                     return new OkResult();
                 }
-                catch
+                catch (Exception ex)
                 {
                     return new StatusCodeResult(500);
                 }

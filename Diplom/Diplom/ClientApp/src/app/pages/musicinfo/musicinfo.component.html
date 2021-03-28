@@ -30,8 +30,6 @@
         </div>
       </div>
     </div>
-
-
     <div class="ml-auto pr-3 pt-3">
       <div>
         {{musicInfo.dateOfPublication.toLocaleDateString()}}
@@ -40,9 +38,9 @@
         <button mat-flat-button class="ml-auto play-button">#{{musicInfo.genreName}}</button>
       </div>
     </div>
-
-    <div>
-      <img src="{{musicInfo.imageUrl}}" class="img-title pr-2">
+    <div class="pr-2">
+      <img src="{{musicInfo.imageUrl}}" class="img-title">
     </div>
   </div>
+  <app-comment-card></app-comment-card>
 </div>
