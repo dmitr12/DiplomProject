@@ -2,7 +2,7 @@
   <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
 </div>
 <div *ngIf="loadedPage">
-  <app-searchbar [musicGenreList]="genres" (onSearch)="search($event)"></app-searchbar>
+  <app-searchbar [genreId]="genreId" [musicGenreList]="genres" (onSearch)="search($event)"></app-searchbar>
   <div class="mat-spinner-container" *ngIf="!loadedSearch">
     <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
   </div>

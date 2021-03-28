@@ -13,15 +13,16 @@ export class SearchbarComponent implements OnInit {
 
   @ViewChild("inputSearch", {static: false})
   inputSearch: ElementRef;
+  @ViewChild("searchBtn", {static: false})
+  searchBtn: ElementRef;
   @Input() musicGenreList: MusicGenreInfo[] = [];
   @Output() onSearch = new EventEmitter<FilterMusicModel>();
-
-  genreSelectEmpty = true;
-  genreId = 0;
+  @Input() genreId: number;
 
   constructor(
     private musicService: MusicService
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
   }
@@ -31,10 +32,6 @@ export class SearchbarComponent implements OnInit {
   }
 
   genreChanged(event: MatSelectChange) {
-    this.inputSearch.nativeElement.value = ''
-    if(event.value){
-      this.genreId = event.value;
-      this.genreSelectEmpty = false;
-    }
+    this.genreId = event.value;
   }
 }

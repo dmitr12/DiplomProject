@@ -3,7 +3,6 @@
 </div>
 <div *ngIf="loadedPage">
   <div class="row" style="display: flex;">
-
     <div class="d-flex flex-column">
       <div class="pl-3 pt-3 row">
         <div>
@@ -17,14 +16,17 @@
         </div>
       </div>
       <div class="mt-auto pl-3">
+        <div class="d-flex" style="align-items: center">
+          <div>Оценка пользователей: {{musicInfo.rating}}</div>
+          <star-rating [value]="1" [readonly]="true" [totalstars]="1" checkedcolor="red" size="18px"></star-rating>
+        </div>
         <div>
           <div>Оценили: {{musicInfo.countRatings}}</div>
         </div>
         <div class="d-flex" style="align-items: center">
-          <div>Рейтинг:</div>
-          <star-rating class="pl-1" [value]="musicInfo.rating" [totalstars]="5" disabled checkedcolor="red" uncheckedcolor="black" [readonly]="false" size="20px"
+          <div>Ваша оценка:</div>
+          <star-rating #ratingComponent class="pl-1" [value]=musicInfo.currentUserRating [totalstars]="5" [readonly]="isRateReadOnly" checkedcolor="red" uncheckedcolor="black" size="18px"
                        (rate)="onRate($event)"></star-rating>
-          <div>{{musicInfo.rating}}</div>
         </div>
       </div>
     </div>
@@ -34,7 +36,7 @@
       <div>
         {{musicInfo.dateOfPublication.toLocaleDateString()}}
       </div>
-      <div class="d-flex">
+      <div class="d-flex" (click)="clickGenre(musicInfo.genreId)">
         <button mat-flat-button class="ml-auto play-button">#{{musicInfo.genreName}}</button>
       </div>
     </div>
@@ -42,11 +44,5 @@
     <div>
       <img src="{{musicInfo.imageUrl}}" class="img-title pr-2">
     </div>
-<!--    <div class="ml-2">-->
-<!--      <div>Название: {{musicInfo.name}}</div>-->
-<!--      <div>Автор: {{musicInfo.userLogin}}</div>-->
-<!--      <div>Жанр: {{musicInfo.genreName}}</div>-->
-<!--      <div>Рейтинг: {{musicInfo.rating}}</div>-->
-<!--    </div>-->
   </div>
 </div>

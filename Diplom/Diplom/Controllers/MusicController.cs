@@ -62,7 +62,7 @@ namespace Diplom.Controllers
         [Authorize(Roles = "1")]
         public MusicInfo GetMusic(int musicId)
         {
-            return musicManager.GetMusic(musicId).Result;
+            return musicManager.GetMusic(musicId, UserId).Result;
         }
 
         [HttpGet("ListMusicsByUserId")]
@@ -101,6 +101,7 @@ namespace Diplom.Controllers
         }
 
         [HttpPost("RateMusic")]
+        [Authorize]
         public async Task<IActionResult> RateMusic(MusicStarRating model)
         {
             var ratedResult = musicManager.RateMusic(model).Result;

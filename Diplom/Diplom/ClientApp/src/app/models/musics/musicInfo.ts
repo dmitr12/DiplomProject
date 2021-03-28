@@ -12,4 +12,5 @@ export class MusicInfo {
   rating: number;
   dateOfPublication: Date;
   countRatings: number;
+  currentUserRating: any;
 }

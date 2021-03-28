@@ -51,10 +51,13 @@ namespace Diplom.Managers
             return res;
         }
 
-        public async Task<MusicInfo> GetMusic(int musicId)
+        public async Task<MusicInfo> GetMusic(int musicId, int currentUser)
         {
             double sumRating = 0;
+            int? userRating = null;
             var rating = await db.MusicStarRatings.Where(r => r.MusicId == musicId).ToListAsync();
+            if (rating.Exists(r => r.UserId == currentUser))
+                userRating = rating.Find(r => r.UserId == currentUser).Rating;
             foreach (var entity in rating)
                 sumRating += entity.Rating;
             var musicInfo = await db.Musics.Where(m=>m.MusicId == musicId).Join(db.Users, m => m.UserId, u => u.UserId, (m, u) => new MusicInfo
@@ -69,7 +72,8 @@ namespace Diplom.Managers
                 UserId = u.UserId,
                 UserLogin = u.Login,
                 DateOfPublication = m.DateOfPublication,
-                CountRatings = rating.Count
+                CountRatings = rating.Count,
+                CurrentUserRating = userRating
             }).FirstOrDefaultAsync();
             musicInfo.GenreName = db.MusicGenres.Find(musicInfo.GenreId).GenreName;
             if (sumRating == 0)

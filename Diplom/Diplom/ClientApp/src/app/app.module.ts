@@ -42,6 +42,7 @@ import {MymusicComponent} from "./pages/mymusic/mymusic.component";
 import { FavouritemusicsComponent } from './pages/favouritemusics/favouritemusics.component';
 import { MusicinfoComponent } from './pages/musicinfo/musicinfo.component';
 import {RatingModule} from "ng-starrating";
+import {SignalrService} from "./services/signalr/signalr.service";
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN);
