@@ -1,6 +1,8 @@
 ﻿using Diplom.Models;
 using Diplom.Models.CommentModels;
 using Diplom.Models.MusicModels;
+using Diplom.Utils;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -30,7 +32,32 @@ namespace Diplom.Managers
                 UserId = c.UserId,
                 UserLogin = u.Login,
                 UserAvatar = u.Avatar
-            }).ToListAsync();
+            }).OrderBy(mc => mc.ParentIdComment).ThenByDescending(mc => mc.CommentDate).ToListAsync();
+        }
+
+        public async Task<MusicCommentResult> CommentOn(MusicComment model)
+        {
+            MusicCommentResult result = new MusicCommentResult();
+            try
+            {
+                db.MusicComments.Add(model);
+                db.SaveChanges();
+                var user = await db.Users.FindAsync(model.UserId);
+                result.MusicCommentInfo.IdComment = model.IdComment;
+                result.MusicCommentInfo.Comment = model.Comment;
+                result.MusicCommentInfo.CommentDate = model.CommentDate;
+                result.MusicCommentInfo.MusicId = model.MusicId;
+                result.MusicCommentInfo.ParentIdComment = model.ParentIdComment;
+                result.MusicCommentInfo.UserId = model.UserId;
+                result.MusicCommentInfo.UserLogin = user.Login;
+                result.MusicCommentInfo.UserAvatar = user.Avatar;
+                result.Result = true;
+            }
+            catch
+            {
+                result.Result = false;
+            }
+            return result;
         }
     }
 }

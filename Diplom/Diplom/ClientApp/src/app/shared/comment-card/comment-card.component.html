@@ -1,27 +1,53 @@
-<div>
-  <mat-card style="word-wrap: break-word;">
+<div *ngIf="data !== null">
+  <mat-card class="mb-2" style="word-wrap: break-word;">
     <mat-card-header class="d-flex">
-      <img mat-card-avatar src="https://miro.medium.com/max/1838/1*mk1-6aYaf_Bes1E3Imhc0A.jpeg">
+      <img mat-card-avatar src="{{data.userAvatar}}">
       <mat-card-title>
-        <div>Hi</div>
+        <div>{{data.userLogin}}</div>
       </mat-card-title>
       <mat-card-subtitle>
         <div>
-         Sound is cool!!)
+         {{data.comment}}
         </div>
       </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content class="d-flex">
       <div class="d-flex">
-        <div>Дата</div>
+        <div>{{getDateTimeString(data.commentDate)}}</div>
         <div>
           <button>Ответить</button>
         </div>
-        <button>ShowChild</button>
+        <button (click)="showChildren()">ShowChild</button>
       </div>
       <div class="ml-auto">
         <button>Удалить</button>
       </div>
     </mat-card-content>
   </mat-card>
+  <div *ngFor="let child of children" [hidden]="hiddenChild" style="margin-left: 25px">
+    <mat-card class="mb-2" style="word-wrap: break-word;">
+      <mat-card-header class="d-flex">
+        <img mat-card-avatar src="{{child.userAvatar}}">
+        <mat-card-title>
+          <div>{{child.userLogin}}</div>
+        </mat-card-title>
+        <mat-card-subtitle>
+          <div>
+            {{child.comment}}
+          </div>
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content class="d-flex">
+        <div class="d-flex">
+          <div>{{getDateTimeString(child.commentDate)}}</div>
+          <div>
+            <button>Ответить</button>
+          </div>
+        </div>
+        <div class="ml-auto">
+          <button>Удалить</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </div>

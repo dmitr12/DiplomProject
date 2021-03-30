@@ -9,7 +9,7 @@ namespace Diplom.Models.CommentModels
 {
     public class MusicComment
     {
-        public Guid IdComment { get; set; }
+        public Guid? IdComment { get; set; }
         public string Comment { get; set; }
         public DateTime CommentDate { get; set; }
         public int UserId { get; set; }

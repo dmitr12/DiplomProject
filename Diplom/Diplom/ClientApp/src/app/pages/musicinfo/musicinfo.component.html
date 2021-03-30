@@ -1,7 +1,7 @@
-<div class="mat-spinner-container" *ngIf="!loadedPage">
+<div class="mat-spinner-container" *ngIf="!loadedComments || !loadedMusicInfo">
   <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
 </div>
-<div *ngIf="loadedPage">
+<div *ngIf="loadedComments && loadedMusicInfo">
   <div class="row" style="display: flex;">
     <div class="d-flex flex-column">
       <div class="pl-3 pt-3 row">
@@ -42,5 +42,13 @@
       <img src="{{musicInfo.imageUrl}}" class="img-title">
     </div>
   </div>
-  <app-comment-card></app-comment-card>
+  <button (click)="openCommentArea()">Прокоментировать</button>
+  <div *ngIf="isCommentAreaOpen">
+    <textarea [(ngModel)]="commentText" style="width: 100%"></textarea>
+    <br>
+    <button (click)="comment()">Оставить комментарий</button>
+  </div>
+  <div *ngFor="let firstComment of firstComments">
+    <app-comment-card [data]="firstComment" [children]="getChildrenComments(firstComment.idComment)"></app-comment-card>
+  </div>
 </div>
