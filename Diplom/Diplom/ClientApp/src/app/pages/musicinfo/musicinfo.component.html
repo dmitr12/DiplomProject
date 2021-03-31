@@ -42,13 +42,25 @@
       <img src="{{musicInfo.imageUrl}}" class="img-title">
     </div>
   </div>
-  <button (click)="openCommentArea()">Прокоментировать</button>
+  <div class="row">
+    <div style="margin-left: 15px" (click)="openCommentArea()">
+      <a mat-menu-item>
+        <mat-icon style="margin-right: 0">add_comment</mat-icon>
+      </a>
+    </div>
+    <div (click)="showComments()">
+      <a mat-menu-item>
+        <mat-icon>mode_comment</mat-icon>
+        <span>{{firstComments.length}}</span>
+      </a>
+    </div>
+  </div>
   <div *ngIf="isCommentAreaOpen">
     <textarea [(ngModel)]="commentText" style="width: 100%"></textarea>
     <br>
     <button (click)="comment()">Оставить комментарий</button>
   </div>
-  <div *ngFor="let firstComment of firstComments">
-    <app-comment-card [data]="firstComment" [children]="getChildrenComments(firstComment.idComment)"></app-comment-card>
+  <div [hidden]="hiddenComments" *ngFor="let firstComment of firstComments">
+    <app-comment-card [data]="firstComment" [musicId]="this.musicId" [children]="getChildrenComments(firstComment.idComment)"></app-comment-card>
   </div>
 </div>

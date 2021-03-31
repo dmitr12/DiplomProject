@@ -38,6 +38,7 @@ export class MusicinfoComponent implements OnInit {
   isCommentAreaOpen = false;
   commentText = '';
   currentUserId = -1;
+  hiddenComments = true;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -73,6 +74,11 @@ export class MusicinfoComponent implements OnInit {
       this.musicCommentsInfo = res;
       this.firstComments = this.musicCommentsInfo.filter(c => c.parentIdComment === null);
       this.secondComments = this.musicCommentsInfo.filter(c => !this.firstComments.includes(c));
+      this.signarService.commentMusicSignal.subscribe((signal: MusicCommentResult) => {
+        if(signal.result && signal.musicCommentInfo.parentIdComment === null){
+          this.firstComments.unshift(signal.musicCommentInfo);
+        }
+      });
     }, error => {
       if (error.status == 401) {
         this.router.navigate(['auth']);
@@ -91,7 +97,7 @@ export class MusicinfoComponent implements OnInit {
         this.musicInfo.rating = signal.rating;
         this.musicInfo.countRatings = signal.countRatings;
       }
-    })
+    });
   }
 
   play() {
@@ -134,9 +140,10 @@ export class MusicinfoComponent implements OnInit {
 
   comment() {
     if (this.commentText) {
-      this.commentsService.musicCommentOn(new MusicComment(this.commentText, (moment(new Date())).format('yyyy-MM-DDTHH:mm:ss'),
+      this.commentsService.musicCommentOn(new MusicComment(this.commentText, null,
         this.currentUserId, Number(this.musicId), null)).subscribe((res: MusicCommentResult) => {
-          alert("Коммент добавлен");
+          this.commentText = '';
+          this.isCommentAreaOpen = false;
       }, error => {
         if (error.status == 401) {
           this.router.navigate(['auth']);
@@ -154,5 +161,9 @@ export class MusicinfoComponent implements OnInit {
 
   openCommentArea() {
     this.isCommentAreaOpen = !this.isCommentAreaOpen;
+  }
+
+  showComments() {
+    this.hiddenComments = !this.hiddenComments;
   }
 }

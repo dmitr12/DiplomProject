@@ -1,53 +1,43 @@
 <div *ngIf="data !== null">
-  <mat-card class="mb-2" style="word-wrap: break-word;">
-    <mat-card-header class="d-flex">
+  <mat-card class="mb-2">
+    <mat-card-header class="pb-3">
       <img mat-card-avatar src="{{data.userAvatar}}">
       <mat-card-title>
         <div>{{data.userLogin}}</div>
       </mat-card-title>
       <mat-card-subtitle>
-        <div>
-         {{data.comment}}
-        </div>
       </mat-card-subtitle>
     </mat-card-header>
-    <mat-card-content class="d-flex">
+    <div style="font-size: 13px">{{data.comment}}</div>
+    <mat-card-content class="d-flex" style="align-items: center">
       <div class="d-flex">
-        <div>{{getDateTimeString(data.commentDate)}}</div>
+        <div class="d-flex" style="align-items: center">{{getDateTimeString(data.commentDate)}}</div>
         <div>
-          <button>Ответить</button>
+          <a mat-menu-item (click)="showAnswerBox()">
+            <mat-icon style="margin-right: 0">add_comment</mat-icon>
+          </a>
         </div>
-        <button (click)="showChildren()">ShowChild</button>
+        <div (click)="showChildren()">
+          <a mat-menu-item>
+            <mat-icon>mode_comment</mat-icon>
+            <span>{{childrenArr.length}}</span>
+          </a>
+        </div>
       </div>
-      <div class="ml-auto">
-        <button>Удалить</button>
+      <div class="ml-auto" *ngIf="currentUser == data.userId">
+        <a mat-menu-item>
+          <mat-icon style="margin-right: 0">delete</mat-icon>
+        </a>
       </div>
     </mat-card-content>
   </mat-card>
-  <div *ngFor="let child of children" [hidden]="hiddenChild" style="margin-left: 25px">
-    <mat-card class="mb-2" style="word-wrap: break-word;">
-      <mat-card-header class="d-flex">
-        <img mat-card-avatar src="{{child.userAvatar}}">
-        <mat-card-title>
-          <div>{{child.userLogin}}</div>
-        </mat-card-title>
-        <mat-card-subtitle>
-          <div>
-            {{child.comment}}
-          </div>
-        </mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content class="d-flex">
-        <div class="d-flex">
-          <div>{{getDateTimeString(child.commentDate)}}</div>
-          <div>
-            <button>Ответить</button>
-          </div>
-        </div>
-        <div class="ml-auto">
-          <button>Удалить</button>
-        </div>
-      </mat-card-content>
-    </mat-card>
+  <div *ngIf="isCommentAreaOpen">
+    <textarea [(ngModel)]="commentText" style="width: 100%"></textarea>
+    <br>
+    <button (click)="comment()">Оставить комментарий</button>
+  </div>
+  <div *ngFor="let child of childrenArr" [hidden]="hiddenChild" style="margin-left: 25px">
+    <app-comment-card-child [data]="child"></app-comment-card-child>
   </div>
 </div>
+<div (click)="check()">check</div>

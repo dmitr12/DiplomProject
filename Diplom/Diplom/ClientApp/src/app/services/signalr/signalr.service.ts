@@ -1,9 +1,10 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import {Injectable, EventEmitter} from '@angular/core';
 import * as signalr from '@aspnet/signalr';
 import {environment} from "../../../environments/environment";
 import {RatedMusicResult} from "../../models/musics/ratedMusicResult";
 import {MusicStarRating} from "../../models/musics/musicStarRating";
 import {HttpClient} from "@angular/common/http";
+import {MusicCommentResult} from "../../models/comments/musicCommentResult";
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,10 @@ import {HttpClient} from "@angular/common/http";
 export class SignalrService {
 
   ratedMusicSignal = new EventEmitter<RatedMusicResult>();
+  commentMusicSignal = new EventEmitter<MusicCommentResult>();
   private hubConnection: signalr.HubConnection;
   private readonly ratedMusic = 'RatedMusic';
+  private readonly commentOnMusic = 'CommentOnMusic';
 
   constructor(
     private http: HttpClient
@@ -21,33 +24,36 @@ export class SignalrService {
     this.startConnection();
   }
 
-  rateMusic(model: MusicStarRating){
+  rateMusic(model: MusicStarRating) {
     return this.http.post(`${environment.url}api/music/RateMusic`, model);
   }
 
-  private buildConnection(){
+  private buildConnection() {
     this.hubConnection = new signalr.HubConnectionBuilder()
       .withUrl(`${environment.url}${environment.hub}`).build();
   }
 
-  private startConnection(){
+  private startConnection() {
     this.hubConnection
       .start()
-      .then(()=>{
+      .then(() => {
         console.log('Connection to hub started ...');
         this.registerSignalEvents();
       })
       .catch(err => {
-        console.log("Error while starting connection: "+err);
-        setTimeout(()=>{
+        console.log("Error while starting connection: " + err);
+        setTimeout(() => {
           this.startConnection();
         }, 3000);
       })
   }
 
-  private registerSignalEvents(){
-    this.hubConnection.on(this.ratedMusic, (data: RatedMusicResult)=>{
+  private registerSignalEvents() {
+    this.hubConnection.on(this.ratedMusic, (data: RatedMusicResult) => {
       this.ratedMusicSignal.emit(data);
-    })
+    });
+    this.hubConnection.on(this.commentOnMusic, (data: MusicCommentResult) => {
+      this.commentMusicSignal.emit(data);
+    });
   }
 }

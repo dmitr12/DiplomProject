@@ -8,6 +8,6 @@ namespace Diplom.Models.CommentModels
     public class MusicCommentResult
     {
         public bool Result { get; set; }
-        public MusicCommentInfo MusicCommentInfo { get; set; }
+        public MusicCommentInfo MusicCommentInfo { get; set; } = new MusicCommentInfo();
     }
 }

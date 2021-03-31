@@ -7,4 +7,14 @@
 .img-title{
   max-width: 400px;
   max-height: 300px;
+  min-height: 300px;
+}
+
+a.mat-menu-item{
+  color: #9414d9;
+}
+
+a.mat-menu-item mat-icon{
+  margin-right: 8px;
+  color: #9414d9;
 }

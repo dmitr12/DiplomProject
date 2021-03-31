@@ -20,7 +20,6 @@ export class CommentsService {
   }
 
   musicCommentOn(musicComment: MusicComment){
-    console.log(musicComment)
     return this.http.post(`${environment.url}api/Comment/CommnetOn`, musicComment);
   }
 }

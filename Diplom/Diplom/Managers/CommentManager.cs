@@ -40,6 +40,7 @@ namespace Diplom.Managers
             MusicCommentResult result = new MusicCommentResult();
             try
             {
+                model.CommentDate = DateTime.Now;
                 db.MusicComments.Add(model);
                 db.SaveChanges();
                 var user = await db.Users.FindAsync(model.UserId);
