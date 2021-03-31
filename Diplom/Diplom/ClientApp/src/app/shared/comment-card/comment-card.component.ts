@@ -3,7 +3,7 @@ import {MusicCommentInfo} from "../../models/comments/musicCommentInfo";
 import * as moment from 'moment';
 import {AuthService} from "../../services/auth/auth.service";
 import {MusicComment} from "../../models/comments/musicComment";
-import {MusicCommentResult} from "../../models/comments/musicCommentResult";
+import {CommentChangedType, MusicCommentResult} from "../../models/comments/musicCommentResult";
 import {CommentsService} from "../../services/comments/comments.service";
 import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -40,7 +40,15 @@ export class CommentCardComponent implements OnInit {
     this.childrenArr = this.children;
     this.signalrService.commentMusicSignal.subscribe((signal: MusicCommentResult) => {
       if (signal.result && signal.musicCommentInfo.parentIdComment === this.data.idComment) {
-        this.childrenArr = this.childrenArr.concat(signal.musicCommentInfo);
+        switch (signal.commentChangedType) {
+          case CommentChangedType.added:
+            this.childrenArr = this.childrenArr.concat(signal.musicCommentInfo);
+            break;
+          case CommentChangedType.deleted:
+            const index = this.childrenArr.findIndex(item => item.idComment == signal.musicCommentInfo.idComment)
+            this.childrenArr.splice(index, 1);
+            break;
+        }
       }
     });
   }
@@ -80,5 +88,21 @@ export class CommentCardComponent implements OnInit {
 
   check() {
     console.log(this.childrenArr)
+  }
+
+  deleteComment() {
+    this.commentsService.deleteMusicComment(this.data.idComment).subscribe((res: MusicCommentResult) => {
+    }, error => {
+      if (error.status == 401) {
+        this.router.navigate(['auth']);
+      } else if (error.status != 0) {
+        this.matSnackBar.open(`При удалении комментария возникла ошибка, статусный код ${error.status}`, '', {
+          duration: 3000,
+          panelClass: 'custom-snack-bar-error'
+        });
+      } else {
+        this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
+      }
+    });
   }
 }

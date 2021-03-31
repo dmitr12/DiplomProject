@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Mime;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Diplom.Interfaces;
@@ -32,10 +33,14 @@ namespace Diplom.Controllers
         private readonly string RatedMusic = "RatedMusic";
         private int UserId => int.Parse(User.Claims.Single(cl => cl.Type == ClaimTypes.NameIdentifier).Value);
 
-        public MusicController(MusicManager musicManager, IHubContext<SignalHub> hubContext)
+
+        private DropboxClient dbx;
+
+        public MusicController(MusicManager musicManager, IHubContext<SignalHub> hubContext, IOptions<DropBoxOptions> options)
         {
             this.musicManager = musicManager;
             this.hubContext = hubContext;
+            dbx = new DropboxClient(options.Value.DropBoxToken);
         }
 
         [HttpGet("FilterMusic")]
@@ -112,6 +117,15 @@ namespace Diplom.Controllers
             return StatusCode(200, ratedResult);
         }
 
+        [HttpGet("{musicFileName}")]
+        public async Task<IActionResult> Download(string musicFileName)
+        {
+            var response = await dbx.Files.DownloadAsync($"/{musicFileName}");
+            Response.Headers.Add("Content-Length", response.Response.AsFile.Size.ToString());
+            Response.Headers.Add("Accept-Ranges", "bytes");
+            return new FileStreamResult(await response.GetContentAsStreamAsync(), "audio/mp3");
+        }
+
         //[HttpGet]
         //public async Task<IActionResult> TestGet()
         //{
@@ -120,7 +134,7 @@ namespace Diplom.Controllers
         //    Response.Headers.Add("Accept-Ranges", "bytes");
         //    var list = await dbx.Files.ListFolderAsync("");
         //    Response.Headers.Add("Content-Length", list.Entries.Where(i => i.Name == "TestLogin_18.3.2021 21:30:2_m.mp3").FirstOrDefault().AsFile.Size.ToString());
-        //    return new FileStreamResult(str, "audio/mp3");
+            //return new FileStreamResult(str, "audio/mp3");
         //}
     }
 }

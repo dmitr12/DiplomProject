@@ -14,8 +14,9 @@ import {CommentsService} from "../../services/comments/comments.service";
 import {MusicCommentInfo} from "../../models/comments/musicCommentInfo";
 import {Guid} from "guid-typescript";
 import {MusicComment} from "../../models/comments/musicComment";
-import {MusicCommentResult} from "../../models/comments/musicCommentResult";
+import {CommentChangedType, MusicCommentResult} from "../../models/comments/musicCommentResult";
 import * as moment from 'moment';
+import {AudioService} from "../../services/player/audio.service";
 
 @Component({
   selector: 'app-musicinfo',
@@ -30,7 +31,7 @@ export class MusicinfoComponent implements OnInit {
   musicCommentsInfo: MusicCommentInfo[] = [];
   loadedMusicInfo = false;
   loadedComments = false;
-  private musicId: number;
+  public musicId: number;
   private subscription: Subscription;
   isRateReadOnly = false;
   firstComments: MusicCommentInfo[] = [];
@@ -47,7 +48,8 @@ export class MusicinfoComponent implements OnInit {
     private authService: AuthService,
     private signarService: SignalrService,
     private commentsService: CommentsService,
-    private musicService: MusicService
+    private musicService: MusicService,
+    public audioService: AudioService
   ) {
     this.subscription = activatedRoute.params.subscribe(params => this.musicId = params['id']);
   }
@@ -75,8 +77,16 @@ export class MusicinfoComponent implements OnInit {
       this.firstComments = this.musicCommentsInfo.filter(c => c.parentIdComment === null);
       this.secondComments = this.musicCommentsInfo.filter(c => !this.firstComments.includes(c));
       this.signarService.commentMusicSignal.subscribe((signal: MusicCommentResult) => {
-        if(signal.result && signal.musicCommentInfo.parentIdComment === null){
-          this.firstComments.unshift(signal.musicCommentInfo);
+        if (signal.result && signal.musicCommentInfo.parentIdComment === null) {
+          switch (signal.commentChangedType) {
+            case CommentChangedType.added:
+              this.firstComments.unshift(signal.musicCommentInfo);
+              break;
+            case CommentChangedType.deleted:
+              const index = this.firstComments.findIndex(item => item.idComment == signal.musicCommentInfo.idComment)
+              this.firstComments.splice(index, 1);
+              break;
+          }
         }
       });
     }, error => {
@@ -142,8 +152,8 @@ export class MusicinfoComponent implements OnInit {
     if (this.commentText) {
       this.commentsService.musicCommentOn(new MusicComment(this.commentText, null,
         this.currentUserId, Number(this.musicId), null)).subscribe((res: MusicCommentResult) => {
-          this.commentText = '';
-          this.isCommentAreaOpen = false;
+        this.commentText = '';
+        this.isCommentAreaOpen = false;
       }, error => {
         if (error.status == 401) {
           this.router.navigate(['auth']);
@@ -165,5 +175,9 @@ export class MusicinfoComponent implements OnInit {
 
   showComments() {
     this.hiddenComments = !this.hiddenComments;
+  }
+
+  playMusic() {
+    this.audioService.openFile(this.musicInfo.id, this.musicInfo.musicFileName, this.musicInfo.name)
   }
 }

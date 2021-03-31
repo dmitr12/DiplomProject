@@ -20,14 +20,13 @@ export class AudioService {
   idMusic: number=-1;
   currentAudioFileName = '';
 
-  openFile(idM: number, url: string, name: string) {
+  openFile(idM: number, fileName: string, name: string) {
     this.isVisible = true
     this.duration = '00:00';
-    this.currentAudioFileName = url;
+    this.currentAudioFileName = fileName;
     this.idMusic = idM;
     this.audioName = name;
-    this.audioObj.src = url;
-    // this.audioObj.src = `${environment.url}api/music`
+    this.audioObj.src = `${environment.url}api/music/${fileName}`
     this.audioObj.preload = "auto"
     this.audioObj.load();
     this.play();

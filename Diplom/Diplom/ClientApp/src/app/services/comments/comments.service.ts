@@ -22,4 +22,8 @@ export class CommentsService {
   musicCommentOn(musicComment: MusicComment){
     return this.http.post(`${environment.url}api/Comment/CommnetOn`, musicComment);
   }
+
+  deleteMusicComment(musicCommentId: Guid){
+    return this.http.delete(`${environment.url}api/Comment/DeleteMusicComment/${musicCommentId}`);
+  }
 }

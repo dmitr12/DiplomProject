@@ -37,7 +37,7 @@ namespace Diplom.Managers
 
         public async Task<MusicCommentResult> CommentOn(MusicComment model)
         {
-            MusicCommentResult result = new MusicCommentResult();
+            var result = new MusicCommentResult();
             try
             {
                 model.CommentDate = DateTime.Now;
@@ -53,6 +53,39 @@ namespace Diplom.Managers
                 result.MusicCommentInfo.UserLogin = user.Login;
                 result.MusicCommentInfo.UserAvatar = user.Avatar;
                 result.Result = true;
+                result.CommentChangedType = CommentChangedType.Added;
+            }
+            catch
+            {
+                result.Result = false;
+            }
+            return result;
+        }
+
+        public async Task<MusicCommentResult> DeleteMusicComment(Guid musicCommentId, int userId)
+        {
+            var result = new MusicCommentResult();
+            try
+            {
+                var comment = await db.MusicComments.FindAsync(musicCommentId);
+                db.MusicComments.Remove(comment);
+                if(comment.ParentIdComment == null)
+                {
+                    var subComments = await db.MusicComments.Where(c => c.ParentIdComment == comment.IdComment).ToListAsync();
+                    db.MusicComments.RemoveRange(subComments);
+                }
+                await db.SaveChangesAsync();
+                var user = await db.Users.FindAsync(userId);
+                result.MusicCommentInfo.IdComment = comment.IdComment;
+                result.MusicCommentInfo.Comment = comment.Comment;
+                result.MusicCommentInfo.CommentDate = comment.CommentDate;
+                result.MusicCommentInfo.MusicId = comment.MusicId;
+                result.MusicCommentInfo.ParentIdComment = comment.ParentIdComment;
+                result.MusicCommentInfo.UserId = comment.UserId;
+                result.MusicCommentInfo.UserLogin = user.Login;
+                result.MusicCommentInfo.UserAvatar = user.Avatar;
+                result.Result = true;
+                result.CommentChangedType = CommentChangedType.Deleted;
             }
             catch
             {
