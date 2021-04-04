@@ -62,7 +62,7 @@ foreign key (UserId) references Users(UserId) on delete cascade,
 go
 create table MusicComments(
 IdComment uniqueidentifier primary key default newid(),
-Comment varchar(max) not null,
+Comment nvarchar(max) not null,
 CommentDate datetime not null,
 UserId int references Users(UserId) on delete cascade not null,
 MusicId int references Musics(MusicId) on delete cascade not null,

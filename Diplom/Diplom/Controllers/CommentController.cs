@@ -48,10 +48,23 @@ namespace Diplom.Controllers
             return StatusCode(200, commentOnResult);
         }
 
+        [HttpPut("EditComment")]
+        [Authorize]
+        public async Task<IActionResult> EditMusicComment(MusicComment comment)
+        {
+            var commentOnResult = manager.EditMusicComment(comment).Result;
+            if (commentOnResult.Result)
+            {
+                await hubContext.Clients.All.SendAsync(CommentOnMusic, commentOnResult);
+            }
+            return StatusCode(200, commentOnResult);
+        }
+
         [HttpDelete("DeleteMusicComment/{musicCommentId}")]
+        [Authorize]
         public async Task<IActionResult> DeleteMusicComment(Guid musicCommentId)
         {
-            var commentOnResult = manager.DeleteMusicComment(musicCommentId, UserId).Result;
+            var commentOnResult = manager.DeleteMusicComment(musicCommentId).Result;
             if (commentOnResult.Result)
             {
                 await hubContext.Clients.All.SendAsync(CommentOnMusic, commentOnResult);

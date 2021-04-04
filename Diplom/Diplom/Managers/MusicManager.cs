@@ -200,9 +200,13 @@ namespace Diplom.Managers
             }
         }
 
-        public async Task<IActionResult> DeleteMusic(int musicId, int UserId)
+        public async Task<IActionResult> DeleteMusic(int musicId, int UserId, int RoleId)
         {
-            Music music = await db.Musics.Where(m=>m.MusicId==musicId && m.UserId==UserId).FirstOrDefaultAsync();
+            Music music;
+            if (RoleId == (int)UserRoleEnum.Admin)
+                music = await db.Musics.Where(m => m.MusicId == musicId).FirstOrDefaultAsync();
+            else
+                music = await db.Musics.Where(m => m.MusicId == musicId && m.UserId == UserId).FirstOrDefaultAsync();
             if (music != null)
             {
                 try

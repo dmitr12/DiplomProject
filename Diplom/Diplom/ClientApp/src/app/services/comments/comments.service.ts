@@ -26,4 +26,8 @@ export class CommentsService {
   deleteMusicComment(musicCommentId: Guid){
     return this.http.delete(`${environment.url}api/Comment/DeleteMusicComment/${musicCommentId}`);
   }
+
+  editMusicComment(musicComment: MusicComment){
+    return this.http.put(`${environment.url}api/Comment/EditComment`, musicComment);
+  }
 }

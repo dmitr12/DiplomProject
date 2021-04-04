@@ -9,7 +9,8 @@ namespace Diplom.Models.CommentModels
     public enum CommentChangedType
     {
         Added = 1,
-        Deleted = 2
+        Deleted = 2,
+        Edited = 3
     }
 
     public class MusicCommentResult

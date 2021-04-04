@@ -8,6 +8,7 @@ import {CommentsService} from "../../services/comments/comments.service";
 import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {SignalrService} from "../../services/signalr/signalr.service";
+import {UserRole} from "../../models/users/user";
 
 @Component({
   selector: 'app-comment-card',
@@ -21,9 +22,12 @@ export class CommentCardComponent implements OnInit {
   @Input() musicId = -1;
   childrenArr: MusicCommentInfo[] = [];
   hiddenChild = true;
-  currentUser = -1;
+  currentUser: number;
+  currnetUserRole: UserRole;
   isCommentAreaOpen = false;
+  isCommentEditAreaOpen = false;
   commentText = '';
+  commentEditText: string;
 
   constructor(
     private authService: AuthService,
@@ -32,11 +36,12 @@ export class CommentCardComponent implements OnInit {
     private commentsService: CommentsService,
     private signalrService: SignalrService
   ) {
-
   }
 
   ngOnInit() {
+    this.commentEditText = this.data.comment;
     this.currentUser = Number(this.authService.getCurrentUserId());
+    this.currnetUserRole = Number(this.authService.getCurrentUserRole());
     this.childrenArr = this.children;
     this.signalrService.commentMusicSignal.subscribe((signal: MusicCommentResult) => {
       if (signal.result && signal.musicCommentInfo.parentIdComment === this.data.idComment) {
@@ -45,8 +50,12 @@ export class CommentCardComponent implements OnInit {
             this.childrenArr = this.childrenArr.concat(signal.musicCommentInfo);
             break;
           case CommentChangedType.deleted:
-            const index = this.childrenArr.findIndex(item => item.idComment == signal.musicCommentInfo.idComment)
-            this.childrenArr.splice(index, 1);
+            const indexForDelete = this.childrenArr.findIndex(item => item.idComment == signal.musicCommentInfo.idComment)
+            this.childrenArr.splice(indexForDelete, 1);
+            break;
+          case CommentChangedType.edited:
+            const indexForEdit = this.childrenArr.findIndex(item => item.idComment == signal.musicCommentInfo.idComment)
+            this.childrenArr[indexForEdit].comment = signal.musicCommentInfo.comment;
             break;
         }
       }
@@ -58,11 +67,15 @@ export class CommentCardComponent implements OnInit {
   }
 
   showChildren() {
+    if(this.childrenArr.length>0){
+      this.isCommentAreaOpen = false;
+      this.isCommentEditAreaOpen = false;
+    }
     this.hiddenChild = !this.hiddenChild;
   }
 
   comment() {
-    if (this.commentText) {
+    if (this.commentText.trim()) {
       this.commentsService.musicCommentOn(new MusicComment(`${this.data.userLogin}, ${this.commentText}`, null,
         this.currentUser, Number(this.musicId), this.data.idComment)).subscribe((res: MusicCommentResult) => {
         this.commentText = '';
@@ -83,11 +96,8 @@ export class CommentCardComponent implements OnInit {
   }
 
   showAnswerBox() {
+    this.isCommentEditAreaOpen = false
     this.isCommentAreaOpen = !this.isCommentAreaOpen;
-  }
-
-  check() {
-    console.log(this.childrenArr)
   }
 
   deleteComment() {
@@ -104,5 +114,37 @@ export class CommentCardComponent implements OnInit {
         this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
       }
     });
+  }
+
+  commentEdit() {
+    if(this.commentEditText.trim()) {
+      const musicComment = this.data;
+      musicComment.comment = this.commentEditText;
+      this.commentsService.editMusicComment(musicComment).subscribe((res: MusicCommentResult) => {
+        this.commentEditText = res.musicCommentInfo.comment;
+        this.isCommentEditAreaOpen = false;
+      }, error => {
+        if (error.status == 401) {
+          this.router.navigate(['auth']);
+        } else if (error.status != 0) {
+          this.matSnackBar.open(`При изменении комментария возникла ошибка, статусный код ${error.status}`, '', {
+            duration: 3000,
+            panelClass: 'custom-snack-bar-error'
+          });
+        } else {
+          this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
+        }
+      });
+    }
+  }
+
+  showEditBox() {
+    this.commentEditText = this.data.comment;
+    this.isCommentAreaOpen = false
+    this.isCommentEditAreaOpen = !this.isCommentEditAreaOpen;
+  }
+
+  enableDeleteComment(): boolean{
+    return this.currentUser == this.data.userId || this.currnetUserRole == UserRole.Admin;
   }
 }

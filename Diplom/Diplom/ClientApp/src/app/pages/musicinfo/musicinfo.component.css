@@ -4,6 +4,12 @@
   cursor: default
 }
 
+.delete-button{
+  color: white;
+  background-color: #fa053e;
+  cursor: default;
+}
+
 .img-title{
   max-width: 400px;
   max-height: 300px;
@@ -17,4 +23,8 @@ a.mat-menu-item{
 a.mat-menu-item mat-icon{
   margin-right: 8px;
   color: #9414d9;
+}
+
+div.mat-form-field-wrapper{
+  padding: 0;
 }

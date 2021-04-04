@@ -12,3 +12,8 @@ a.mat-menu-item mat-icon{
   overflow-wrap: break-word;
 }
 
+.comment-button{
+  color: white;
+  background-color: #9414d9;
+  cursor: default
+}

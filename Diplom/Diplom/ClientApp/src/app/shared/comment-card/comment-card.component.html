@@ -23,8 +23,13 @@
             <span>{{childrenArr.length}}</span>
           </a>
         </div>
+        <div *ngIf="currentUser == data.userId" (click)="showEditBox()">
+          <a mat-menu-item>
+            <mat-icon style="margin-right: 0">edit</mat-icon>
+          </a>
+        </div>
       </div>
-      <div class="ml-auto" *ngIf="currentUser == data.userId" (click)="deleteComment()">
+      <div class="ml-auto" *ngIf="enableDeleteComment()" (click)="deleteComment()">
         <a mat-menu-item>
           <mat-icon style="margin-right: 0">delete</mat-icon>
         </a>
@@ -32,12 +37,30 @@
     </mat-card-content>
   </mat-card>
   <div *ngIf="isCommentAreaOpen">
-    <textarea [(ngModel)]="commentText" style="width: 100%"></textarea>
+    <mat-form-field style="width: 100%;">
+      <mat-label>Комментарий</mat-label>
+      <textarea matInput
+                [(ngModel)]="commentText"
+                cdkTextareaAutosize
+                cdkAutosizeMinRows="1"
+                cdkAutosizeMaxRows="5"></textarea>
+    </mat-form-field>
     <br>
-    <button (click)="comment()">Оставить комментарий</button>
+    <button mat-flat-button (click)="comment()" class="comment-button">Ответить</button>
+  </div>
+  <div *ngIf="isCommentEditAreaOpen">
+    <mat-form-field style="width: 100%;">
+      <mat-label>Комментарий</mat-label>
+      <textarea matInput
+                [(ngModel)]="commentEditText"
+                cdkTextareaAutosize
+                cdkAutosizeMinRows="1"
+                cdkAutosizeMaxRows="5"></textarea>
+    </mat-form-field>
+    <br>
+    <button mat-flat-button (click)="commentEdit()" class="comment-button">Изменить</button>
   </div>
   <div *ngFor="let child of childrenArr" [hidden]="hiddenChild" style="margin-left: 25px">
     <app-comment-card-child [data]="child"></app-comment-card-child>
   </div>
 </div>
-<div (click)="check()">check</div>

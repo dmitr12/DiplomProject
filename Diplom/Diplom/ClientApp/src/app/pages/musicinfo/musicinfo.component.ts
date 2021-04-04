@@ -15,8 +15,8 @@ import {MusicCommentInfo} from "../../models/comments/musicCommentInfo";
 import {Guid} from "guid-typescript";
 import {MusicComment} from "../../models/comments/musicComment";
 import {CommentChangedType, MusicCommentResult} from "../../models/comments/musicCommentResult";
-import * as moment from 'moment';
 import {AudioService} from "../../services/player/audio.service";
+import {UserRole} from "../../models/users/user";
 
 @Component({
   selector: 'app-musicinfo',
@@ -38,8 +38,10 @@ export class MusicinfoComponent implements OnInit {
   secondComments: MusicCommentInfo[] = [];
   isCommentAreaOpen = false;
   commentText = '';
-  currentUserId = -1;
+  currentUserId: number;
+  currentUserRole: UserRole;
   hiddenComments = true;
+  deletingMusic = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -56,6 +58,7 @@ export class MusicinfoComponent implements OnInit {
 
   ngOnInit() {
     this.currentUserId = Number(this.authService.getCurrentUserId());
+    this.currentUserRole = Number(this.authService.getCurrentUserRole());
     this.musicService.getMusic(this.musicId).pipe(finalize(() => this.loadedMusicInfo = true)).subscribe((res: MusicInfo) => {
       this.musicInfo = res;
       this.musicInfo.dateOfPublication = new Date(res.dateOfPublication);
@@ -83,8 +86,12 @@ export class MusicinfoComponent implements OnInit {
               this.firstComments.unshift(signal.musicCommentInfo);
               break;
             case CommentChangedType.deleted:
-              const index = this.firstComments.findIndex(item => item.idComment == signal.musicCommentInfo.idComment)
-              this.firstComments.splice(index, 1);
+              const indexForDelete = this.firstComments.findIndex(item => item.idComment == signal.musicCommentInfo.idComment)
+              this.firstComments.splice(indexForDelete, 1);
+              break;
+            case CommentChangedType.edited:
+              const indexForEdit = this.firstComments.findIndex(item => item.idComment == signal.musicCommentInfo.idComment)
+              this.firstComments[indexForEdit].comment = signal.musicCommentInfo.comment;
               break;
           }
         }
@@ -149,7 +156,7 @@ export class MusicinfoComponent implements OnInit {
   }
 
   comment() {
-    if (this.commentText) {
+    if (this.commentText.trim()) {
       this.commentsService.musicCommentOn(new MusicComment(this.commentText, null,
         this.currentUserId, Number(this.musicId), null)).subscribe((res: MusicCommentResult) => {
         this.commentText = '';
@@ -174,10 +181,38 @@ export class MusicinfoComponent implements OnInit {
   }
 
   showComments() {
+    if(this.firstComments.length > 0)
+      this.isCommentAreaOpen = false;
     this.hiddenComments = !this.hiddenComments;
   }
 
   playMusic() {
     this.audioService.openFile(this.musicInfo.id, this.musicInfo.musicFileName, this.musicInfo.name)
+  }
+
+  enableDeleteMusic(): boolean{
+    return this.currentUserId == this.musicInfo.userId || this.currentUserRole == UserRole.Admin;
+  }
+
+  deleteMusic() {
+    this.deletingMusic = true;
+    if(this.audioService.idMusic == this.musicInfo.id)
+      this.audioService.clearMusic()
+    this.musicService.deleteMusic(this.musicInfo.id).pipe(finalize(()=>{this.deletingMusic = false;})).subscribe(
+      (res: any)=>{
+        this.router.navigate(['search'])
+        this.matSnackBar.open(`Запись успешно удалена`, '', {duration: 3000, panelClass: 'custom-snack-bar-success'});
+      }, error => {
+        if(error.status == 401){
+          this.router.navigate(['auth']);
+        }
+        if (error.status != 0) {
+          this.matSnackBar.open(`При удалении музыки возникла ошибка, статусный код ${error.status}`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'
+          });
+        } else {
+          this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
+        }
+      }
+    )
   }
 }

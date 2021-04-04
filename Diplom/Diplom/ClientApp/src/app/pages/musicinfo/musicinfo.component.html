@@ -30,13 +30,16 @@
         </div>
       </div>
     </div>
-    <div class="ml-auto pr-3 pt-3">
-      <div>
-        {{musicInfo.dateOfPublication.toLocaleDateString()}}
-      </div>
-      <div class="d-flex" (click)="clickGenre(musicInfo.genreId)">
-        <button mat-flat-button class="ml-auto play-button">#{{musicInfo.genreName}}</button>
-      </div>
+    <div class="ml-auto pr-3 pt-3 d-flex flex-column">
+        <div style="text-align: end">
+          {{musicInfo.dateOfPublication.toLocaleDateString()}}
+        </div>
+        <div class="d-flex" (click)="clickGenre(musicInfo.genreId)">
+          <button mat-flat-button class="ml-auto play-button">#{{musicInfo.genreName}}</button>
+        </div>
+        <div *ngIf="enableDeleteMusic()" (click)="deleteMusic()" class="mt-auto ml-auto d-flex">
+          <button mat-flat-button class="delete-button" [disabled]="deletingMusic">Удалить запись</button>
+        </div>
     </div>
     <div class="pr-2">
       <img src="{{musicInfo.imageUrl}}" class="img-title">
@@ -56,9 +59,16 @@
     </div>
   </div>
   <div *ngIf="isCommentAreaOpen">
-    <textarea [(ngModel)]="commentText" style="width: 100%"></textarea>
+    <mat-form-field style="width: 100%;">
+      <mat-label>Комментарий</mat-label>
+      <textarea matInput
+                [(ngModel)]="commentText"
+                cdkTextareaAutosize
+                cdkAutosizeMinRows="1"
+                cdkAutosizeMaxRows="5"></textarea>
+    </mat-form-field>
     <br>
-    <button (click)="comment()">Оставить комментарий</button>
+    <button mat-flat-button (click)="comment()" class="play-button">Оставить комментарий</button>
   </div>
   <div [hidden]="hiddenComments" *ngFor="let firstComment of firstComments">
     <app-comment-card [data]="firstComment" [musicId]="this.musicId" [children]="getChildrenComments(firstComment.idComment)"></app-comment-card>

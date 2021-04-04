@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace Diplom.Models.UserModels
 {
+    public enum UserRoleEnum
+    {
+        User = 1,
+        Admin = 2
+    }
+
     public class User
     {
         public int UserId { get; set; }

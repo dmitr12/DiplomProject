@@ -62,7 +62,34 @@ namespace Diplom.Managers
             return result;
         }
 
-        public async Task<MusicCommentResult> DeleteMusicComment(Guid musicCommentId, int userId)
+        public async Task<MusicCommentResult> EditMusicComment(MusicComment model)
+        {
+            var result = new MusicCommentResult();
+            try
+            {
+                var comment = await db.MusicComments.FindAsync(model.IdComment);
+                comment.Comment = model.Comment;
+                await db.SaveChangesAsync();
+                var user = await db.Users.FindAsync(comment.UserId);
+                result.MusicCommentInfo.IdComment = comment.IdComment;
+                result.MusicCommentInfo.Comment = comment.Comment;
+                result.MusicCommentInfo.CommentDate = comment.CommentDate;
+                result.MusicCommentInfo.MusicId = comment.MusicId;
+                result.MusicCommentInfo.ParentIdComment = comment.ParentIdComment;
+                result.MusicCommentInfo.UserId = comment.UserId;
+                result.MusicCommentInfo.UserLogin = user.Login;
+                result.MusicCommentInfo.UserAvatar = user.Avatar;
+                result.Result = true;
+                result.CommentChangedType = CommentChangedType.Edited;
+            }
+            catch
+            {
+                result.Result = false;
+            }
+            return result;
+        }
+
+        public async Task<MusicCommentResult> DeleteMusicComment(Guid musicCommentId)
         {
             var result = new MusicCommentResult();
             try
@@ -75,14 +102,14 @@ namespace Diplom.Managers
                     db.MusicComments.RemoveRange(subComments);
                 }
                 await db.SaveChangesAsync();
-                var user = await db.Users.FindAsync(userId);
+                var user = await db.Users.FindAsync(comment.UserId);
                 result.MusicCommentInfo.IdComment = comment.IdComment;
                 result.MusicCommentInfo.Comment = comment.Comment;
                 result.MusicCommentInfo.CommentDate = comment.CommentDate;
                 result.MusicCommentInfo.MusicId = comment.MusicId;
                 result.MusicCommentInfo.ParentIdComment = comment.ParentIdComment;
                 result.MusicCommentInfo.UserId = comment.UserId;
-                result.MusicCommentInfo.UserLogin = user.Login;
+                result.MusicCommentInfo.UserLogin = user.Login; 
                 result.MusicCommentInfo.UserAvatar = user.Avatar;
                 result.Result = true;
                 result.CommentChangedType = CommentChangedType.Deleted;
