@@ -1,5 +1,6 @@
 ﻿using Diplom.Interfaces;
 using Diplom.Models;
+using Diplom.Models.Email;
 using Diplom.Models.UserModels;
 using Diplom.Utils;
 using Microsoft.AspNetCore.Mvc;
@@ -18,15 +19,16 @@ namespace Diplom.Managers
         private DataBaseContext db;
         private readonly IGeneratorToken generatorToken;
         private readonly IOptions<DropBoxOptions> options;
-        public UserManager(DataBaseContext db, IGeneratorToken generatorToken, IOptions<DropBoxOptions> options)
+        private readonly EmailManager emailManager;
+        public UserManager(DataBaseContext db, IGeneratorToken generatorToken, IOptions<DropBoxOptions> options, EmailManager emailManager)
         {
             this.db = db;
             this.generatorToken = generatorToken;
             this.options = options;
+            this.emailManager = emailManager;
         }
-        public async Task<string> GetToken(AuthModel model)
+        public string GetToken(User user)
         {
-            User user = await db.Users.Where(u => (u.Login == model.Login || u.Mail==model.Login) && u.Password == HashClass.GetHash(model.Password)).FirstOrDefaultAsync(); 
             if (user != null)
             {
                 var token = generatorToken.GenerateToken(user);
@@ -35,7 +37,17 @@ namespace Diplom.Managers
             return null;
         }
 
-        public async Task<IActionResult> Register(RegisterModel model)
+        public bool IsMailConfirmed(User user)
+        {
+            return user == null ? false : user.IsMailConfirmed;
+        }
+
+        public async Task<User> GetUserByNameEmail(AuthModel model)
+        {
+            return await db.Users.Where(u => (u.Login == model.Login || u.Mail == model.Login) && u.Password == HashClass.GetHash(model.Password)).FirstOrDefaultAsync();
+        }
+
+        public async Task<IActionResult> Register(RegisterModel model, string baseUrl)
         {
             User us = await db.Users.Where(u => u.Mail == model.Mail).FirstOrDefaultAsync();
             if (us != null)
@@ -56,6 +68,13 @@ namespace Diplom.Managers
             {
                 db.Users.Add(user);
                 await db.SaveChangesAsync();
+                var emailInfo = new EmailInfo();
+                emailInfo.Subject = "Подтверждение почты в приложении MusicApp";
+                emailInfo.Body = $"<div><p>Кликните по ссылке ниже, чтобы подтвердить свою почту</p><a href='{baseUrl}/api/user/ConfirmEmail/{user.UserId}'>Подтвердить почту</a></div>";
+                emailInfo.ToMails.Add(user.Mail);
+                var emailResult = emailManager.Send(emailInfo);
+                if (!emailResult.Sended)
+                    throw new Exception(emailResult.ErrorMessage);
                 return new OkResult();
             }
             catch(Exception ex)
@@ -79,6 +98,13 @@ namespace Diplom.Managers
                 Mail = u.Mail
             }).FirstOrDefaultAsync();
             return userInfo;
+        }
+
+        public async Task ConfrimEmail(int userId)
+        {
+            var user = await db.Users.FindAsync(userId);
+            user.IsMailConfirmed = true;
+            await db.SaveChangesAsync();
         }
     }
 }

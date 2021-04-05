@@ -4,7 +4,7 @@
 <div class="row mt-5 mr-3 ml-3" style="min-width:300px">
   <div class="col-sm-3 col-md-4"></div>
   <form class="card col-sm-6 col-md-4" [formGroup]="form" (ngSubmit)="login()">
-    <div class="card-content">
+    <div class="card-content" style="padding-bottom: 0">
       <span class="card-title center-align">Вход в приложение</span>
       <div class="input-field">
         <input id="login" required type="email" formControlName="login" [ngClass]="{invalid: form.get('login').invalid && form.get('login').dirty}">
@@ -21,7 +21,10 @@
         </span>
       </div>
     </div>
-    <div class="card-action center-align">
+    <div class="right-align" style="padding-bottom: 16px">
+      <a class="link" style="padding-right: 24px;" href="#">Забыли пароль?</a>
+    </div>
+    <div class="center-align" style="padding-bottom: 24px">
       <button type="submit" class="btn white-text waves-effect waves-light" [disabled]="form.invalid">Войти</button>
     </div>
   </form>

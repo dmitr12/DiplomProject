@@ -16,3 +16,13 @@
 .btn:hover{
   background-color: #a120b3;
 }
+
+.link{
+  color: #9414d9;
+  font-size: 14px;
+}
+
+.link:hover{
+  text-decoration: underline;
+  cursor: pointer;
+}

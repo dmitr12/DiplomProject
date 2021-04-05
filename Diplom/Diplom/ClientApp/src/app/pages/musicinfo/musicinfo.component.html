@@ -38,6 +38,7 @@
           <button mat-flat-button class="ml-auto play-button">#{{musicInfo.genreName}}</button>
         </div>
         <div *ngIf="enableDeleteMusic()" (click)="deleteMusic()" class="mt-auto ml-auto d-flex">
+          <button mat-flat-button class="play-button mr-1">Добавить в избранные</button>
           <button mat-flat-button class="delete-button" [disabled]="deletingMusic">Удалить запись</button>
         </div>
     </div>
