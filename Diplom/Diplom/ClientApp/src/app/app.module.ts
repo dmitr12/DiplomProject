@@ -46,6 +46,8 @@ import {SignalrService} from "./services/signalr/signalr.service";
 import { CommentCardComponent } from './shared/comment-card/comment-card.component';
 import { CommentCardChildComponent } from './shared/comment-card-child/comment-card-child.component';
 import {MatStepperModule} from "@angular/material/stepper";
+import { ForgotPasswordComponent } from './components/users/forgot-password/forgot-password.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN);
@@ -72,6 +74,8 @@ export function tokenGetter() {
     MusicinfoComponent,
     CommentCardComponent,
     CommentCardChildComponent,
+    ForgotPasswordComponent,
+    ProfileComponent,
   ],
     imports: [
         BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -90,7 +94,8 @@ export function tokenGetter() {
                 path: 'auth', component: AuthlayoutComponent, children: [
                     {path: '', redirectTo: 'login', pathMatch: 'full'},
                     {path: 'login', component: LoginComponent},
-                    {path: 'register', component: RegisterComponent}
+                    {path: 'register', component: RegisterComponent},
+                    {path: 'forgot-password', component: ForgotPasswordComponent}
                 ]
             },
             {
@@ -104,7 +109,8 @@ export function tokenGetter() {
                         ]
                     },
                     {path: 'search', component: SearchComponent},
-                    {path: 'musicinfo/:id', component: MusicinfoComponent}
+                    {path: 'musicinfo/:id', component: MusicinfoComponent},
+                    {path: 'profile', component: ProfileComponent}
                 ]
             }
         ]),

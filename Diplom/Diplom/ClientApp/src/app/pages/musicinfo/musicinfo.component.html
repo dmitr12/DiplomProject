@@ -37,9 +37,9 @@
         <div class="d-flex" (click)="clickGenre(musicInfo.genreId)">
           <button mat-flat-button class="ml-auto play-button">#{{musicInfo.genreName}}</button>
         </div>
-        <div *ngIf="enableDeleteMusic()" (click)="deleteMusic()" class="mt-auto ml-auto d-flex">
-          <button mat-flat-button class="play-button mr-1">Добавить в избранные</button>
-          <button mat-flat-button class="delete-button" [disabled]="deletingMusic">Удалить запись</button>
+        <div class="mt-auto ml-auto d-flex">
+          <button *ngIf="musicInfo.userId != currentUserId" mat-flat-button class="play-button mr-1">Добавить в избранные</button>
+          <button *ngIf="enableDeleteMusic()" (click)="deleteMusic()" mat-flat-button class="delete-button" [disabled]="deletingMusic">Удалить запись</button>
         </div>
     </div>
     <div class="pr-2">

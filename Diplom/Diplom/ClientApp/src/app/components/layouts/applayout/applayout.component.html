@@ -15,6 +15,10 @@
         <mat-icon>arrow_drop_down</mat-icon>
       </mat-card>
       <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="profile()">
+          <mat-icon>person</mat-icon>
+          <span>Profile</span>
+        </button>
         <button mat-menu-item (click)="logout()">
           <mat-icon>logout</mat-icon>
           <span>Logout</span>
@@ -35,6 +39,12 @@
         <a mat-menu-item routerLink="/search">
           <mat-icon>search</mat-icon>
           <span>Search</span>
+        </a>
+      </div>
+      <div routerLinkActive="active">
+        <a mat-menu-item routerLink="/profile">
+          <mat-icon>person</mat-icon>
+          <span>Profile</span>
         </a>
       </div>
     </mat-sidenav>

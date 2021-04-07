@@ -59,4 +59,8 @@ export class ApplayoutComponent implements OnInit {
   logout() {
     this.authService.logout();
   }
+
+  profile() {
+    this.router.navigate(['/profile'])
+  }
 }

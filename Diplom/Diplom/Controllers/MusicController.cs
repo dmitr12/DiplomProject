@@ -71,28 +71,28 @@ namespace Diplom.Controllers
         }
 
         [HttpGet("ListMusicsByUserId")]
-        [Authorize(Roles = "1")]
+        [Authorize]
         public List<MusicInfo> GetMusicsByUserId()
         {
             return musicManager.GetMusicsByUserId(UserId).Result;
         }
 
         [HttpGet("GetPartOfMusicsPyUserId/{lastIndex}")]
-        [Authorize(Roles = "1")]
+        [Authorize]
         public List<MusicInfo> GetPartOfListMusic(int lastIndex)
         {
             return musicManager.GetPartOfMusicsByUserId(UserId, CountMusics, lastIndex).Result;
         }
 
         [HttpPost("AddMusic")]
-        [Authorize(Roles = "1")]
+        [Authorize]
         public IActionResult AddMusic([FromForm] AddMusicModel model)
         {
             return musicManager.AddMusic(model, UserId).Result;
         }
 
         [HttpPut("EditMusic")]
-        [Authorize(Roles = "1")]
+        [Authorize]
         public IActionResult EditMusic([FromForm] EditMusicModel model)
         {
             return musicManager.EditMusic(model, UserId).Result;

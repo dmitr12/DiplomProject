@@ -47,6 +47,11 @@ namespace Diplom.Managers
             return await db.Users.Where(u => (u.Login == model.Login || u.Mail == model.Login) && u.Password == HashClass.GetHash(model.Password)).FirstOrDefaultAsync();
         }
 
+        public async Task<User> GetUser(int userId)
+        {
+            return await db.Users.FindAsync(userId);
+        }
+
         public async Task<IActionResult> Register(RegisterModel model, string baseUrl)
         {
             User us = await db.Users.Where(u => u.Mail == model.Mail).FirstOrDefaultAsync();
@@ -105,6 +110,55 @@ namespace Diplom.Managers
             var user = await db.Users.FindAsync(userId);
             user.IsMailConfirmed = true;
             await db.SaveChangesAsync();
+        }
+
+        public async Task<IActionResult> SendEmailForgotPassword(ForgotPasswordModel model, string baseUrl)
+        {
+            var user = await db.Users.Where(u => u.Mail == model.Email).FirstOrDefaultAsync();
+            if (user != null)
+            {
+                if (!user.IsMailConfirmed)
+                    return new OkObjectResult(new { msg = "Почта не подтверждена" });
+                var emailInfo = new EmailInfo();
+                emailInfo.Subject = "Заменя пароля в приложении MusicApp";
+                emailInfo.Body = $"<div><p>Кликните по ссылке ниже, чтобы заменить пароль</p><a href='{baseUrl}/api/user/EmailForgotPassword/{user.UserId}'>Заменить пароль</a></div>";
+                emailInfo.ToMails.Add(model.Email);
+                var emailResult = emailManager.Send(emailInfo);
+                if (emailResult.Sended)
+                    return new OkResult();
+                return new StatusCodeResult(500);
+            }
+            return new NotFoundResult();
+        }
+
+        public async Task<IActionResult> ChangePassword(ForgotPasswordModel model)
+        {
+            var user = await db.Users.Where(u => u.Mail == model.Email).FirstOrDefaultAsync();
+            if (!IsMailConfirmed(user))
+                return new BadRequestResult();
+            if (user != null)
+            {
+                user.Password = HashClass.GetHash(model.Password);
+                await db.SaveChangesAsync();
+                return new OkResult();
+            }
+            return new NotFoundResult();
+        }
+
+        public async Task<UserProfile> GetUserProfile(int userId)
+        {
+            var userProfile = new UserProfile();
+            var user = await db.Users.FindAsync(userId);
+            userProfile.Avatar = user.Avatar;
+            userProfile.City = user.City;
+            userProfile.Country = user.Country;
+            userProfile.Login = user.Login;
+            userProfile.Name = user.Name;
+            userProfile.Surname = user.Surname;
+            userProfile.UserId = user.UserId;
+            userProfile.CountMusics = await db.Musics.Where(m => m.UserId == userId).CountAsync();
+            userProfile.CountComments = await db.MusicComments.Where(c => c.UserId == userId).CountAsync();
+            return userProfile;
         }
     }
 }
