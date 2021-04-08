@@ -18,7 +18,8 @@ Name nvarchar(100),
 Surname nvarchar(100),
 Country nvarchar(100),
 City nvarchar(100),
-IsMailConfirmed bit
+IsMailConfirmed bit,
+RegistrationDate date not null
 );
 go
 create table MusicGenres(

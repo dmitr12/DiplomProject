@@ -48,6 +48,7 @@ import { CommentCardChildComponent } from './shared/comment-card-child/comment-c
 import {MatStepperModule} from "@angular/material/stepper";
 import { ForgotPasswordComponent } from './components/users/forgot-password/forgot-password.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { ProfileEditorComponent } from './pages/profile/profile-editor/profile-editor.component';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN);
@@ -76,6 +77,7 @@ export function tokenGetter() {
     CommentCardChildComponent,
     ForgotPasswordComponent,
     ProfileComponent,
+    ProfileEditorComponent,
   ],
     imports: [
         BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -110,8 +112,9 @@ export function tokenGetter() {
                     },
                     {path: 'search', component: SearchComponent},
                     {path: 'musicinfo/:id', component: MusicinfoComponent},
-                    {path: 'profile', component: ProfileComponent}
-                ]
+                    {path: 'profile/:id', component: ProfileComponent},
+                    {path: 'profile-editor/:id', component: ProfileEditorComponent}
+              ]
             }
         ]),
         BrowserAnimationsModule,

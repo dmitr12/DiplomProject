@@ -67,7 +67,8 @@ namespace Diplom.Managers
                 Password = HashClass.GetHash(model.Password),
                 RoleId = 1,
                 IsMailConfirmed = false,
-                Avatar = options.Value.DefaultUserImageLink
+                Avatar = options.Value.DefaultUserImageLink,
+                RegistrationDate = DateTime.Now
             };
             try
             {
@@ -100,16 +101,17 @@ namespace Diplom.Managers
                 Avatar = u.Avatar,
                 City = u.City,
                 Country = u.Country,
-                Mail = u.Mail
+                Mail = u.Mail,
+                RegistrationDate = u.RegistrationDate
             }).FirstOrDefaultAsync();
             return userInfo;
         }
 
-        public async Task ConfrimEmail(int userId)
+        public void ConfrimEmail(int userId)
         {
-            var user = await db.Users.FindAsync(userId);
+            var user = db.Users.Find(userId);
             user.IsMailConfirmed = true;
-            await db.SaveChangesAsync();
+            db.SaveChanges();
         }
 
         public async Task<IActionResult> SendEmailForgotPassword(ForgotPasswordModel model, string baseUrl)
@@ -145,20 +147,26 @@ namespace Diplom.Managers
             return new NotFoundResult();
         }
 
-        public async Task<UserProfile> GetUserProfile(int userId)
+        public async Task<UserInfo> GetUserProfile(int userId)
         {
-            var userProfile = new UserProfile();
+            var userInfo = new UserInfo();
             var user = await db.Users.FindAsync(userId);
-            userProfile.Avatar = user.Avatar;
-            userProfile.City = user.City;
-            userProfile.Country = user.Country;
-            userProfile.Login = user.Login;
-            userProfile.Name = user.Name;
-            userProfile.Surname = user.Surname;
-            userProfile.UserId = user.UserId;
-            userProfile.CountMusics = await db.Musics.Where(m => m.UserId == userId).CountAsync();
-            userProfile.CountComments = await db.MusicComments.Where(c => c.UserId == userId).CountAsync();
-            return userProfile;
+            userInfo.UserId = user.UserId;
+            userInfo.RoleId = user.RoleId;
+            userInfo.Mail = user.Mail;
+            userInfo.IsMailConfirmed = user.IsMailConfirmed;
+            userInfo.Avatar = user.Avatar;
+            userInfo.City = user.City;
+            userInfo.Country = user.Country;
+            userInfo.Login = user.Login;
+            userInfo.Name = user.Name;
+            userInfo.Surname = user.Surname;
+            userInfo.UserId = user.UserId;
+            userInfo.RegistrationDate = user.RegistrationDate;
+            userInfo.CountMusics = await db.Musics.Where(m => m.UserId == userId).CountAsync();
+            userInfo.CountComments = await db.MusicComments.Where(c => c.UserId == userId).CountAsync();
+            userInfo.SummaryMusicRating = await db.Musics.Where(m => m.UserId == userId).Join(db.MusicStarRatings, m => m.MusicId, r => r.MusicId, (m, r) => r.Rating).SumAsync();
+            return userInfo;
         }
     }
 }

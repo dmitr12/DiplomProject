@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
 import {ForgotPassword} from "../../models/users/forgotPassword";
+import {Observable} from "rxjs";
+import {UserInfo} from "../../models/users/userInfo";
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +22,7 @@ export class UsersService {
     return this.httpClient.post(`${environment.url}api/user/ChangePassword`, forgotPassword)
   }
 
-  // getUserProfile(userId: number){
-  //   return this.httpClient.get
-  // }
+  getUserProfile(userId: number): Observable<UserInfo>{
+    return this.httpClient.get<UserInfo>(`${environment.url}api/user/UserProfile/${userId}`);
+  }
 }

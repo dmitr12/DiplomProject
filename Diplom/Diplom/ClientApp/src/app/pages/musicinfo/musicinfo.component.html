@@ -18,14 +18,14 @@
       <div class="mt-auto pl-3">
         <div class="d-flex" style="align-items: center">
           <div>Оценка пользователей: {{musicInfo.rating}}</div>
-          <star-rating [value]="1" [readonly]="true" [totalstars]="1" checkedcolor="red" size="18px"></star-rating>
+          <star-rating [value]="1" [readonly]="true" [totalstars]="1" checkedcolor="#fa053e" size="18px"></star-rating>
         </div>
         <div>
           <div>Оценили: {{musicInfo.countRatings}}</div>
         </div>
         <div class="d-flex" style="align-items: center">
           <div>Ваша оценка:</div>
-          <star-rating #ratingComponent class="pl-1" [value]=musicInfo.currentUserRating [totalstars]="5" [readonly]="isRateReadOnly" checkedcolor="red" uncheckedcolor="black" size="18px"
+          <star-rating #ratingComponent class="pl-1" [value]=musicInfo.currentUserRating [totalstars]="5" [readonly]="isRateReadOnly" checkedcolor="#fa053e" uncheckedcolor="black" size="18px"
                        (rate)="onRate($event)"></star-rating>
         </div>
       </div>

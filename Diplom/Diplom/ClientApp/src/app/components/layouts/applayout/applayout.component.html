@@ -42,7 +42,7 @@
         </a>
       </div>
       <div routerLinkActive="active">
-        <a mat-menu-item routerLink="/profile">
+        <a mat-menu-item [routerLink]="['/profile', userId]">
           <mat-icon>person</mat-icon>
           <span>Profile</span>
         </a>

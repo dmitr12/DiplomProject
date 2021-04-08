@@ -9,4 +9,8 @@ export class UserInfo{
   country: string;
   city: string;
   isMailConfirmed: boolean;
+  registrationDate: Date
+  countMusics: number;
+  countComments: number;
+  summaryMusicRating: number;
 }

@@ -111,7 +111,7 @@ namespace Diplom.Controllers
         }
 
         [HttpGet("UserProfile/{userId}")]
-        public UserProfile GetUserProfile(int userId)
+        public UserInfo GetUserProfile(int userId)
         {
             return userManager.GetUserProfile(userId).Result;
         }

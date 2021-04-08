@@ -52,6 +52,10 @@ export class ApplayoutComponent implements OnInit {
     })
   }
 
+  public get userId(): number{
+    return this.userInfo.userId;
+  }
+
   onSidenavClick() {
     this.isMenuOpen = false;
   }
@@ -61,6 +65,6 @@ export class ApplayoutComponent implements OnInit {
   }
 
   profile() {
-    this.router.navigate(['/profile'])
+    this.router.navigate(['/profile', `${this.userInfo.userId}`]);
   }
 }

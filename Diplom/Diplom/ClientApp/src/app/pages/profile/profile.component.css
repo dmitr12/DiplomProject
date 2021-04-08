@@ -1,3 +1,7 @@
+.mat-card-content{
+  padding-right: 15px;
+}
+
 .title-key{
   font-weight: normal;
   font-size: 18px;
@@ -14,6 +18,37 @@
 }
 
 .mat-card-content{
-  margin-left: 32px;
+  margin-left: 16px;
   font-family: Roboto,"Helvetica Neue",sans-serif;
+}
+
+.mat-form-field{
+  width: 100%;
+}
+
+.general-information .title{
+  font-size: 16px;
+  text-decoration: underline;
+  margin-bottom: 15px;
+}
+
+.general-information .content{
+  font-size: 18px;
+}
+
+.statistics .title{
+  font-size: 16px;
+  text-decoration: underline;
+}
+
+.statistics .content{
+  font-size: 16px;
+}
+
+.statistics .content .item{
+  margin-top: 15px;
+}
+
+mat-icon{
+  color: #9414d9;
 }

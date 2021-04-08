@@ -47,5 +47,7 @@ namespace Diplom.Models.UserModels
         public bool IsMailConfirmed { get; set; }
 
         public List<Music> Musics { get; set; }
+        
+        public DateTime RegistrationDate { get; set; }
     }
 }
