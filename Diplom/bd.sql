@@ -70,3 +70,18 @@ MusicId int references Musics(MusicId) on delete cascade not null,
 ParentIdComment uniqueidentifier
 )
 go
+create table Playlists(
+PlaylistId int primary key identity(1,1),
+PlaylistName nvarchar(200) not null,
+PlaylistDescription nvarchar(max),
+PlaylistImage nvarchar(max) not null,
+UserId int references Users(UserId) not null,
+)
+go
+create table PlaylistsMusics(
+PlaylistId int not null,
+MusicId int not null,
+primary key (PlaylistId, MusicId),
+foreign key (PlaylistId) references Playlists(PlaylistId) on delete cascade,
+foreign key (MusicId) references Musics(MusicId) on delete cascade
+)

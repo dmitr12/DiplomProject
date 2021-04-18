@@ -55,8 +55,8 @@ export class ProfileEditorComponent implements OnInit {
 
   }
 
-  changeAvatarFile(event: Event) {
-    this.avatarFile = this.musicService.getFileNameByPath(this.profileForm.value.avatar)
+  changeAvatarFile(files: any) {
+    this.avatarFile = this.musicService.getFileNameByPath(this.profileForm.value.avatar);
   }
 
   chooseAvatar() {

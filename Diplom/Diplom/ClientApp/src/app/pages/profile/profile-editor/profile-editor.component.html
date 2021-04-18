@@ -14,11 +14,11 @@
         <form [formGroup]="profileForm" (ngSubmit)="editProfile()">
           <div class="pr-3 pl-3">
             <div class="d-flex" style="justify-content: center">
-              <img mat-card-avatar src="{{userInfo.avatar}}" style="width: 200px; height: 200px">
+              <img id="output" mat-card-avatar src="{{userInfo.avatar}}" style="width: 200px; height: 200px">
             </div>
             <div class="mt-3 d-flex" style="justify-content: center">
               <button mat-flat-button class="mat-btn" (click)="chooseAvatar()">Выбрать фото</button>
-              <input #inputFile id="avatar" hidden type="file" accept=".jpg, .png" formControlName="avatar" (change)="changeAvatarFile($event)">
+              <input #inputFile id="avatar" hidden type="file" accept=".jpg, .png" formControlName="avatar" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])" (change)="changeAvatarFile($event)">
             </div>
             <div *ngIf="!profileForm.value.avatar" class="mt-3" style="text-align: center">
               Формат фото: .jpg, .png

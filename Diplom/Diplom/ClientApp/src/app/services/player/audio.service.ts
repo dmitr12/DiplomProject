@@ -9,7 +9,7 @@ export class AudioService {
 
   constructor() { }
 
-  audioObj = new Audio();
+  public audioObj = new Audio();
   isVisible = false;
 
   currentTime = '00:00';
