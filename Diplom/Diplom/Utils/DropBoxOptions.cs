@@ -9,7 +9,9 @@ namespace Diplom.Utils
     {
         public string DropBoxToken { get; set; }
         public string DefaultMusicImageFile { get; set; }
+        public string DefaultPlaylistImageFile { get; set; }
         public string DefaultMusicImageFileLink { get; set; }
         public string DefaultUserImageLink { get; set; }
+        public string DefaultPlaylistImageLink { get; set; }
     }
 }

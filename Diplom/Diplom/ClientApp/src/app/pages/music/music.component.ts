@@ -11,10 +11,10 @@ import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-playlist',
-  templateUrl: './playlist.component.html',
-  styleUrls: ['./playlist.component.css']
+  templateUrl: './music.component.html',
+  styleUrls: ['./music.component.css']
 })
-export class PlaylistComponent implements OnInit {
+export class MusicComponent implements OnInit {
 
   @ViewChild('scrollElem', {static: false})
   private scrollElem: any;

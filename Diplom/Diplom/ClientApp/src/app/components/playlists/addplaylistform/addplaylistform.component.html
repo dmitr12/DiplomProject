@@ -1,0 +1,37 @@
+<div style="width: 100%;" *ngIf="loaderService.isLoading | async">
+  <mat-progress-bar color="warn" mode="query"></mat-progress-bar>
+</div>
+
+<div>
+  <h4 mat-dialog-title class="center-align">Добавление плейлиста</h4>
+  <mat-dialog-content>
+    <form [formGroup]="form" (ngSubmit)="addPlaylist()">
+      <div class="input-field">
+        <input id="playlistName" type="text" required formControlName="playlistName">
+        <label for="playlistName">*Название плейлиста</label>
+        <span class="helper-text red-text" *ngIf="form.get('playlistName').invalid && form.get('playlistName').dirty">
+          <span *ngIf="form.get('playlistName').errors['required']">поле необходимо заполнить</span>
+          <span *ngIf="form.get('playlistName').errors['maxlength'] && form.get('playlistName').errors['maxlength']['requiredLength']">Максимум {{form.get('playlistName').errors['maxlength']['requiredLength']}} символов</span>
+        </span>
+      </div>
+      <mat-form-field class="input-field" style="width: 100%;">
+        <mat-label>Описание</mat-label>
+        <textarea matInput
+                  formControlName="playlistDescription"
+                  cdkTextareaAutosize
+                  cdkAutosizeMinRows="1"
+                  cdkAutosizeMaxRows="5"></textarea>
+      </mat-form-field>
+      <div class="input-field" style="margin-bottom: 30px">
+        <div>
+          <span>Выберите картинку для плейлиста (формат .jpg, .png)</span>
+        </div>
+        <input id="playlistImageName" type="file" accept=".jpg, .png" formControlName="playlistImage" (change)="changeImageFile($event)">
+      </div>
+      <div class="center-align">
+        <button class="btn waves-effect waves-light" [disabled]='form?.invalid || postingQuery' style="background-color: #11d62b; margin-right: 20px;">Добавить</button>
+        <button mat-dialog-close="false" class="btn waves-effect waves-light" [disabled]="postingQuery" style="background-color: #fa053e;">Отмена</button>
+      </div>
+    </form>
+  </mat-dialog-content>
+</div>

@@ -37,6 +37,7 @@ namespace Diplom
             services.AddScoped<MusicManager>();
             services.AddScoped<CommentManager>();
             services.AddScoped<EmailManager>();
+            services.AddScoped<PlaylistManager>();
             services.AddSingleton<ICloudService, CloudService>();
             services.AddSingleton<IEmailService, EmailService>();
             services.Configure<DropBoxOptions>(Configuration.GetSection("DropBoxOptions"));

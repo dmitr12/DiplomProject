@@ -74,8 +74,10 @@ create table Playlists(
 PlaylistId int primary key identity(1,1),
 PlaylistName nvarchar(200) not null,
 PlaylistDescription nvarchar(max),
-PlaylistImage nvarchar(max) not null,
+PlaylistImageFile nvarchar(200) not null,
+PlaylistImageUrl nvarchar(max) not null,
 UserId int references Users(UserId) not null,
+CreateDate date not null
 )
 go
 create table PlaylistsMusics(

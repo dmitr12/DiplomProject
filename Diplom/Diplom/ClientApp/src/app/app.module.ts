@@ -19,7 +19,7 @@ import { ApplayoutComponent } from './components/layouts/applayout/applayout.com
 import {MatIconModule} from "@angular/material/icon";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {AuthGuard} from "./guards/auth-guard";
-import { PlaylistComponent } from './pages/playlist/playlist.component';
+import { MusicComponent } from './pages/music/music.component';
 import {MatButtonModule} from "@angular/material/button";
 import {MatListModule} from "@angular/material/list";
 import {MatMenuModule} from "@angular/material/menu";
@@ -49,6 +49,8 @@ import {MatStepperModule} from "@angular/material/stepper";
 import { ForgotPasswordComponent } from './components/users/forgot-password/forgot-password.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { ProfileEditorComponent } from './pages/profile/profile-editor/profile-editor.component';
+import { AddplaylistformComponent } from './components/playlists/addplaylistform/addplaylistform.component';
+import { PlaylistComponent } from './pages/playlist/playlist/playlist.component';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN);
@@ -61,7 +63,7 @@ export function tokenGetter() {
     LoginComponent,
     RegisterComponent,
     ApplayoutComponent,
-    PlaylistComponent,
+    MusicComponent,
     AudioplayerComponent,
     AddmusicformComponent,
     MusicCardComponent,
@@ -78,6 +80,8 @@ export function tokenGetter() {
     ForgotPasswordComponent,
     ProfileComponent,
     ProfileEditorComponent,
+    AddplaylistformComponent,
+    PlaylistComponent,
   ],
     imports: [
         BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -105,12 +109,13 @@ export function tokenGetter() {
                     {path: '', redirectTo: 'mymusic', pathMatch: 'full'},
                     {
                         path: 'mymusic', component: MymusicComponent, children: [
-                            {path: '', redirectTo: 'playlist', pathMatch: 'full'},
-                            {path: 'playlist', component: PlaylistComponent},
+                            {path: '', redirectTo: 'music', pathMatch: 'full'},
+                            {path: 'music', component: MusicComponent},
                             {path: 'favorite', component: FavouritemusicsComponent}
                         ]
                     },
                     {path: 'search', component: SearchComponent},
+                    {path: 'playlist', component: PlaylistComponent},
                     {path: 'musicinfo/:id', component: MusicinfoComponent},
                     {path: 'profile/:id', component: ProfileComponent},
                     {path: 'profile-editor/:id', component: ProfileEditorComponent}
@@ -138,7 +143,8 @@ export function tokenGetter() {
     {provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true}
   ],
   bootstrap: [AppComponent],
-  entryComponents: [AddmusicformComponent, DeletemusicformComponent, EditmusicformComponent]
+  entryComponents: [AddmusicformComponent, DeletemusicformComponent, EditmusicformComponent,
+  AddplaylistformComponent]
 })
 export class AppModule {
 }
