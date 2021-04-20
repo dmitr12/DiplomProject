@@ -3,6 +3,7 @@ using Diplom.Models;
 using Diplom.Models.PlaylistModels;
 using Diplom.Utils;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -57,6 +58,19 @@ namespace Diplom.Managers
             {
                 return new StatusCodeResult(500);
             }
+        }
+
+        public async Task<List<PlaylistInfo>> GetUserPlaylists(int userId)
+        {
+            return await db.Playlists.Where(p => p.UserId == userId).Select(p => new PlaylistInfo
+            {
+                PlaylistId = p.PlaylistId,
+                PlaylistName = p.PlaylistName,
+                PlaylistDescription = p.PlaylistDescription,
+                PlaylistImageUrl = p.PlaylistImageUrl,
+                UserId = p.UserId,
+                CreateDate = p.CreateDate
+            }).ToListAsync();
         }
     }
 }

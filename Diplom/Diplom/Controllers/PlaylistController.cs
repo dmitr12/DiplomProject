@@ -29,5 +29,12 @@ namespace Diplom.Controllers
         {
             return playlistManager.AddPlaylist(model, UserId).Result;
         }
+
+        [HttpGet("UserPlaylists")]
+        [Authorize]
+        public List<PlaylistInfo> GetUserPlaylists()
+        {
+            return playlistManager.GetUserPlaylists(UserId).Result;
+        }
     }
 }

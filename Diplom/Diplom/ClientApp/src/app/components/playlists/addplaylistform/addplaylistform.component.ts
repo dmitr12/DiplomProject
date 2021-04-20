@@ -57,7 +57,10 @@ export class AddplaylistformComponent implements OnInit {
     this.formData.delete("PlaylistName");
     this.formData.delete("PlaylistDescription");
     this.formData.append("PlaylistName", this.form.value.playlistName);
-    this.formData.append("PlaylistDescription", this.form.value.playlistDescription);
+    if(this.form.value.playlistDescription === null)
+      this.formData.append("PlaylistDescription", '');
+    else
+      this.formData.append("PlaylistDescription", this.form.value.playlistDescription);
     this.postingQuery = true;
     this.playlistService.addPlaylist(this.formData).subscribe((response: any) => {
         this.postingQuery = false;

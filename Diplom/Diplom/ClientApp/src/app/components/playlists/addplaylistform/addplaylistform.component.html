@@ -3,7 +3,7 @@
 </div>
 
 <div>
-  <h4 mat-dialog-title class="center-align">Добавление плейлиста</h4>
+  <h3 mat-dialog-title class="center-align">Добавление плейлиста</h3>
   <mat-dialog-content>
     <form [formGroup]="form" (ngSubmit)="addPlaylist()">
       <div class="input-field">
@@ -17,10 +17,11 @@
       <mat-form-field class="input-field" style="width: 100%;">
         <mat-label>Описание</mat-label>
         <textarea matInput
-                  formControlName="playlistDescription"
                   cdkTextareaAutosize
                   cdkAutosizeMinRows="1"
-                  cdkAutosizeMaxRows="5"></textarea>
+                  cdkAutosizeMaxRows="2"
+                  formControlName="playlistDescription"
+                  ></textarea>
       </mat-form-field>
       <div class="input-field" style="margin-bottom: 30px">
         <div>

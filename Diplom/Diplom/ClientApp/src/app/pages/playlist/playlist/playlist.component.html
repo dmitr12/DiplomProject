@@ -1,2 +1,28 @@
-<p>playlist works!</p>
-<button (click)="addPlaylis()">Add</button>
+<div class="mat-spinner-container" *ngIf="!loadedPage">
+  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+</div>
+
+<div class="row">
+
+</div>
+
+
+<div *ngIf="loadedPage">
+  <p>playlist works!</p>
+  <button (click)="addPlaylis()">Add</button>
+  <div class="row">
+    <div *ngFor="let p of playlistsInfo" class="col-6 col-sm-4 col-lg-3 col-xl-2">
+      <mat-card class="playlist-card">
+        <div class="d-flex" style="justify-content: center">
+          <img mat-card-image src="{{p.playlistImageUrl}}">
+        </div>
+        <mat-card-content>
+          <p>
+            Название: {{p.playlistName}}
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+</div>

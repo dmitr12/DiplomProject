@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import {environment} from "../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
+import {Observable} from "rxjs";
+import {MusicInfo} from "../../models/musics/musicInfo";
+import {PlaylistInfo} from "../../models/playlists/playlistInfo";
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +16,10 @@ export class PlaylistService {
 
   addPlaylist(formData: FormData) {
     return this.http.post(`${environment.url}api/playlist/addPlaylist`, formData);
+  }
+
+  getUserPlaylists(): Observable<PlaylistInfo[]>{
+    return this.http.get<PlaylistInfo[]>(`${environment.url}api/playlist/UserPlaylists`);
   }
 
   getFileNameByPath(path: string):string {
