@@ -4,5 +4,6 @@ export class PlaylistInfo {
   playlistDescription: string;
   playlistImageUrl: string;
   userId: number;
+  userName: string;
   createDate: Date;
 }

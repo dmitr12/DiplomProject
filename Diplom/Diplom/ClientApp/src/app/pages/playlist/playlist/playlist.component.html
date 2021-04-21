@@ -2,27 +2,16 @@
   <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
 </div>
 
-<div class="row">
-
-</div>
-
-
 <div *ngIf="loadedPage">
-  <p>playlist works!</p>
-  <button (click)="addPlaylis()">Add</button>
+  <div class="mb-3">
+    <button (click)="addPlaylist()" mat-mini-fab class="add-button">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
   <div class="row">
-    <div *ngFor="let p of playlistsInfo" class="col-6 col-sm-4 col-lg-3 col-xl-2">
-      <mat-card class="playlist-card">
-        <div class="d-flex" style="justify-content: center">
-          <img mat-card-image src="{{p.playlistImageUrl}}">
-        </div>
-        <mat-card-content>
-          <p>
-            Название: {{p.playlistName}}
-          </p>
-        </mat-card-content>
-      </mat-card>
+    <div style="margin-bottom: 15px" class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2" *ngFor="let p of playlistsInfo">
+      <app-playlist-card [playlistCard]="p">
+      </app-playlist-card>
     </div>
   </div>
-
 </div>

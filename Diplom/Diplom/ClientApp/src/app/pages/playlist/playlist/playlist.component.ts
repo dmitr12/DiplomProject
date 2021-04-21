@@ -43,7 +43,7 @@ export class PlaylistComponent implements OnInit {
     })
   }
 
-  addPlaylis() {
+  addPlaylist() {
     const dialogConfig = new MatDialogConfig();
     this.dialogSource = this.dialog.open(AddplaylistformComponent, dialogConfig);
     // this.dialogSource.afterClosed().subscribe(result => {

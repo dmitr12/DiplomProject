@@ -1,0 +1,37 @@
+.playlist-card{
+  height: 190px;
+  width: 190px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  transition: all .3s;
+}
+
+.playlist-card-title{
+  word-wrap: break-word;
+  background-color: rgba(0,0,0,.7);
+  width: 100%;
+  color: white;
+  padding: 5px;
+  text-align: center;
+}
+
+.playlist-card-user{
+  word-wrap: break-word;
+  width: 190px;
+  color: #9414d9;
+  text-align: center;
+}
+
+.playlist-card:hover{
+  box-shadow: 0 0 15px rgb(148, 20, 217);
+}
+
+a{
+  color: #9414d9;
+  cursor: pointer;
+}
+
+a:hover{
+  text-decoration: underline;
+}

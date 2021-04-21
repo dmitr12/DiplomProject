@@ -51,6 +51,7 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { ProfileEditorComponent } from './pages/profile/profile-editor/profile-editor.component';
 import { AddplaylistformComponent } from './components/playlists/addplaylistform/addplaylistform.component';
 import { PlaylistComponent } from './pages/playlist/playlist/playlist.component';
+import { PlaylistCardComponent } from './shared/playlist-card/playlist-card.component';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN);
@@ -82,6 +83,7 @@ export function tokenGetter() {
     ProfileEditorComponent,
     AddplaylistformComponent,
     PlaylistComponent,
+    PlaylistCardComponent,
   ],
     imports: [
         BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),

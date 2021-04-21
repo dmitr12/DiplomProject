@@ -12,6 +12,7 @@ namespace Diplom.Models.PlaylistModels
         public string PlaylistDescription { get; set; }
         public string PlaylistImageUrl { get; set; }
         public int UserId { get; set; }
+        public string UserName { get; set; }
         public DateTime CreateDate { get; set; }
     }
 }

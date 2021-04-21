@@ -1,0 +1,10 @@
+<div>
+  <div class="playlist-card d-flex align-items-end" [ngStyle]="{'background-image':'url('+playlistCard.playlistImageUrl+')'}">
+    <div class="playlist-card-title">
+      {{playlistCard.playlistName}}
+    </div>
+  </div>
+  <div *ngIf="playlistCard.userName !== null" class="playlist-card-user">
+    <a class="link">{{playlistCard.userName}}</a>
+  </div>
+</div>
