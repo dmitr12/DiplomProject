@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Diplom.Managers;
 using Diplom.Models.PlaylistModels;
+using Diplom.Models.PlaylistsMusicsModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +36,20 @@ namespace Diplom.Controllers
         public List<PlaylistInfo> GetUserPlaylists()
         {
             return playlistManager.GetUserPlaylists(UserId).Result;
+        }
+
+        [HttpGet("PlaylistInfo/{playlistId}")]
+        [Authorize]
+        public PlaylistInfo GetPlaylistInfo(int playlistId)
+        {
+            return playlistManager.GetPlaylistInfo(playlistId).Result;
+        }
+
+        [HttpPost("AddMusic")]
+        [Authorize]
+        public IActionResult AddMusic(PlaylistsMusic model)
+        {
+            return playlistManager.AddMusic(model, UserId).Result;
         }
     }
 }

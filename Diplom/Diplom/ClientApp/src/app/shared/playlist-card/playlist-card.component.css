@@ -5,6 +5,9 @@
   background-position: center center;
   background-size: cover;
   transition: all .3s;
+  border: 1px solid #9414d9;
+  border-radius: 15px;
+  border-bottom: none;
 }
 
 .playlist-card-title{
@@ -14,6 +17,8 @@
   color: white;
   padding: 5px;
   text-align: center;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
 }
 
 .playlist-card-user{

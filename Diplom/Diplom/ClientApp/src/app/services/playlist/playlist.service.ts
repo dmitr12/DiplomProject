@@ -4,6 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {MusicInfo} from "../../models/musics/musicInfo";
 import {PlaylistInfo} from "../../models/playlists/playlistInfo";
+import {PlaylistsMusic} from "../../models/playlists/playlistsMusic";
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,14 @@ export class PlaylistService {
 
   addPlaylist(formData: FormData) {
     return this.http.post(`${environment.url}api/playlist/addPlaylist`, formData);
+  }
+
+  addMusic(playlistsMusic: PlaylistsMusic){
+    return this.http.post(`${environment.url}api/playlist/addMusic`, playlistsMusic);
+  }
+
+  getPlaylistInfo(playlistId: number): Observable<PlaylistInfo>{
+    return this.http.get<PlaylistInfo>(`${environment.url}api/playlist/PlaylistInfo/${playlistId}`);
   }
 
   getUserPlaylists(): Observable<PlaylistInfo[]>{
