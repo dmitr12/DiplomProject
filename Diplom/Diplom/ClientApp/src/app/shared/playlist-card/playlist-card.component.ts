@@ -9,10 +9,15 @@ import {PlaylistInfo} from "../../models/playlists/playlistInfo";
 export class PlaylistCardComponent implements OnInit {
 
   @Input() playlistCard: PlaylistInfo;
+  loaded = false;
 
   constructor() { }
 
   ngOnInit() {
   }
 
+  imageLoaded() {
+    console.log('image loaded');
+    this.loaded = true
+  }
 }

@@ -1,7 +1,7 @@
-<div class="mat-spinner-container" *ngIf="!loadedComments || !loadedMusicInfo">
+<div class="mat-spinner-container" *ngIf="!loadedComments || !loadedMusicInfo || !imageLoaded">
   <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
 </div>
-<div *ngIf="loadedComments && loadedMusicInfo">
+<div *ngIf="loadedComments && loadedMusicInfo && imageLoaded">
   <div class="row" style="display: flex;">
     <div class="d-flex flex-column">
       <div class="pl-3 pt-3 row">
@@ -74,4 +74,7 @@
   <div [hidden]="hiddenComments" *ngFor="let firstComment of firstComments">
     <app-comment-card [data]="firstComment" [musicId]="this.musicId" [children]="getChildrenComments(firstComment.idComment)"></app-comment-card>
   </div>
+</div>
+<div *ngIf="loadedMusicInfo">
+  <img src="{{musicInfo.imageUrl}}" hidden (load)="imgLoaded()">
 </div>

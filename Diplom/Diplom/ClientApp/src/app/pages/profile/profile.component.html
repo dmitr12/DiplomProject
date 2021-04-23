@@ -5,7 +5,10 @@
   <mat-card style="word-wrap: break-word">
     <mat-card-header style="align-items: center">
       <mat-card-title>
-        <img style="width: 200px; height: 200px" mat-card-avatar src="{{userInfo.avatar}}">
+        <img style="width: 200px; height: 200px" mat-card-avatar src="{{userInfo.avatar}}" [hidden]="imgHidden" (load)="imgLoaded()">
+        <div *ngIf="imgHidden" style="width: 200px; height: 200px" class="d-flex justify-content-center align-items-center">
+          <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+        </div>
       </mat-card-title>
       <mat-card-subtitle *ngIf="currentUserId == userId" class="d-flex" style="justify-content: center" (click)="editProfile()">
         <button mat-flat-button class="mat-btn mt-2">Редактировать профиль</button>

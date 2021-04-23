@@ -1,4 +1,5 @@
-<div>
+<img src="{{playlistCard.playlistImageUrl}}" hidden alt="" (load)="imageLoaded()">
+<div *ngIf="loaded">
   <div class="playlist-card d-flex align-items-end" [ngStyle]="{'background-image':'url('+playlistCard.playlistImageUrl+')'}">
     <div class="playlist-card-title">
       {{playlistCard.playlistName}}
@@ -7,4 +8,7 @@
   <div *ngIf="playlistCard.userName !== null" class="playlist-card-user">
     <a class="link">{{playlistCard.userName}}</a>
   </div>
+</div>
+<div *ngIf="!loaded" class="d-flex justify-content-center align-items-center" style="height: 190px; width: 190px;">
+  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
 </div>

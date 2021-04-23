@@ -42,6 +42,7 @@ export class MusicinfoComponent implements OnInit {
   currentUserRole: UserRole;
   hiddenComments = true;
   deletingMusic = false;
+  imageLoaded = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -214,5 +215,9 @@ export class MusicinfoComponent implements OnInit {
         }
       }
     )
+  }
+
+  imgLoaded() {
+    this.imageLoaded = true;
   }
 }

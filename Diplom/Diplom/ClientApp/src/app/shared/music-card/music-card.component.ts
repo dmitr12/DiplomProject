@@ -17,6 +17,7 @@ export class MusicCardComponent implements OnInit {
   @Output() onDeleted = new EventEmitter<number>();
   @Output() onEdited = new EventEmitter<MusicInfo>();
   dialogSource: any;
+  imgHidden = true;
 
   constructor(
     private dialog: MatDialog,
@@ -57,5 +58,9 @@ export class MusicCardComponent implements OnInit {
     {
       this.audioService.openFile(this.data.id, this.data.musicFileName, this.data.name)
     }
+  }
+
+  imgLoaded() {
+    this.imgHidden = false;
   }
 }

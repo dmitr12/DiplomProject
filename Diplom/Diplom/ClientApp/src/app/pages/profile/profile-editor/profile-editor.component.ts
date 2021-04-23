@@ -22,6 +22,7 @@ export class ProfileEditorComponent implements OnInit {
   avatarFile = null;
 
   public profileForm: FormGroup;
+  imgHidden = true;
 
   constructor(
     private authService: AuthService,
@@ -61,5 +62,9 @@ export class ProfileEditorComponent implements OnInit {
 
   chooseAvatar() {
     this.inputFile.nativeElement.click();
+  }
+
+  imgLoaded() {
+    this.imgHidden = false;
   }
 }

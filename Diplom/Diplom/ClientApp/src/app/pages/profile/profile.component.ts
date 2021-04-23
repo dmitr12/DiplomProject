@@ -19,6 +19,7 @@ export class ProfileComponent implements OnInit {
   private subscription: Subscription;
   public userId: number;
   public currentUserId: number;
+  imgHidden = true;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -49,5 +50,9 @@ export class ProfileComponent implements OnInit {
 
   editProfile() {
     this.router.navigate(['profile-editor', `${this.userId}`])
+  }
+
+  imgLoaded() {
+    this.imgHidden = false;
   }
 }

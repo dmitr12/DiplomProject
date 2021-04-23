@@ -34,3 +34,12 @@
   color: #fa053e;
 }
 
+.music-image{
+  height: 40px;
+  width: 40px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  border-radius: 40px;
+}
+

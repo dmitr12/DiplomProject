@@ -10,10 +10,14 @@ import {MusicInfo} from "../../models/musics/musicInfo";
 export class SearchMusicCardComponent implements OnInit {
 
   @Input() data: MusicInfo;
+  imgHidden = true;
 
   constructor() { }
 
   ngOnInit() {
   }
 
+  imageLoaded() {
+    this.imgHidden = false;
+  }
 }
