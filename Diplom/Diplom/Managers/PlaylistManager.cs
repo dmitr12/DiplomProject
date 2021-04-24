@@ -63,7 +63,7 @@ namespace Diplom.Managers
 
         public async Task<PlaylistInfo> GetPlaylistInfo(int playlistId)
         {
-            return await db.Playlists.Where(p => p.PlaylistId == playlistId).Join(db.Users, p => p.UserId, u => u.UserId, (p, u) => new PlaylistInfo
+            var playlistInfo = await db.Playlists.Where(p => p.PlaylistId == playlistId).Join(db.Users, p => p.UserId, u => u.UserId, (p, u) => new PlaylistInfo
             {
                 PlaylistId = p.PlaylistId,
                 PlaylistName = p.PlaylistName,
@@ -73,6 +73,9 @@ namespace Diplom.Managers
                 UserLogin = u.Login,
                 CreateDate = p.CreateDate
             }).FirstOrDefaultAsync();
+            var musics = await db.PlaylistsMusics.Where(pm => pm.PlaylistId == playlistInfo.PlaylistId).Select(pm=>pm.MusicId).ToListAsync();
+            playlistInfo.Musics = musics;
+            return playlistInfo;
         }
 
         public async Task<IActionResult> AddMusic(PlaylistsMusic model, int userId)

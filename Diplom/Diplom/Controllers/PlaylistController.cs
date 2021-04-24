@@ -31,6 +31,14 @@ namespace Diplom.Controllers
             return playlistManager.AddPlaylist(model, UserId).Result;
         }
 
+        [HttpPut("EditPlaylist")]
+        [Authorize]
+        public IActionResult EditPlaylist([FromForm] PlaylistEditor model)
+        {
+            var s = "asd";
+            return null;
+        }
+
         [HttpGet("UserPlaylists")]
         [Authorize]
         public List<PlaylistInfo> GetUserPlaylists()

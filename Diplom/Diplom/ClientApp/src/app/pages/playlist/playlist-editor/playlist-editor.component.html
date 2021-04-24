@@ -1,1 +1,69 @@
-<p>playlist-editor works!</p>
+<div class="mat-spinner-container" *ngIf="!playlistInfoLoaded || !musicLoaded || !imgLoaded">
+  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+</div>
+
+<div *ngIf="playlistInfoLoaded">
+  <img src="{{playlistInfo.playlistImageUrl}}" (load)="posterLoaded()" hidden>
+</div>
+
+<div *ngIf="playlistInfoLoaded && musicLoaded && imgLoaded">
+  <div class="d-flex">
+    <div class="mr-3">
+      <div class="playlist-poster" [ngStyle]="{'background-image':'url('+image+')'}">
+      </div>
+      <div class="mt-2">
+        <button mat-flat-button class="delete-button">Удалить плейлист</button>
+      </div>
+      <div class="mt-2">
+        <button mat-flat-button class="save-button">Сохранить изменения</button>
+      </div>
+    </div>
+    <div class="row" style="width: 100%">
+      <div class="col-12 col-lg-5">
+        <form [formGroup]="playlistForm">
+          <div>
+            <mat-form-field style="width: 100%">
+              <mat-label>Название</mat-label>
+              <input matInput type="text" value="{{playlistInfo.playlistName}}" formControlName="name">
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field style="width: 100%">
+              <mat-label>Описание</mat-label>
+              <textarea matInput
+                        value="{{playlistInfo.playlistDescription}}"
+                        formControlName="description"
+                        cdkTextareaAutosize
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="5"></textarea>
+            </mat-form-field>
+          </div>
+          <div>
+            <div>
+              <span>Сменить картинку для плейлиста (формат .jpg, .png)</span>
+            </div>
+            <input formControlName="poster" type="file" accept=".jpg, .png" (change)="changePoster($event)">
+          </div>
+        </form>
+      </div>
+      <div class="col-12 col-lg-7">
+        <div class="input-group mb-2">
+          <input #inputSearch id="filter" type="text" class="form-control" placeholder="Название музыки" (keyup.enter)="searchMusic()">
+          <div class="input-group-append search_button waves-effect waves-light" #searchBtn (click)="searchMusic()">
+          <span class="input-group-text" style="cursor: pointer">
+            <mat-icon>search</mat-icon>
+          </span>
+          </div>
+        </div>
+        <div class="d-flex align-items-center" *ngFor="let m of musicUsersFiltered">
+          <mat-checkbox class="mr-3"
+                        (change)="checkboxChanged($event.checked, m.id)">
+          </mat-checkbox>
+          <app-search-music-card style="width: 100%" [data]="m"></app-search-music-card>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+

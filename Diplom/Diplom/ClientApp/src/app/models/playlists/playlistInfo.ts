@@ -6,4 +6,5 @@ export class PlaylistInfo {
   userId: number;
   userName: string;
   createDate: Date;
+  musics: number[];
 }

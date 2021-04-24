@@ -67,4 +67,8 @@ export class PlaylistComponent implements OnInit {
     //   }
     // });
   }
+
+  getPlaylistEditor(playlistId: number) {
+    this.router.navigate(['playlist-editor', `${playlistId}`]);
+  }
 }

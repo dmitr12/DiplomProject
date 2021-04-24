@@ -19,6 +19,10 @@ export class PlaylistService {
     return this.http.post(`${environment.url}api/playlist/addPlaylist`, formData);
   }
 
+  editPlaylist(formData: FormData){
+    return this.http.put(`${environment.url}api/playlist/EditPlaylist`, formData);
+  }
+
   addMusic(playlistsMusic: PlaylistsMusic){
     return this.http.post(`${environment.url}api/playlist/addMusic`, playlistsMusic);
   }

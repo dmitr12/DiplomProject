@@ -1,0 +1,21 @@
+.playlist-poster{
+  height: 190px;
+  width: 190px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  border: 1px solid #9414d9;
+  border-radius: 15px;
+}
+
+.delete-button{
+  color: white;
+  background-color: #fa053e;
+  width: 190px;
+}
+
+.save-button{
+  color: white;
+  background-color: #9414d9;
+  width: 190px;
+}
