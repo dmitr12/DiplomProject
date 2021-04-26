@@ -17,7 +17,6 @@ export class PlaylistCardComponent implements OnInit {
   }
 
   imageLoaded() {
-    console.log('image loaded');
     this.loaded = true
   }
 }

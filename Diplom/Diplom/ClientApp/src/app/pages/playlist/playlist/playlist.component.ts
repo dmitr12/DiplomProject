@@ -46,26 +46,26 @@ export class PlaylistComponent implements OnInit {
   addPlaylist() {
     const dialogConfig = new MatDialogConfig();
     this.dialogSource = this.dialog.open(AddplaylistformComponent, dialogConfig);
-    // this.dialogSource.afterClosed().subscribe(result => {
-    //   if (result !== 'false'){
-    //     this.musicService.getMusic(result).pipe(finalize(()=> this.loaded = true)).subscribe((res:MusicInfo)=>{
-    //       this.loaded = false;
-    //       this.musics = this.musics.concat(res);
-    //     }, error => {
-    //       if(error.status == 401){
-    //         this.router.navigate(['auth']);
-    //       }
-    //       if (error.status != 0) {
-    //         this.matSnackBar.open(`При получении музыки возникла ошибка, статусный код ${error.status}`, '', {
-    //           duration: 3000,
-    //           panelClass: 'custom-snack-bar-error'
-    //         });
-    //       } else {
-    //         this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
-    //       }
-    //     })
-    //   }
-    // });
+    this.dialogSource.afterClosed().subscribe(result => {
+      if (result !== 'false'){
+        this.loadedPage = false;
+        this.playlistService.getPlaylistInfo(result).pipe(finalize(()=> this.loadedPage = true)).subscribe((res: PlaylistInfo)=>{
+          this.playlistsInfo = this.playlistsInfo.concat(res);
+        }, error => {
+          if(error.status == 401){
+            this.router.navigate(['auth']);
+          }
+          if (error.status != 0) {
+            this.matSnackBar.open(`При получении плейлиста возникла ошибка, статусный код ${error.status}`, '', {
+              duration: 3000,
+              panelClass: 'custom-snack-bar-error'
+            });
+          } else {
+            this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
+          }
+        })
+      }
+    });
   }
 
   getPlaylistEditor(playlistId: number) {

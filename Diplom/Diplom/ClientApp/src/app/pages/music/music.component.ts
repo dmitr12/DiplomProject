@@ -120,10 +120,6 @@ export class MusicComponent implements OnInit {
     )
   }
 
-  checkss() {
-    this.musics = this.musics.concat(this.musics)
-  }
-
   onMusicDeleted(id: number) {
     this.loaded = false;
     const index = this.musics.indexOf(this.musics.filter(m=>m.id == id)[0]);

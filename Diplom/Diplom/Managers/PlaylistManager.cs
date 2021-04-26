@@ -2,6 +2,7 @@
 using Diplom.Models;
 using Diplom.Models.PlaylistModels;
 using Diplom.Models.PlaylistsMusicsModels;
+using Diplom.Models.UserModels;
 using Diplom.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -61,6 +62,56 @@ namespace Diplom.Managers
             }
         }
 
+        public async Task<IActionResult> EditPlaylist(PlaylistEditor model, int userId)
+        {
+            var playlist = await db.Playlists.FindAsync(model.PlaylistId);
+            if (playlist == null)
+                return new NotFoundObjectResult(new { msg = "Плейлист не найден" });
+            if (playlist.UserId != userId)
+                return new ForbidResult();
+            if (model.Musics == null)
+                model.Musics = new List<int>();
+            var user = await db.Users.FindAsync(userId);
+            string imageFileName;
+            var dateTimeNow = DateTime.Now;
+            var createDate = $"{dateTimeNow.Day}.{dateTimeNow.Month}.{dateTimeNow.Year} {dateTimeNow.Hour}:{dateTimeNow.Minute}:{dateTimeNow.Second}";
+            try
+            {
+                if(model.ImageFile != null)
+                {
+                    imageFileName = $"{user.Login}_playlist_{createDate}_" + model.ImageFile.FileName;
+                    if(playlist.PlaylistImageFile != $"{options.Value.DefaultPlaylistImageFile}")
+                    {
+                        playlist.PlaylistImageUrl = await cloudService.EditFile("", playlist.PlaylistImageFile, "", imageFileName, model.ImageFile.OpenReadStream());
+                        playlist.PlaylistImageFile = imageFileName;
+                    }
+                    else
+                    {
+                        playlist.PlaylistImageUrl = await cloudService.AddFile("", imageFileName, model.ImageFile.OpenReadStream());
+                        playlist.PlaylistImageFile = imageFileName;
+                    }
+                }
+                playlist.PlaylistName = model.PlaylistName;
+                playlist.PlaylistDescription = model.PlaylistDescription;
+                var pm = await db.PlaylistsMusics.Where(pm => pm.PlaylistId == model.PlaylistId).ToListAsync();
+                var sub = model.Musics.Except(pm.Select(pm => pm.MusicId));
+                if(model.Musics.Count!=pm.Count || sub.Count() != 0)
+                {
+                    db.PlaylistsMusics.RemoveRange(pm);
+                    var playlistMusics = new List<PlaylistsMusic>();
+                    foreach (var m in model.Musics)
+                        playlistMusics.Add(new PlaylistsMusic { PlaylistId = model.PlaylistId, MusicId = m });
+                    await db.PlaylistsMusics.AddRangeAsync(playlistMusics);
+                }
+                await db.SaveChangesAsync();
+                return new OkResult();
+            }
+            catch
+            {
+                return new StatusCodeResult(500);
+            }
+        }
+
         public async Task<PlaylistInfo> GetPlaylistInfo(int playlistId)
         {
             var playlistInfo = await db.Playlists.Where(p => p.PlaylistId == playlistId).Join(db.Users, p => p.UserId, u => u.UserId, (p, u) => new PlaylistInfo
@@ -94,6 +145,28 @@ namespace Diplom.Managers
                 if(music == null)
                     return new NotFoundObjectResult(new { msg = "Указанная музыкальная запись не существует" });
                 db.PlaylistsMusics.Add(model);
+                await db.SaveChangesAsync();
+                return new OkResult();
+            }
+            catch
+            {
+                return new StatusCodeResult(500);
+            }
+        }
+
+        public async Task<IActionResult> DeletePlaylist(int playlistId, int UserId, int RoleId)
+        {
+            var playlist = await db.Playlists.FindAsync(playlistId);
+            if (playlist == null)
+                return new NotFoundResult();
+            if (RoleId != (int)UserRoleEnum.Admin)
+                if (playlist.UserId != UserId)
+                    return new ForbidResult();
+            try
+            {
+                if (playlist.PlaylistImageFile != $"{options.Value.DefaultPlaylistImageFile}")
+                    await cloudService.DeleteFile("", playlist.PlaylistImageFile);
+                db.Playlists.Remove(playlist);
                 await db.SaveChangesAsync();
                 return new OkResult();
             }

@@ -55,6 +55,8 @@ import { PlaylistCardComponent } from './shared/playlist-card/playlist-card.comp
 import { PlaylistEditorComponent } from './pages/playlist/playlist-editor/playlist-editor.component';
 import { PlaylistInfoComponent } from './pages/playlist/playlist-info/playlist-info.component';
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import { DeleteplaylistComponent } from './components/playlists/deleteplaylist/deleteplaylist.component';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN);
@@ -89,72 +91,74 @@ export function tokenGetter() {
     PlaylistCardComponent,
     PlaylistEditorComponent,
     PlaylistInfoComponent,
+    DeleteplaylistComponent,
   ],
-  imports: [
-    BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatProgressBarModule,
-    MatSnackBarModule,
-    JwtModule.forRoot({
-      config: {
-        tokenGetter
-      }
-    }),
-    RouterModule.forRoot([
-      {
-        path: 'auth', component: AuthlayoutComponent, children: [
-          {path: '', redirectTo: 'login', pathMatch: 'full'},
-          {path: 'login', component: LoginComponent},
-          {path: 'register', component: RegisterComponent},
-          {path: 'forgot-password', component: ForgotPasswordComponent}
-        ]
-      },
-      {
-        path: '', component: ApplayoutComponent, canActivate: [AuthGuard], children: [
-          {path: '', redirectTo: 'mymusic', pathMatch: 'full'},
-          {
-            path: 'mymusic', component: MymusicComponent, children: [
-              {path: '', redirectTo: 'music', pathMatch: 'full'},
-              {path: 'music', component: MusicComponent},
-              {path: 'favorite', component: FavouritemusicsComponent}
-            ]
-          },
-          {path: 'search', component: SearchComponent},
-          {path: 'playlist', component: PlaylistComponent},
-          {path: 'musicinfo/:id', component: MusicinfoComponent},
-          {path: 'profile/:id', component: ProfileComponent},
-          {path: 'profile-editor/:id', component: ProfileEditorComponent},
-          {path: 'playlist-editor/:id', component: PlaylistEditorComponent},
-          {path: 'playlist-info/:id', component: PlaylistInfoComponent}
-        ]
-      }
-    ]),
-    BrowserAnimationsModule,
-    MatProgressSpinnerModule,
-    MatIconModule,
-    MatSidenavModule,
-    MatButtonModule,
-    MatListModule,
-    MatMenuModule,
-    MatSelectModule,
-    MatToolbarModule,
-    MatDialogModule,
-    InfiniteScrollModule,
-    MatInputModule,
-    MatCardModule,
-    NgxPaginationModule,
-    RatingModule,
-    MatStepperModule,
-    MatCheckboxModule,
-  ],
+    imports: [
+        BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
+        HttpClientModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatProgressBarModule,
+        MatSnackBarModule,
+        JwtModule.forRoot({
+            config: {
+                tokenGetter
+            }
+        }),
+        RouterModule.forRoot([
+            {
+                path: 'auth', component: AuthlayoutComponent, children: [
+                    {path: '', redirectTo: 'login', pathMatch: 'full'},
+                    {path: 'login', component: LoginComponent},
+                    {path: 'register', component: RegisterComponent},
+                    {path: 'forgot-password', component: ForgotPasswordComponent}
+                ]
+            },
+            {
+                path: '', component: ApplayoutComponent, canActivate: [AuthGuard], children: [
+                    {path: '', redirectTo: 'mymusic', pathMatch: 'full'},
+                    {
+                        path: 'mymusic', component: MymusicComponent, children: [
+                            {path: '', redirectTo: 'music', pathMatch: 'full'},
+                            {path: 'music', component: MusicComponent},
+                            {path: 'favorite', component: FavouritemusicsComponent}
+                        ]
+                    },
+                    {path: 'search', component: SearchComponent},
+                    {path: 'playlist', component: PlaylistComponent},
+                    {path: 'musicinfo/:id', component: MusicinfoComponent},
+                    {path: 'profile/:id', component: ProfileComponent},
+                    {path: 'profile-editor/:id', component: ProfileEditorComponent},
+                    {path: 'playlist-editor/:id', component: PlaylistEditorComponent},
+                    {path: 'playlist-info/:id', component: PlaylistInfoComponent}
+                ]
+            }
+        ]),
+        BrowserAnimationsModule,
+        MatProgressSpinnerModule,
+        MatIconModule,
+        MatSidenavModule,
+        MatButtonModule,
+        MatListModule,
+        MatMenuModule,
+        MatSelectModule,
+        MatToolbarModule,
+        MatDialogModule,
+        InfiniteScrollModule,
+        MatInputModule,
+        MatCardModule,
+        NgxPaginationModule,
+        RatingModule,
+        MatStepperModule,
+        MatCheckboxModule,
+        MatTooltipModule,
+    ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true}
   ],
   bootstrap: [AppComponent],
   entryComponents: [AddmusicformComponent, DeletemusicformComponent, EditmusicformComponent,
-  AddplaylistformComponent]
+  AddplaylistformComponent, DeleteplaylistComponent]
 })
 export class AppModule {
 }

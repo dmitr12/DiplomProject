@@ -18,6 +18,7 @@ namespace Diplom.Controllers
     {
         private readonly PlaylistManager playlistManager;
         private int UserId => int.Parse(User.Claims.Single(cl => cl.Type == ClaimTypes.NameIdentifier).Value);
+        private int RoleId => int.Parse(User.Claims.Single(cl => cl.Type == ClaimTypes.Role).Value);
 
         public PlaylistController(PlaylistManager playlistManager)
         {
@@ -35,8 +36,14 @@ namespace Diplom.Controllers
         [Authorize]
         public IActionResult EditPlaylist([FromForm] PlaylistEditor model)
         {
-            var s = "asd";
-            return null;
+            return playlistManager.EditPlaylist(model, UserId).Result;
+        }
+
+        [HttpDelete("DeletePlaylist/{playlistId}")]
+        [Authorize]
+        public IActionResult DeletePlaylist(int playlistId)
+        {
+            return playlistManager.DeletePlaylist(playlistId, UserId, RoleId).Result;
         }
 
         [HttpGet("UserPlaylists")]

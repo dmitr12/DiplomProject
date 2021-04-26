@@ -23,6 +23,10 @@ export class PlaylistService {
     return this.http.put(`${environment.url}api/playlist/EditPlaylist`, formData);
   }
 
+  deletePlaylist(playlistId: number){
+    return this.http.delete(`${environment.url}api/playlist/DeletePlaylist/${playlistId}`);
+  }
+
   addMusic(playlistsMusic: PlaylistsMusic){
     return this.http.post(`${environment.url}api/playlist/addMusic`, playlistsMusic);
   }

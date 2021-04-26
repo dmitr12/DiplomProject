@@ -31,7 +31,9 @@ export class AddplaylistformComponent implements OnInit {
     public loaderService: LoaderService,
     private router: Router,
     private dialogSource: MatDialogRef<AddplaylistformComponent>
-  ) { }
+  ) {
+    dialogSource.disableClose = true;
+  }
 
   ngOnInit() {
     this.formData = new FormData();
@@ -75,6 +77,9 @@ export class AddplaylistformComponent implements OnInit {
         this.postingQuery = false;
         if(error.status == 401){
           this.router.navigate(['auth']);
+        }
+        else if(error.status == 404){
+          this.matSnackBar.open(error.error.msg, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
         }
         if(error.status != 0){
           this.matSnackBar.open(`При отправке запроса возникла ошибка, статусный код ${error.status}`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});

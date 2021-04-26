@@ -19,3 +19,8 @@
   background-color: #9414d9;
   width: 190px;
 }
+
+.title{
+  font-size: 18px;
+  border-bottom: #9414d9 1px solid;
+}

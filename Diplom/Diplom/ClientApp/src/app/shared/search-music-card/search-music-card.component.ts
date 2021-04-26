@@ -1,5 +1,4 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {MusicGenreInfo} from "../../models/musics/musicGenreInfo";
 import {MusicInfo} from "../../models/musics/musicInfo";
 
 @Component({
