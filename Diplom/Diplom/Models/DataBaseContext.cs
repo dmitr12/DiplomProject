@@ -1,6 +1,8 @@
 ﻿using Diplom.Models.CommentModels;
+using Diplom.Models.FollowerModels;
 using Diplom.Models.GenreModels;
 using Diplom.Models.MusicModels;
+using Diplom.Models.NotificationModels;
 using Diplom.Models.PlaylistModels;
 using Diplom.Models.PlaylistsMusicsModels;
 using Diplom.Models.RatingModels;
@@ -20,6 +22,8 @@ namespace Diplom.Models
         public DbSet<MusicComment> MusicComments { get; set; }
         public DbSet<Playlist> Playlists { get; set; }
         public DbSet<PlaylistsMusic> PlaylistsMusics { get; set; }
+        public DbSet<Follower> Followers { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         public DataBaseContext(DbContextOptions<DataBaseContext> options) : base(options) { }
 
@@ -27,6 +31,7 @@ namespace Diplom.Models
         {
             modelBuilder.Entity<MusicStarRating>().HasKey(r => new { r.MusicId, r.UserId });
             modelBuilder.Entity<PlaylistsMusic>().HasKey(p => new { p.PlaylistId, p.MusicId });
+            modelBuilder.Entity<Follower>().HasKey(f => new { f.UserId, f.FollowedUserId });
             modelBuilder.Entity<MusicComment>().HasKey(c => c.IdComment);
         }
     }

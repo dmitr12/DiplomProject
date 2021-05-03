@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import {environment} from "../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {MusicInfo} from "../../models/musics/musicInfo";
 import {PlaylistInfo} from "../../models/playlists/playlistInfo";
 import {PlaylistsMusic} from "../../models/playlists/playlistsMusic";
 

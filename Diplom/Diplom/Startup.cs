@@ -32,14 +32,7 @@ namespace Diplom
             {
                 configuration.RootPath = "ClientApp/dist";
             });
-            services.AddScoped<IGeneratorToken, TokenManager>();
-            services.AddScoped<UserManager>();
-            services.AddScoped<MusicManager>();
-            services.AddScoped<CommentManager>();
-            services.AddScoped<EmailManager>();
-            services.AddScoped<PlaylistManager>();
-            services.AddSingleton<ICloudService, CloudService>();
-            services.AddSingleton<IEmailService, EmailService>();
+            services.AddDependencies();
             services.Configure<DropBoxOptions>(Configuration.GetSection("DropBoxOptions"));
             services.Configure<AuthOptions>(Configuration.GetSection("Auth"));
             services.AddCors(options =>

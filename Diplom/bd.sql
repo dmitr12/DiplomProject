@@ -87,3 +87,21 @@ primary key (PlaylistId, MusicId),
 foreign key (PlaylistId) references Playlists(PlaylistId) on delete cascade,
 foreign key (MusicId) references Musics(MusicId) on delete cascade
 )
+go
+create table Followers(
+UserId int,
+FollowedUserId int,
+primary key (UserId, FollowedUserId),
+foreign key (UserId) references Users(UserId),
+foreign key (FollowedUserId) references Users(UserId),
+check (FollowedUserId <> UserId)
+)
+go
+create table Notifications(
+NotificationId int primary key identity(1,1),
+UserId int not null references Users(UserId),
+SourceId int not null,
+NotificationType int not null,
+IsChecked bit,
+CreateDate date not null
+)

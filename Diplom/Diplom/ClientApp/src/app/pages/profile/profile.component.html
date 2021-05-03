@@ -1,4 +1,4 @@
-<div class="mat-spinner-container" *ngIf="!pageLoaded">
+<div class="mat-spinner-container" *ngIf="!pageLoaded || followerProccessing">
   <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
 </div>
 <div *ngIf="pageLoaded">
@@ -10,9 +10,15 @@
           <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
         </div>
       </mat-card-title>
-      <mat-card-subtitle *ngIf="currentUserId == userId" class="d-flex" style="justify-content: center" (click)="editProfile()">
+      <mat-card-subtitle *ngIf="authService.isAuth() && !isAnotherUser" class="d-flex" style="justify-content: center" (click)="editProfile()">
         <button mat-flat-button class="mat-btn mt-2">Редактировать профиль</button>
       </mat-card-subtitle>
+        <mat-card-subtitle *ngIf="authService.isAuth() && isAnotherUser && !isFollowerExists" class="d-flex" style="justify-content: center" (click)="addFollower()">
+          <button mat-flat-button [disabled]="followerProccessing" class="mat-btn mt-2" >Оформить подписку</button>
+        </mat-card-subtitle>
+        <mat-card-subtitle *ngIf="authService.isAuth() && isAnotherUser && isFollowerExists" class="d-flex" style="justify-content: center" (click)="deleteFollower()">
+          <button mat-flat-button [disabled]="followerProccessing" class="mat-btn mt-2">Отписаться</button>
+        </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
       <div class="general-information">

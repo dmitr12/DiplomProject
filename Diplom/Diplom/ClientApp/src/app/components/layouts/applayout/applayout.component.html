@@ -8,7 +8,14 @@
         <span class="app-title">Menu</span>
       </a>
     </div>
-    <div>
+    <div class="d-flex">
+      <div class="notification d-flex align-items-center mr-3">
+<!--        <mat-icon>notifications</mat-icon>-->
+<!--        <mat-icon class="mr-1">notifications_active</mat-icon>-->
+<!--        <div class="notification-counter d-flex justify-content-center">-->
+<!--          <span>3</span>-->
+<!--        </div>-->
+      </div>
       <mat-card class="profile" [matMenuTriggerFor]="menu">
         <span style="margin-right: 10px">{{userInfo.login}}</span>
         <img mat-card-avatar src="{{userInfo.avatar}}">
