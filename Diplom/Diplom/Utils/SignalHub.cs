@@ -8,6 +8,5 @@ namespace Diplom.Utils
 {
     public class SignalHub: Hub
     {
-
     }
 }

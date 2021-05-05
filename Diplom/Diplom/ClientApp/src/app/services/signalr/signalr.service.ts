@@ -6,6 +6,7 @@ import {MusicStarRating} from "../../models/musics/musicStarRating";
 import {HttpClient} from "@angular/common/http";
 import {MusicCommentResult} from "../../models/comments/musicCommentResult";
 import {User} from "../../models/users/user";
+import {NotificationResult} from "../../models/notifications/notificationResult";
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +16,12 @@ export class SignalrService {
   ratedMusicSignal = new EventEmitter<RatedMusicResult>();
   commentMusicSignal = new EventEmitter<MusicCommentResult>();
   changeUserPasswordSignal = new EventEmitter<User>();
+  notificationSignal = new EventEmitter<NotificationResult>();
   private hubConnection: signalr.HubConnection;
   private readonly ratedMusic = 'RatedMusic';
   private readonly commentOnMusic = 'CommentOnMusic';
   private readonly changeUserPassword = "ChangeUserPassword";
+  private readonly notification_event = "Notification";
 
   constructor(
     private http: HttpClient
@@ -60,6 +63,9 @@ export class SignalrService {
     });
     this.hubConnection.on(this.changeUserPassword, (data: User) => {
       this.changeUserPasswordSignal.emit(data);
+    });
+    this.hubConnection.on(this.notification_event, (data: NotificationResult) => {
+      this.notificationSignal.emit(data);
     });
   }
 }

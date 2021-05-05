@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {MusicInfo} from "../../models/musics/musicInfo";
@@ -23,26 +23,26 @@ import {UserRole} from "../../models/users/user";
   templateUrl: './musicinfo.component.html',
   styleUrls: ['./musicinfo.component.css']
 })
-export class MusicinfoComponent implements OnInit {
+export class MusicinfoComponent implements OnInit, OnDestroy {
 
   @ViewChild("ratingComponent", {static: false}) ratingComponent: StarRatingComponent;
 
   musicInfo: MusicInfo;
-  musicCommentsInfo: MusicCommentInfo[] = [];
-  loadedMusicInfo = false;
+  musicCommentsInfo: MusicCommentInfo[];
+  loadedMusicInfo: boolean;
   loadedComments = false;
   public musicId: number;
   private subscription: Subscription;
-  isRateReadOnly = false;
-  firstComments: MusicCommentInfo[] = [];
-  secondComments: MusicCommentInfo[] = [];
-  isCommentAreaOpen = false;
-  commentText = '';
+  isRateReadOnly;
+  firstComments: MusicCommentInfo[];
+  secondComments: MusicCommentInfo[];
+  isCommentAreaOpen: boolean;
+  commentText: string;
   currentUserId: number;
   currentUserRole: UserRole;
-  hiddenComments = true;
-  deletingMusic = false;
-  imageLoaded = false;
+  hiddenComments: boolean;
+  deletingMusic: boolean;
+  imageLoaded: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -55,58 +55,73 @@ export class MusicinfoComponent implements OnInit {
     public audioService: AudioService
   ) {
     this.subscription = activatedRoute.params.subscribe(params => this.musicId = params['id']);
+    activatedRoute.params.subscribe(val=>{
+      this.loadedMusicInfo = false;
+      this.loadedComments = false;
+      this.musicCommentsInfo = [];
+      this.isRateReadOnly = false;
+      this.firstComments = [];
+      this.secondComments = [];
+      this.isRateReadOnly = false;
+      this.commentText = '';
+      this.hiddenComments = true;
+      this.deletingMusic = false;
+      this.imageLoaded = false;
+
+      this.musicService.getMusic(this.musicId).pipe(finalize(() => this.loadedMusicInfo = true)).subscribe((res: MusicInfo) => {
+        this.musicInfo = res;
+        this.musicInfo.dateOfPublication = new Date(res.dateOfPublication);
+      }, error => {
+        if (error.status == 401) {
+          this.router.navigate(['auth']);
+        } else if (error.status != 0) {
+          this.matSnackBar.open(`При получении информации о музыки возникла ошибка, статусный код ${error.status}`, '', {
+            duration: 3000,
+            panelClass: 'custom-snack-bar-error'
+          });
+        } else {
+          this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
+        }
+      });
+
+      this.commentsService.getCommentsForMusic(this.musicId).pipe(finalize(() => this.loadedComments = true)).subscribe((res: MusicCommentInfo[]) => {
+        this.musicCommentsInfo = res;
+        this.firstComments = this.musicCommentsInfo.filter(c => c.parentIdComment === null);
+        this.secondComments = this.musicCommentsInfo.filter(c => !this.firstComments.includes(c));
+      }, error => {
+        if (error.status == 401) {
+          this.router.navigate(['auth']);
+        } else if (error.status != 0) {
+          this.matSnackBar.open(`При получении комментариев возникла ошибка, статусный код ${error.status}`, '', {
+            duration: 3000,
+            panelClass: 'custom-snack-bar-error'
+          });
+        } else {
+          this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
+        }
+      });
+    })
   }
 
   ngOnInit() {
     this.currentUserId = Number(this.authService.getCurrentUserId());
     this.currentUserRole = Number(this.authService.getCurrentUserRole());
-    this.musicService.getMusic(this.musicId).pipe(finalize(() => this.loadedMusicInfo = true)).subscribe((res: MusicInfo) => {
-      this.musicInfo = res;
-      this.musicInfo.dateOfPublication = new Date(res.dateOfPublication);
-    }, error => {
-      if (error.status == 401) {
-        this.router.navigate(['auth']);
-      } else if (error.status != 0) {
-        this.matSnackBar.open(`При получении информации о музыки возникла ошибка, статусный код ${error.status}`, '', {
-          duration: 3000,
-          panelClass: 'custom-snack-bar-error'
-        });
-      } else {
-        this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
-      }
-    });
 
-    this.commentsService.getCommentsForMusic(this.musicId).pipe(finalize(() => this.loadedComments = true)).subscribe((res: MusicCommentInfo[]) => {
-      this.musicCommentsInfo = res;
-      this.firstComments = this.musicCommentsInfo.filter(c => c.parentIdComment === null);
-      this.secondComments = this.musicCommentsInfo.filter(c => !this.firstComments.includes(c));
-      this.signarService.commentMusicSignal.subscribe((signal: MusicCommentResult) => {
-        if (signal.result && signal.musicCommentInfo.parentIdComment === null) {
-          switch (signal.commentChangedType) {
-            case CommentChangedType.added:
-              this.firstComments.unshift(signal.musicCommentInfo);
-              break;
-            case CommentChangedType.deleted:
-              const indexForDelete = this.firstComments.findIndex(item => item.idComment == signal.musicCommentInfo.idComment)
-              this.firstComments.splice(indexForDelete, 1);
-              break;
-            case CommentChangedType.edited:
-              const indexForEdit = this.firstComments.findIndex(item => item.idComment == signal.musicCommentInfo.idComment)
-              this.firstComments[indexForEdit].comment = signal.musicCommentInfo.comment;
-              break;
-          }
+    this.signarService.commentMusicSignal.subscribe((signal: MusicCommentResult) => {
+      if (signal.result && signal.musicCommentInfo.parentIdComment === null) {
+        switch (signal.commentChangedType) {
+          case CommentChangedType.added:
+            this.firstComments.unshift(signal.musicCommentInfo);
+            break;
+          case CommentChangedType.deleted:
+            const indexForDelete = this.firstComments.findIndex(item => item.idComment == signal.musicCommentInfo.idComment)
+            this.firstComments.splice(indexForDelete, 1);
+            break;
+          case CommentChangedType.edited:
+            const indexForEdit = this.firstComments.findIndex(item => item.idComment == signal.musicCommentInfo.idComment)
+            this.firstComments[indexForEdit].comment = signal.musicCommentInfo.comment;
+            break;
         }
-      });
-    }, error => {
-      if (error.status == 401) {
-        this.router.navigate(['auth']);
-      } else if (error.status != 0) {
-        this.matSnackBar.open(`При получении комментариев возникла ошибка, статусный код ${error.status}`, '', {
-          duration: 3000,
-          panelClass: 'custom-snack-bar-error'
-        });
-      } else {
-        this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
       }
     });
 
@@ -116,6 +131,9 @@ export class MusicinfoComponent implements OnInit {
         this.musicInfo.countRatings = signal.countRatings;
       }
     });
+  }
+
+  ngOnDestroy(): void {
   }
 
   play() {

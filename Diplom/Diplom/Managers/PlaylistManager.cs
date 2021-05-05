@@ -1,5 +1,6 @@
 ﻿using Diplom.Interfaces;
 using Diplom.Models;
+using Diplom.Models.NotificationModels;
 using Diplom.Models.PlaylistModels;
 using Diplom.Models.PlaylistsMusicsModels;
 using Diplom.Models.UserModels;
@@ -19,12 +20,14 @@ namespace Diplom.Managers
         private readonly DataBaseContext db;
         private readonly ICloudService cloudService;
         private readonly IOptions<DropBoxOptions> options;
+        private readonly NotificationManager notificationManager;
 
-        public PlaylistManager(DataBaseContext db, ICloudService cloudService, IOptions<DropBoxOptions> options)
+        public PlaylistManager(DataBaseContext db, ICloudService cloudService, IOptions<DropBoxOptions> options, NotificationManager notificationManager)
         {
             this.db = db;
             this.cloudService = cloudService;
             this.options = options;
+            this.notificationManager = notificationManager;
         }
 
         public async Task<IActionResult> AddPlaylist(AddPlaylistModel model, int userId)
@@ -54,6 +57,15 @@ namespace Diplom.Managers
                 };
                 db.Playlists.Add(playlist);
                 await db.SaveChangesAsync();
+                var notificationResult = notificationManager.AddNotification(new AddNotification
+                {
+                    UserId = userId,
+                    SourceId = playlist.PlaylistId,
+                    NotificationType = NotificationType.AddedPlaylist,
+                    Message = $"Пользователь {user.Login} добавил новый плейлист под названием {playlist.PlaylistName}"
+                }).Result;
+                if (!notificationResult.OperationCompleted)
+                    throw new Exception(notificationResult.ErrorMessage);
                 return new OkObjectResult(new { id = playlist.PlaylistId });
             }
             catch

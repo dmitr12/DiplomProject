@@ -2,6 +2,7 @@
 using Diplom.Models;
 using Diplom.Models.GenreModels;
 using Diplom.Models.MusicModels;
+using Diplom.Models.NotificationModels;
 using Diplom.Models.RatingModels;
 using Diplom.Models.UserModels;
 using Diplom.Utils;
@@ -21,12 +22,14 @@ namespace Diplom.Managers
         private readonly DataBaseContext db;
         private readonly ICloudService cloudService;
         private readonly IOptions<DropBoxOptions> options;
+        private readonly NotificationManager notificationManager;
 
-        public MusicManager(DataBaseContext db, ICloudService cloudService, IOptions<DropBoxOptions> options)
+        public MusicManager(DataBaseContext db, ICloudService cloudService, IOptions<DropBoxOptions> options, NotificationManager notificationManager)
         {
             this.db = db;
             this.cloudService = cloudService;
             this.options = options;
+            this.notificationManager = notificationManager;
         }
 
         public async Task<List<MusicInfo>> GetFilteredList(string musicName, int genreId)
@@ -153,6 +156,10 @@ namespace Diplom.Managers
                 };
                 db.Musics.Add(music);
                 await db.SaveChangesAsync();
+                var notificationResult = notificationManager.AddNotification(new AddNotification { UserId = userId, SourceId = music.MusicId, NotificationType = NotificationType.AddedMusic,  
+                Message = $"Пользователь {user.Login} добавил новую песню под названием {music.MusicName}"}).Result;
+                if (!notificationResult.OperationCompleted)
+                    throw new Exception(notificationResult.ErrorMessage);
                 return new OkObjectResult(new {id = music.MusicId});
             }
             catch

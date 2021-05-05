@@ -20,6 +20,7 @@ namespace Diplom.Utils
             services.AddScoped<EmailManager>();
             services.AddScoped<PlaylistManager>();
             services.AddScoped<FollowerManager>();
+            services.AddScoped<NotificationManager>();
             services.AddSingleton<ICloudService, CloudService>();
             services.AddSingleton<IEmailService, EmailService>();
         }

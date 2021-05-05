@@ -102,6 +102,7 @@ NotificationId int primary key identity(1,1),
 UserId int not null references Users(UserId),
 SourceId int not null,
 NotificationType int not null,
+Message nvarchar(max) not null,
 IsChecked bit,
 CreateDate date not null
 )

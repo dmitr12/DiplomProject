@@ -9,6 +9,11 @@ import {LoaderService} from "../../../services/loader/loader.service";
 import {UserInfo} from "../../../models/users/userInfo";
 import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {NotificationService} from "../../../services/notification/notification.service";
+import {Notification} from "../../../models/notifications/notification";
+import {SignalrService} from "../../../services/signalr/signalr.service";
+import {NotificationResult} from "../../../models/notifications/notificationResult";
+import {NotificationType} from "../../../models/notifications/notification";
 
 @Component({
   selector: 'app-applayout',
@@ -18,8 +23,11 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class ApplayoutComponent implements OnInit {
 
   public isMenuOpen = false;
-  pageLoaded = false;
+  userInfoLoaded = false;
+  notificationsLoaded = false;
   userInfo: UserInfo;
+  notifications: Notification[];
+  currentUserId: number;
 
   constructor(
     public authService: AuthService,
@@ -27,7 +35,9 @@ export class ApplayoutComponent implements OnInit {
     private router: Router,
     private matSnackBar: MatSnackBar,
     public loaderService: LoaderService,
-    public audioService: AudioService
+    public audioService: AudioService,
+    private notificationService: NotificationService,
+    private signalrService: SignalrService
   ) { }
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
@@ -37,7 +47,8 @@ export class ApplayoutComponent implements OnInit {
     );
 
   ngOnInit() {
-    this.authService.getUserInfo().pipe(finalize(()=>this.pageLoaded = true)).subscribe((res: UserInfo)=>{
+    this.currentUserId = Number(this.authService.getCurrentUserId());
+    this.authService.getUserInfo().pipe(finalize(()=>this.userInfoLoaded = true)).subscribe((res: UserInfo)=>{
       this.userInfo = res;
     }, error => {
       if(error.status == 401){
@@ -49,6 +60,22 @@ export class ApplayoutComponent implements OnInit {
       else{
         this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
       }
+    });
+
+    this.notificationService.getNotificationsForCurrentUser().pipe(finalize(()=>this.notificationsLoaded = true)).subscribe((res: Notification[])=>{
+      this.notifications = res;
+      this.notifications.forEach(n=>{
+        switch (n.notificationType) {
+          case NotificationType.AddedMusic:
+            n.routeString = '/musicinfo';
+            break;
+        }
+      })
+    });
+
+    this.signalrService.notificationSignal.subscribe((signal: NotificationResult) => {
+      if(signal.followers.includes(this.currentUserId))
+        alert(`it's for me`)
     })
   }
 
@@ -66,5 +93,15 @@ export class ApplayoutComponent implements OnInit {
 
   profile() {
     this.router.navigate(['/profile', `${this.userInfo.userId}`]);
+  }
+
+  notificationClick(notification: Notification) {
+    this.router.navigate([`${notification.routeString}`, `${notification.sourceId}`]);
+  }
+
+  checkNotification(event: MouseEvent, notification: Notification) {
+    event.stopPropagation();
+    const index =  this.notifications.indexOf(notification);
+    this.notifications.splice(index, 1);
   }
 }
