@@ -54,7 +54,6 @@ namespace Diplom.Controllers
         }
 
         [HttpGet("PlaylistInfo/{playlistId}")]
-        [Authorize]
         public PlaylistInfo GetPlaylistInfo(int playlistId)
         {
             return playlistManager.GetPlaylistInfo(playlistId).Result;

@@ -115,5 +115,12 @@ namespace Diplom.Controllers
         {
             return userManager.GetUserProfile(userId).Result;
         }
+
+        [HttpPut("EditUserProfile")]
+        [Authorize]
+        public IActionResult EditUserProfile([FromForm] EditProfile model)
+        {
+            return userManager.EditProfile(model, UserId).Result;
+        }
     }
 }

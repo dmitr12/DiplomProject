@@ -1,5 +1,6 @@
 export enum NotificationType {
-  AddedMusic = 1
+  AddedMusic = 1,
+  AddedPlaylist = 2
 }
 
 export class Notification {

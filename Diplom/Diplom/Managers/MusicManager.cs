@@ -54,6 +54,26 @@ namespace Diplom.Managers
             return res;
         }
 
+        public async Task<List<MusicInfo>> GetMusicByPlaylist(int playlistId)
+        {
+            return await (from pm in db.PlaylistsMusics
+                          join m in db.Musics on pm.MusicId equals m.MusicId
+                          join u in db.Users on m.UserId equals u.UserId
+                          where pm.PlaylistId == playlistId
+                          select new MusicInfo
+                          {
+                              Id = m.MusicId,
+                              Name = m.MusicName,
+                              MusicFileName = m.MusicFileName,
+                              MusicUrl = m.MusicUrl,
+                              MusicImageName = m.MusicImageName,
+                              ImageUrl = m.MusicImageUrl,
+                              GenreId = m.MusicGenreId,
+                              UserId = m.UserId,
+                              UserLogin = u.Login
+                          }).ToListAsync();
+        }
+
         public async Task<MusicInfo> GetMusic(int musicId, int currentUser)
         {
             double sumRating = 0;

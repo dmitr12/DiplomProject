@@ -8,12 +8,8 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {MusicService} from "../../../services/music/music.service";
 import {MusicInfo} from "../../../models/musics/musicInfo";
-import {FilterMusicModel} from "../../../models/musics/filterMusicModel";
 import {AudioService} from "../../../services/player/audio.service";
-import {isAsciiLetter} from "codelyzer/angular/styles/chars";
-import {LoaderService} from "../../../services/loader/loader.service";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {DeletemusicformComponent} from "../../../components/musics/deletemusicform/deletemusicform.component";
 import {DeleteplaylistComponent} from "../../../components/playlists/deleteplaylist/deleteplaylist.component";
 
 @Component({

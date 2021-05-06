@@ -1,6 +1,5 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../../../services/auth/auth.service";
-import {MatMenuTrigger} from "@angular/material/menu";
 import {Observable} from "rxjs";
 import {finalize, map, shareReplay} from "rxjs/operators";
 import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
@@ -10,10 +9,9 @@ import {UserInfo} from "../../../models/users/userInfo";
 import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {NotificationService} from "../../../services/notification/notification.service";
-import {Notification} from "../../../models/notifications/notification";
+import {Notification, NotificationType} from "../../../models/notifications/notification";
 import {SignalrService} from "../../../services/signalr/signalr.service";
 import {NotificationResult} from "../../../models/notifications/notificationResult";
-import {NotificationType} from "../../../models/notifications/notification";
 
 @Component({
   selector: 'app-applayout',
@@ -69,8 +67,12 @@ export class ApplayoutComponent implements OnInit {
           case NotificationType.AddedMusic:
             n.routeString = '/musicinfo';
             break;
+          case NotificationType.AddedPlaylist:
+            n.routeString = '/playlist-info';
+            break;
         }
       })
+      console.log(this.notifications)
     });
 
     this.signalrService.notificationSignal.subscribe((signal: NotificationResult) => {

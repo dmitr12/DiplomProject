@@ -37,6 +37,10 @@ export class MusicService {
     return this.http.get<MusicInfo[]>(`${environment.url}api/music/GetPartOfMusicsPyUserId/${lastIndex}`);
   }
 
+  getMusicByPlaylist(playlistId: number): Observable<MusicInfo[]>{
+    return this.http.get<MusicInfo[]>(`${environment.url}api/music/GetMusicByPlaylist/${playlistId}`);
+  }
+
   addmusic(formData: FormData) {
     return this.http.post(`${environment.url}api/music/AddMusic`, formData);
   }

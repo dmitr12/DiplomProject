@@ -63,6 +63,12 @@ namespace Diplom.Controllers
             return musicManager.GetMusicGenresList().Result;
         }
 
+        [HttpGet("GetMusicByPlaylist/{playlistId}")]
+        public List<MusicInfo> GetMusicByPlaylist(int playlistId)
+        {
+            return musicManager.GetMusicByPlaylist(playlistId).Result;
+        }
+
         [HttpGet("GetMusic/{musicId}")]
         [Authorize]
         public MusicInfo GetMusic(int musicId)

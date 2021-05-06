@@ -1,0 +1,19 @@
+.playlist-poster{
+  height: 190px;
+  width: 190px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  border: 1px solid #9414d9;
+  border-radius: 15px;
+}
+
+p{
+  color: #9414d9;
+  cursor: pointer;
+  margin: 0;
+}
+
+p:hover{
+  text-decoration: underline;
+}

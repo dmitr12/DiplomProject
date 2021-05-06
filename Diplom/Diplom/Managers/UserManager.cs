@@ -20,12 +20,14 @@ namespace Diplom.Managers
         private readonly IGeneratorToken generatorToken;
         private readonly IOptions<DropBoxOptions> options;
         private readonly EmailManager emailManager;
-        public UserManager(DataBaseContext db, IGeneratorToken generatorToken, IOptions<DropBoxOptions> options, EmailManager emailManager)
+        private readonly ICloudService cloudService;
+        public UserManager(DataBaseContext db, IGeneratorToken generatorToken, IOptions<DropBoxOptions> options, EmailManager emailManager, ICloudService cloudService)
         {
             this.db = db;
             this.generatorToken = generatorToken;
             this.options = options;
             this.emailManager = emailManager;
+            this.cloudService = cloudService;
         }
         public string GetToken(User user)
         {
@@ -112,6 +114,36 @@ namespace Diplom.Managers
             var user = db.Users.Find(userId);
             user.IsMailConfirmed = true;
             db.SaveChanges();
+        }
+
+        public async Task<IActionResult> EditProfile(EditProfile model, int userId)
+        {
+            var dateTimeNow = DateTime.Now;
+            var createDate = $"{dateTimeNow.Day}.{dateTimeNow.Month}.{dateTimeNow.Year} {dateTimeNow.Hour}:{dateTimeNow.Minute}:{dateTimeNow.Second}";
+            var sharingLinkImage = "";
+            try
+            {
+                var user = await db.Users.FindAsync(userId);
+                if (user == null)
+                    return new NotFoundObjectResult(new { msg = "Пользователь не найден" });
+                if (model.Avatar != null)
+                {
+                    if (await cloudService.IfFileExists("", $"{user.Login}_user_{createDate}_" + model.Avatar.FileName))
+                        return new OkObjectResult(new { msg = $"В вашем хранилище уже есть файл {model.Avatar.FileName}" });
+                    sharingLinkImage = await cloudService.AddFile("", $"{user.Login}_user_{createDate}_" + model.Avatar.FileName, model.Avatar.OpenReadStream());
+                }
+                user.City = model.City;
+                user.Country = model.Country;
+                user.Name = model.Name;
+                user.Surname = model.Surname;
+                user.Avatar = sharingLinkImage;
+                await db.SaveChangesAsync();
+                return new OkResult();
+            }
+            catch
+            {
+                return new StatusCodeResult(500);
+            }
         }
 
         public async Task<IActionResult> SendEmailForgotPassword(ForgotPasswordModel model, string baseUrl)
