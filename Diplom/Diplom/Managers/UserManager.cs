@@ -70,6 +70,7 @@ namespace Diplom.Managers
                 RoleId = 1,
                 IsMailConfirmed = false,
                 Avatar = options.Value.DefaultUserImageLink,
+                AvatarFile = options.Value.DefaultUserImageFile,
                 RegistrationDate = DateTime.Now
             };
             try
@@ -118,9 +119,9 @@ namespace Diplom.Managers
 
         public async Task<IActionResult> EditProfile(EditProfile model, int userId)
         {
+            string imageFileName;
             var dateTimeNow = DateTime.Now;
             var createDate = $"{dateTimeNow.Day}.{dateTimeNow.Month}.{dateTimeNow.Year} {dateTimeNow.Hour}:{dateTimeNow.Minute}:{dateTimeNow.Second}";
-            var sharingLinkImage = "";
             try
             {
                 var user = await db.Users.FindAsync(userId);
@@ -128,17 +129,24 @@ namespace Diplom.Managers
                     return new NotFoundObjectResult(new { msg = "Пользователь не найден" });
                 if (model.Avatar != null)
                 {
-                    if (await cloudService.IfFileExists("", $"{user.Login}_user_{createDate}_" + model.Avatar.FileName))
-                        return new OkObjectResult(new { msg = $"В вашем хранилище уже есть файл {model.Avatar.FileName}" });
-                    sharingLinkImage = await cloudService.AddFile("", $"{user.Login}_user_{createDate}_" + model.Avatar.FileName, model.Avatar.OpenReadStream());
+                    imageFileName = $"{user.Login}_user_{createDate}_" + model.Avatar.FileName;
+                    if(user.AvatarFile != options.Value.DefaultUserImageFile)
+                    {
+                        user.Avatar = await cloudService.EditFile("", user.AvatarFile, "", imageFileName, model.Avatar.OpenReadStream());
+                        user.AvatarFile = imageFileName;
+                    }
+                    else
+                    {
+                        user.Avatar = await cloudService.AddFile("", imageFileName, model.Avatar.OpenReadStream());
+                        user.AvatarFile = imageFileName;
+                    }
                 }
                 user.City = model.City;
                 user.Country = model.Country;
                 user.Name = model.Name;
                 user.Surname = model.Surname;
-                user.Avatar = sharingLinkImage;
                 await db.SaveChangesAsync();
-                return new OkResult();
+                return new OkObjectResult(new { avatar = user.Avatar });
             }
             catch
             {

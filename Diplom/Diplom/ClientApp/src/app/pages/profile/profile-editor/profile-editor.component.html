@@ -11,7 +11,7 @@
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <form [formGroup]="profileForm" (ngSubmit)="editProfile()">
+        <form [formGroup]="profileForm">
           <div class="pr-3 pl-3">
             <div class="d-flex" style="justify-content: center">
               <img id="output" mat-card-avatar src="{{userInfo.avatar}}" [hidden]="imgHidden" (load)="imgLoaded()" style="width: 200px; height: 200px">
@@ -46,7 +46,7 @@
               <input matInput type="text" formControlName="city">
             </mat-form-field>
             <div class="d-flex" style="justify-content: center">
-              <button type="submit" mat-flat-button class="mat-btn">Сохранить</button>
+              <button type="submit" mat-flat-button class="mat-btn" [disabled]="editing" (click)="editProfile()">Сохранить</button>
             </div>
           </div>
         </form>

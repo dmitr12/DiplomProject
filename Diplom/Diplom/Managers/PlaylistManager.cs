@@ -92,7 +92,7 @@ namespace Diplom.Managers
                 if(model.ImageFile != null)
                 {
                     imageFileName = $"{user.Login}_playlist_{createDate}_" + model.ImageFile.FileName;
-                    if(playlist.PlaylistImageFile != $"{options.Value.DefaultPlaylistImageFile}")
+                    if(playlist.PlaylistImageFile != options.Value.DefaultPlaylistImageFile)
                     {
                         playlist.PlaylistImageUrl = await cloudService.EditFile("", playlist.PlaylistImageFile, "", imageFileName, model.ImageFile.OpenReadStream());
                         playlist.PlaylistImageFile = imageFileName;

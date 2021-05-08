@@ -33,6 +33,7 @@ namespace Diplom.Models.UserModels
         public string Password { get; set; }
 
         public string Avatar { get; set; }
+        public string AvatarFile { get; set; }
 
         [StringLength(100, MinimumLength = 3)]
         public string Name { get; set; }

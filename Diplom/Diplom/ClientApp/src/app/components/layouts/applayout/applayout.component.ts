@@ -12,6 +12,7 @@ import {NotificationService} from "../../../services/notification/notification.s
 import {Notification, NotificationType} from "../../../models/notifications/notification";
 import {SignalrService} from "../../../services/signalr/signalr.service";
 import {NotificationResult} from "../../../models/notifications/notificationResult";
+import {UsersService} from "../../../services/users/users.service";
 
 @Component({
   selector: 'app-applayout',
@@ -35,7 +36,8 @@ export class ApplayoutComponent implements OnInit {
     public loaderService: LoaderService,
     public audioService: AudioService,
     private notificationService: NotificationService,
-    private signalrService: SignalrService
+    private signalrService: SignalrService,
+    private userService: UsersService
   ) { }
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
@@ -48,6 +50,9 @@ export class ApplayoutComponent implements OnInit {
     this.currentUserId = Number(this.authService.getCurrentUserId());
     this.authService.getUserInfo().pipe(finalize(()=>this.userInfoLoaded = true)).subscribe((res: UserInfo)=>{
       this.userInfo = res;
+      this.userService.editedProfile.subscribe((newAvatar:string)=>{
+        this.userInfo.avatar = newAvatar;
+      })
     }, error => {
       if(error.status == 401){
         this.router.navigate(['auth']);
