@@ -82,4 +82,8 @@ export class PlaylistInfoComponent implements OnInit {
   userProfile(userId: number) {
     this.router.navigate(['profile',`${userId}`]);
   }
+
+  navigateMusicInfo(id: number) {
+    this.router.navigate(['musicinfo',`${id}`])
+  }
 }

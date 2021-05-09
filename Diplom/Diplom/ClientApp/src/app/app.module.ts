@@ -57,6 +57,8 @@ import { PlaylistInfoComponent } from './pages/playlist/playlist-info/playlist-i
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import { DeleteplaylistComponent } from './components/playlists/deleteplaylist/deleteplaylist.component';
+import { SearchBarPageComponent } from './shared/search-bar-page/search-bar-page.component';
+import { SearchUserCardComponent } from './shared/search-user-card/search-user-card.component';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN);
@@ -92,6 +94,8 @@ export function tokenGetter() {
     PlaylistEditorComponent,
     PlaylistInfoComponent,
     DeleteplaylistComponent,
+    SearchBarPageComponent,
+    SearchUserCardComponent,
   ],
     imports: [
         BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),

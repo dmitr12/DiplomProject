@@ -5,8 +5,8 @@
       {{playlistCard.playlistName}}
     </div>
   </div>
-  <div *ngIf="playlistCard.userName !== null" class="playlist-card-user">
-    <a class="link">{{playlistCard.userName}}</a>
+  <div *ngIf="playlistCard.userLogin !== null" class="playlist-card-user">
+    <p (click)="navigateProfile()">{{playlistCard.userLogin}}</p>
   </div>
 </div>
 <div *ngIf="!loaded" class="d-flex justify-content-center align-items-center" style="height: 190px; width: 190px;">

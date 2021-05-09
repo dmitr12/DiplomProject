@@ -200,5 +200,23 @@ namespace Diplom.Managers
                 CreateDate = p.CreateDate
             }).ToListAsync();
         }
+
+        public async Task<List<PlaylistInfo>> GetFilteredPlaylists(string playlistName)
+        {
+            var filter = new { PlaylistName = playlistName == null ? "" : playlistName};
+            var playlistNameFilter = filter.PlaylistName.Length > 0 ? filter.PlaylistName : string.Empty;
+
+            return await db.Playlists.Where(p => EF.Functions.Like(p.PlaylistName, $"%{playlistNameFilter}%"))
+                .Join(db.Users, p => p.UserId, u => u.UserId, (p, u) => new PlaylistInfo
+                {
+                    PlaylistId = p.PlaylistId,
+                    PlaylistName = p.PlaylistName,
+                    PlaylistDescription = p.PlaylistDescription,
+                    PlaylistImageUrl = p.PlaylistImageUrl,
+                    UserId = p.UserId,
+                    UserLogin = u.Login,
+                    CreateDate = p.CreateDate
+                }).ToListAsync();
+        }
     }
 }

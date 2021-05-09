@@ -1,0 +1,57 @@
+<div class="row d-flex align-items-center">
+  <div class="col-12 col-sm-2">
+    <mat-form-field class="input-field" style="width: 100%">
+      <mat-select [value]="searchType" placeholder="Тип поиска" (selectionChange)="searchTypeChanged($event)">
+        <mat-option [value]="1">Музыка</mat-option>
+        <mat-option [value]="2">Плейлист</mat-option>
+        <mat-option [value]="3">Пользователь</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div *ngIf="isMusicType()" class="row col-12 col-sm-10">
+    <div class="col-xl-2 col-lg-5 col-sm-3 col-5">
+      <mat-form-field class="input-field" style="width: 100%">
+        <mat-select #selectMusicGenre [value]="genreId" placeholder="Жанр" (selectionChange)="musicGenreChanged($event)">
+          <mat-option [value]="0">Все</mat-option>
+          <mat-option *ngFor="let genre of musicGenreList" [value]="genre.musicGenreId">
+            {{genre.genreName}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-xl-10 col-lg-7 col-sm-9 col-7 input-field" style="display: flex; align-items: center; width: 100%">
+      <div class="input-group mb-2">
+        <input #inputMusicName id="filter" type="text" class="form-control" placeholder="Название музыки" (keyup.enter)="search()">
+        <div class="input-group-append search_button waves-effect waves-light" #searchMusicBtn (click)="search()">
+          <span class="input-group-text" style="cursor: pointer">
+            <mat-icon>search</mat-icon>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isPlaylistType()" class="col-12 col-sm-10">
+    <div class="input-field" style="display: flex; align-items: center; width: 100%">
+      <div class="input-group mb-2">
+        <input #inputPlaylistName id="playlistFilter" type="text" class="form-control" placeholder="Название плейлиста" (keyup.enter)="search()">
+        <div class="input-group-append search_button waves-effect waves-light" #searchPlaylistBtn (click)="search()">
+          <span class="input-group-text" style="cursor: pointer">
+            <mat-icon>search</mat-icon>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isUserType()" class="col-12 col-sm-10">
+    <div class="input-field" style="display: flex; align-items: center; width: 100%">
+      <div class="input-group mb-2">
+        <input #inputUserLogin id="userFilter" type="text" class="form-control" placeholder="Логин пользователя" (keyup.enter)="search()">
+        <div class="input-group-append search_button waves-effect waves-light" #searchUserBtn (click)="search()">
+          <span class="input-group-text" style="cursor: pointer">
+            <mat-icon>search</mat-icon>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

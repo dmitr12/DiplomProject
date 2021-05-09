@@ -2,30 +2,79 @@
   <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
 </div>
 <div *ngIf="loadedPage">
-  <app-searchbar [genreId]="genreId" [musicGenreList]="genres" (onSearch)="search($event)"></app-searchbar>
+<!--  <app-searchbar [genreId]="genreId" [musicGenreList]="genres" (onSearch)="search($event)"></app-searchbar>-->
+  <app-search-bar-page [searchType]="searchType" [genreId]="genreId" [musicGenreList]="genres" (onSearch)="search($event)" (onChangeSearchType)="changedSearchType($event)"></app-search-bar-page>
   <div class="mat-spinner-container" *ngIf="!loadedSearch">
     <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
   </div>
-  <div *ngIf="musics.length == 0" style="display: flex; align-items: center; justify-content: center">
-    Список пуст
-  </div>
-  <div class="row" *ngIf="loadedSearch">
-    <div class="col-6 col-md-4 col-lg-3" *ngFor="let music of musics | paginate: {id: 'listing_musics',
-  itemsPerPage: itemsPage,
+  <div *ngIf="isMusicType()">
+    <div *ngIf="musics.length == 0" style="display: flex; align-items: center; justify-content: center">
+      Список пуст
+    </div>
+    <div class="row" *ngIf="loadedSearch">
+      <div class="col-6 col-md-4 col-lg-3" *ngFor="let music of musics | paginate: {id: 'listing_musics',
+  itemsPerPage: 20,
   currentPage: page,
   totalItems: totalRecords}">
-      <app-search-music-card [data]="music" (click)="getMusicInfo(music.id)"></app-search-music-card>
+        <app-search-music-card [data]="music" (click)="getMusicInfo(music.id)"></app-search-music-card>
+      </div>
+    </div>
+    <div style="text-align:center" *ngIf="musics.length > 20">
+      <pagination-controls id="listing_musics"
+                           maxSize="8"
+                           directionLinks="true"
+                           previousLabel="Назад"
+                           nextLabel="Далее"
+                           autoHide="true"
+                           (pageChange)="page=$event">
+      </pagination-controls>
     </div>
   </div>
-  <div style="text-align:center" *ngIf="musics.length>itemsPage">
-    <pagination-controls id="listing_musics"
-                         maxSize="8"
-                         directionLinks="true"
-                         previousLabel="Назад"
-                         nextLabel="Далее"
-                         autoHide="true"
-                         (pageChange)="page=$event">
-    </pagination-controls>
+  <div *ngIf="isPlaylistType()">
+    <div *ngIf="playlists.length == 0" style="display: flex; align-items: center; justify-content: center">
+      Список пуст
+    </div>
+    <div class="row" *ngIf="loadedSearch">
+      <div style="margin-bottom: 20px" class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2" *ngFor="let playlist of playlists | paginate: {id: 'listing_playlists',
+  itemsPerPage: 12,
+  currentPage: page,
+  totalItems: totalRecords}">
+        <app-playlist-card [playlistCard]="playlist" (click)="navigatePlaylistInfo(playlist.playlistId)"></app-playlist-card>
+      </div>
+    </div>
+    <div style="text-align:center" *ngIf="playlists.length > 12">
+      <pagination-controls id="listing_playlists"
+                           maxSize="8"
+                           directionLinks="true"
+                           previousLabel="Назад"
+                           nextLabel="Далее"
+                           autoHide="true"
+                           (pageChange)="page=$event">
+      </pagination-controls>
+    </div>
+  </div>
+  <div *ngIf="isUserType()">
+    <div *ngIf="users.length == 0" style="display: flex; align-items: center; justify-content: center">
+      Список пуст
+    </div>
+    <div class="row" *ngIf="loadedSearch">
+      <div style="margin-bottom: 20px" class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2" *ngFor="let user of users | paginate: {id: 'listing_users',
+  itemsPerPage: 12,
+  currentPage: page,
+  totalItems: totalRecords}">
+        <app-search-user-card [userInfo]="user" (click)="navigateProfile(user.userId)"></app-search-user-card>
+      </div>
+    </div>
+    <div style="text-align:center" *ngIf="users.length > 12">
+      <pagination-controls id="listing_users"
+                           maxSize="8"
+                           directionLinks="true"
+                           previousLabel="Назад"
+                           nextLabel="Далее"
+                           autoHide="true"
+                           (pageChange)="page=$event">
+      </pagination-controls>
+    </div>
   </div>
 </div>
 

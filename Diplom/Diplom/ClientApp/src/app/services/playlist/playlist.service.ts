@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import {environment} from "../../../environments/environment";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {PlaylistInfo} from "../../models/playlists/playlistInfo";
 import {PlaylistsMusic} from "../../models/playlists/playlistsMusic";
+import {FilterPlaylistModel} from "../../models/playlists/filterPlaylistModel";
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +37,11 @@ export class PlaylistService {
 
   getUserPlaylists(): Observable<PlaylistInfo[]>{
     return this.http.get<PlaylistInfo[]>(`${environment.url}api/playlist/UserPlaylists`);
+  }
+
+  getFiltered(model: FilterPlaylistModel): Observable<PlaylistInfo[]>{
+    let httpParams = new HttpParams().set('playlistName', model.playlistName);
+    return this.http.get<PlaylistInfo[]>(`${environment.url}api/playlist/FilterPlaylist`, {params:httpParams});
   }
 
   getFileNameByPath(path: string):string {

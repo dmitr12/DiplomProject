@@ -1,4 +1,4 @@
-.playlist-card{
+.user-card{
   height: 190px;
   width: 190px;
   background-repeat: no-repeat;
@@ -10,7 +10,7 @@
   border-bottom: none;
 }
 
-.playlist-card-title{
+.user-card-title{
   word-wrap: break-word;
   background-color: rgba(0,0,0,.7);
   width: 100%;
@@ -21,22 +21,6 @@
   border-bottom-right-radius: 15px;
 }
 
-.playlist-card-user{
-  word-wrap: break-word;
-  width: 190px;
-  color: #9414d9;
-  text-align: center;
-}
-
-.playlist-card:hover{
+.user-card:hover{
   box-shadow: 0 0 15px rgb(148, 20, 217);
-}
-
-p{
-  color: #9414d9;
-  cursor: pointer;
-}
-
-p:hover{
-  text-decoration: underline;
 }

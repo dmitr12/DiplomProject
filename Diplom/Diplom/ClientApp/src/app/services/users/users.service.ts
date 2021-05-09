@@ -1,10 +1,11 @@
 import {EventEmitter, Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
 import {ForgotPassword} from "../../models/users/forgotPassword";
 import {Observable} from "rxjs";
 import {UserInfo} from "../../models/users/userInfo";
 import {NotificationResult} from "../../models/notifications/notificationResult";
+import {FilterUserModel} from "../../models/users/filterUserModel";
 
 @Injectable({
   providedIn: 'root'
@@ -31,5 +32,10 @@ export class UsersService {
 
   editProfile(formData: FormData){
     return this.httpClient.put(`${environment.url}api/user/EditUserProfile`, formData);
+  }
+
+  getFiltered(model: FilterUserModel):Observable<UserInfo[]>{
+    let httpParams = new HttpParams().set('login', model.login);
+    return this.httpClient.get<UserInfo[]>(`${environment.url}api/user/FilterUsers`,{params: httpParams})
   }
 }

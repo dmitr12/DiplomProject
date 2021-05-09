@@ -110,6 +110,27 @@ namespace Diplom.Managers
             return userInfo;
         }
 
+        public async Task<List<UserInfo>> FilterUsers(string login)
+        {
+            var filter = new { Login = login == null ? "" : login };
+            var loginFilter = filter.Login.Length > 0 ? filter.Login : string.Empty;
+
+            return await db.Users.Where(u => EF.Functions.Like(u.Login, $"%{loginFilter}%")).Select(u => new UserInfo
+            {
+                UserId = u.UserId,
+                RoleId = u.RoleId,
+                Login = u.Login,
+                Name = u.Name,
+                IsMailConfirmed = u.IsMailConfirmed,
+                Surname = u.Surname,
+                Avatar = u.Avatar,
+                City = u.City,
+                Country = u.Country,
+                Mail = u.Mail,
+                RegistrationDate = u.RegistrationDate
+            }).ToListAsync();
+        }
+
         public void ConfrimEmail(int userId)
         {
             var user = db.Users.Find(userId);

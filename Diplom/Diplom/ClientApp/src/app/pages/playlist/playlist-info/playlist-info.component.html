@@ -50,7 +50,7 @@
   itemsPerPage: itemsPage,
   currentPage: page,
   totalItems: totalRecords}">
-        <app-search-music-card [data]="musicInfo"></app-search-music-card>
+        <app-search-music-card [data]="musicInfo" (click)="navigateMusicInfo(musicInfo.id)"></app-search-music-card>
       </div>
     </div>
     <div style="text-align:center">

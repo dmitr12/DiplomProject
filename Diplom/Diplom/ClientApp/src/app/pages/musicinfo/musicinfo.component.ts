@@ -17,6 +17,7 @@ import {MusicComment} from "../../models/comments/musicComment";
 import {CommentChangedType, MusicCommentResult} from "../../models/comments/musicCommentResult";
 import {AudioService} from "../../services/player/audio.service";
 import {UserRole} from "../../models/users/user";
+import {SearchType} from "../../models/search";
 
 @Component({
   selector: 'app-musicinfo',
@@ -163,7 +164,8 @@ export class MusicinfoComponent implements OnInit, OnDestroy {
   clickGenre(genreId: number) {
     this.router.navigate(['search'], {
       queryParams: {
-        'genreId': this.musicInfo.genreId
+        'genreId': this.musicInfo.genreId,
+        'searchType': SearchType.Music
       }
     });
   }
