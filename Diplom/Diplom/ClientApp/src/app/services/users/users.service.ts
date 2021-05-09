@@ -6,6 +6,7 @@ import {Observable} from "rxjs";
 import {UserInfo} from "../../models/users/userInfo";
 import {NotificationResult} from "../../models/notifications/notificationResult";
 import {FilterUserModel} from "../../models/users/filterUserModel";
+import {ChangeUserPassword} from "../../models/users/changeUserPassword";
 
 @Injectable({
   providedIn: 'root'
@@ -37,5 +38,9 @@ export class UsersService {
   getFiltered(model: FilterUserModel):Observable<UserInfo[]>{
     let httpParams = new HttpParams().set('login', model.login);
     return this.httpClient.get<UserInfo[]>(`${environment.url}api/user/FilterUsers`,{params: httpParams})
+  }
+
+  changeUserPassword(model: ChangeUserPassword){
+    return this.httpClient.put(`${environment.url}api/user/ChangeUserPassword`, model);
   }
 }

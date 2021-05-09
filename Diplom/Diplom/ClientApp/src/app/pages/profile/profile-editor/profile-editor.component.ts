@@ -7,6 +7,9 @@ import {FormControl, FormGroup} from "@angular/forms";
 import {MusicService} from "../../../services/music/music.service";
 import {UsersService} from "../../../services/users/users.service";
 import {Router} from "@angular/router";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {AddmusicformComponent} from "../../../components/musics/addmusicform/addmusicform.component";
+import {ChangePasswordComponent} from "../../../components/users/change-password/change-password.component";
 
 @Component({
   selector: 'app-profile-editor',
@@ -23,6 +26,7 @@ export class ProfileEditorComponent implements OnInit {
   avatarFile = null;
   formData: FormData;
   editing = false;
+  dialogSource: any;
 
   public profileForm: FormGroup;
   imgHidden = true;
@@ -32,7 +36,8 @@ export class ProfileEditorComponent implements OnInit {
     private matSnackBar: MatSnackBar,
     private musicService: MusicService,
     private userService: UsersService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -112,5 +117,10 @@ export class ProfileEditorComponent implements OnInit {
 
   imgLoaded() {
     this.imgHidden = false;
+  }
+
+  changePassword() {
+    const dialogConfig = new MatDialogConfig();
+    this.dialogSource = this.dialog.open(ChangePasswordComponent, dialogConfig);
   }
 }

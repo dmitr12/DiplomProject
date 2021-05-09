@@ -59,6 +59,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import { DeleteplaylistComponent } from './components/playlists/deleteplaylist/deleteplaylist.component';
 import { SearchBarPageComponent } from './shared/search-bar-page/search-bar-page.component';
 import { SearchUserCardComponent } from './shared/search-user-card/search-user-card.component';
+import { ChangePasswordComponent } from './components/users/change-password/change-password.component';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN);
@@ -96,6 +97,7 @@ export function tokenGetter() {
     DeleteplaylistComponent,
     SearchBarPageComponent,
     SearchUserCardComponent,
+    ChangePasswordComponent,
   ],
     imports: [
         BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -162,7 +164,7 @@ export function tokenGetter() {
   ],
   bootstrap: [AppComponent],
   entryComponents: [AddmusicformComponent, DeletemusicformComponent, EditmusicformComponent,
-  AddplaylistformComponent, DeleteplaylistComponent]
+  AddplaylistformComponent, DeleteplaylistComponent, ChangePasswordComponent]
 })
 export class AppModule {
 }

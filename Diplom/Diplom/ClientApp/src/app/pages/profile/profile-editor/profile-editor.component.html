@@ -2,8 +2,8 @@
   <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
 </div>
 <div *ngIf="loadedPage" class="row">
-  <div class="col-sm-3 col-md-4"></div>
-  <div class="col-sm-6 col-md-4">
+  <div class="col-sm-2 col-md-3 col-lg-4"></div>
+  <div class="col-sm-8 col-md-6 col-lg-4">
     <mat-card>
       <mat-card-header class="d-flex" style="justify-content: center">
         <mat-card-title style="text-align: center">
@@ -45,8 +45,13 @@
               <mat-label>Город</mat-label>
               <input matInput type="text" formControlName="city">
             </mat-form-field>
-            <div class="d-flex" style="justify-content: center">
-              <button type="submit" mat-flat-button class="mat-btn" [disabled]="editing" (click)="editProfile()">Сохранить</button>
+            <div class="row">
+              <div class="d-flex col-6" style="justify-content: center;">
+                <button type="submit" mat-flat-button class="mat-btn" [disabled]="editing" (click)="editProfile()">Сохранить</button>
+              </div>
+              <div class="d-flex col-6" style="justify-content: center;">
+                <button type="submit" mat-flat-button class="mat-btn" [disabled]="editing" (click)="changePassword()">Новый пароль</button>
+              </div>
             </div>
           </div>
         </form>

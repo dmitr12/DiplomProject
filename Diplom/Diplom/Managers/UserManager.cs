@@ -131,6 +131,25 @@ namespace Diplom.Managers
             }).ToListAsync();
         }
 
+        public async Task<IActionResult> ChangeUserPassword(ChangePasswordModel model, int userId)
+        {
+            try
+            {
+                var user = await db.Users.FindAsync(userId);
+                if (user == null)
+                    return new NotFoundResult();
+                if (user.Password != HashClass.GetHash(model.OldPassword))
+                    return new ForbidResult();
+                user.Password = HashClass.GetHash(model.NewPassword);
+                await db.SaveChangesAsync();
+                return new OkResult();
+            }
+            catch
+            {
+                return new StatusCodeResult(500);
+            }
+        }
+
         public void ConfrimEmail(int userId)
         {
             var user = db.Users.Find(userId);

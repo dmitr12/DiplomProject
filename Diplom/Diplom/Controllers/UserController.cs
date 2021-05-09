@@ -25,7 +25,7 @@ namespace Diplom.Controllers
         private readonly UserManager userManager;
         private readonly IWebHostEnvironment environment;
         private readonly IHubContext<SignalHub> hubContext;
-        private readonly string ChangeUserPassword = "ChangeUserPassword";
+        private readonly string ChangeUserPsw = "ChangeUserPassword";
         private int UserId => int.Parse(User.Claims.Single(cl => cl.Type == ClaimTypes.NameIdentifier).Value);
 
         public UserController(UserManager userManager, IWebHostEnvironment environment, IHubContext<SignalHub> hubContext)
@@ -88,7 +88,7 @@ namespace Diplom.Controllers
             var user = userManager.GetUser(userId).Result;
             if (userManager.IsMailConfirmed(user))
             {
-                await hubContext.Clients.All.SendAsync(ChangeUserPassword, user);
+                await hubContext.Clients.All.SendAsync(ChangeUserPsw, user);
             }
             var fileContents = System.IO.File.ReadAllText($@"{environment.WebRootPath}\EmailForgotPassword.html");
             return new ContentResult
@@ -127,6 +127,13 @@ namespace Diplom.Controllers
         public IActionResult EditUserProfile([FromForm] EditProfile model)
         {
             return userManager.EditProfile(model, UserId).Result;
+        }
+
+        [HttpPut("ChangeUserPassword")]
+        [Authorize]
+        public IActionResult ChangeUserPassword(ChangePasswordModel model)
+        {
+            return userManager.ChangeUserPassword(model, UserId).Result;
         }
     }
 }
