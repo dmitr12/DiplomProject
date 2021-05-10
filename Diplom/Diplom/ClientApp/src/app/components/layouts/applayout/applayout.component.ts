@@ -27,6 +27,7 @@ export class ApplayoutComponent implements OnInit {
   userInfo: UserInfo;
   notifications: Notification[];
   currentUserId: number;
+  isUserAuthenticated: boolean;
 
   constructor(
     public authService: AuthService,
@@ -38,7 +39,9 @@ export class ApplayoutComponent implements OnInit {
     private notificationService: NotificationService,
     private signalrService: SignalrService,
     private userService: UsersService
-  ) { }
+  ) {
+    this.isUserAuthenticated = this.authService.isAuth();
+  }
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -47,43 +50,44 @@ export class ApplayoutComponent implements OnInit {
     );
 
   ngOnInit() {
-    this.currentUserId = Number(this.authService.getCurrentUserId());
-    this.authService.getUserInfo().pipe(finalize(()=>this.userInfoLoaded = true)).subscribe((res: UserInfo)=>{
-      this.userInfo = res;
-      this.userService.editedProfile.subscribe((newAvatar:string)=>{
-        this.userInfo.avatar = newAvatar;
-      })
-    }, error => {
-      if(error.status == 401){
-        this.router.navigate(['auth']);
-      }
-      if(error.status != 0){
-        this.matSnackBar.open(`При получении информации о пользователе возникла ошибка, статусный код ${error.status}`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
-      }
-      else{
-        this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
-      }
-    });
-
-    this.notificationService.getNotificationsForCurrentUser().pipe(finalize(()=>this.notificationsLoaded = true)).subscribe((res: Notification[])=>{
-      this.notifications = res;
-      this.notifications.forEach(n=>{
-        switch (n.notificationType) {
-          case NotificationType.AddedMusic:
-            n.routeString = '/musicinfo';
-            break;
-          case NotificationType.AddedPlaylist:
-            n.routeString = '/playlist-info';
-            break;
+    if(this.isUserAuthenticated){
+      this.currentUserId = Number(this.authService.getCurrentUserId());
+      this.authService.getUserInfo().pipe(finalize(()=>this.userInfoLoaded = true)).subscribe((res: UserInfo)=>{
+        this.userInfo = res;
+        this.userService.editedProfile.subscribe((newAvatar:string)=>{
+          this.userInfo.avatar = newAvatar;
+        })
+      }, error => {
+        if(error.status == 401){
+          this.router.navigate(['auth']);
         }
-      })
-      console.log(this.notifications)
-    });
+        if(error.status != 0){
+          this.matSnackBar.open(`При получении информации о пользователе возникла ошибка, статусный код ${error.status}`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
+        }
+        else{
+          this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
+        }
+      });
 
-    this.signalrService.notificationSignal.subscribe((signal: NotificationResult) => {
-      if(signal.followers.includes(this.currentUserId))
-        alert(`it's for me`)
-    })
+      this.notificationService.getNotificationsForCurrentUser().pipe(finalize(()=>this.notificationsLoaded = true)).subscribe((res: Notification[])=>{
+        this.notifications = res;
+        this.notifications.forEach(n=>{
+          switch (n.notificationType) {
+            case NotificationType.AddedMusic:
+              n.routeString = '/musicinfo';
+              break;
+            case NotificationType.AddedPlaylist:
+              n.routeString = '/playlist-info';
+              break;
+          }
+        })
+      });
+
+      this.signalrService.notificationSignal.subscribe((signal: NotificationResult) => {
+        if(signal.followers.includes(this.currentUserId))
+          alert(`it's for me`)
+      })
+    }
   }
 
   public get userId(): number{
@@ -99,7 +103,7 @@ export class ApplayoutComponent implements OnInit {
   }
 
   profile() {
-    this.router.navigate(['/profile', `${this.userInfo.userId}`]);
+    this.router.navigate(['/profile-editor', `${this.userInfo.userId}`]);
   }
 
   notificationClick(notification: Notification) {
@@ -110,5 +114,9 @@ export class ApplayoutComponent implements OnInit {
     event.stopPropagation();
     const index =  this.notifications.indexOf(notification);
     this.notifications.splice(index, 1);
+  }
+
+  login() {
+    this.router.navigate(['auth']);
   }
 }

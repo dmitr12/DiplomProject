@@ -25,6 +25,7 @@ export class ProfileComponent implements OnInit {
   isAnotherUser: boolean;
   followerProccessing = false;
   isFollowerExists: boolean;
+  isUserAuthenticated: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -35,26 +36,30 @@ export class ProfileComponent implements OnInit {
     public authService: AuthService
   ) {
     this.subscription = activatedRoute.params.subscribe(params => this.userId = Number(params['id']));
+    this.isUserAuthenticated = this.authService.isAuth();
   }
 
   ngOnInit() {
-    this.currentUserId = Number(this.authService.getCurrentUserId());
-    this.isAnotherUser = this.userId != this.currentUserId;
-    if(this.isAnotherUser && this.authService.isAuth()){
-      this.followerService.isFollowerExists(this.userId).subscribe((res:any)=>{
-        this.isFollowerExists = res;
-      }, error => {
-        if(error.status == 401){
-          this.router.navigate(['auth']);
-        }
-        else if (error.status != 0) {
-          this.matSnackBar.open(`При получении информации о подписке возникла ошибка, статусный код ${error.status}`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'
-          });
-        } else {
-          this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
-        }
-      });
+    if(this.isUserAuthenticated){
+      this.currentUserId = Number(this.authService.getCurrentUserId());
+      this.isAnotherUser = this.userId != this.currentUserId;
+      if(this.isAnotherUser && this.authService.isAuth()){
+        this.followerService.isFollowerExists(this.userId).subscribe((res:any)=>{
+          this.isFollowerExists = res;
+        }, error => {
+          if(error.status == 401){
+            this.router.navigate(['auth']);
+          }
+          else if (error.status != 0) {
+            this.matSnackBar.open(`При получении информации о подписке возникла ошибка, статусный код ${error.status}`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'
+            });
+          } else {
+            this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
+          }
+        });
+      }
     }
+
     this.userService.getUserProfile(this.userId).pipe(finalize(()=>this.pageLoaded=true)).subscribe((res:UserInfo)=>{
       this.userInfo = res;
       this.userInfo.registrationDate = new Date(res.registrationDate);

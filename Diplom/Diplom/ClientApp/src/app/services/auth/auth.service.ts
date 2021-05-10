@@ -35,8 +35,10 @@ export class AuthService {
     return this.httpClient.post(`${environment.url}api/user/register`, userRegistration);
   }
 
-  isAuth(): any {
+  isAuth(): boolean {
     let token = localStorage.getItem(ACCESS_TOKEN);
+    if(!token)
+      return false;
     return token && !this.jwtHelper.isTokenExpired(token);
   }
 

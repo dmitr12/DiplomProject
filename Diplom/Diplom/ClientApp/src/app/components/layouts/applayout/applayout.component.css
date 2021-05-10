@@ -127,3 +127,15 @@
   margin-right: 5px;
 }
 
+.pdIsAuth{
+  padding-top: 10px;
+}
+
+.login_link{
+  margin: 0;
+  cursor: pointer;
+}
+
+.login_link:hover{
+  text-decoration: underline;
+}

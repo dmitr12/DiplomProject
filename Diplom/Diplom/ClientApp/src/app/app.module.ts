@@ -60,6 +60,7 @@ import { DeleteplaylistComponent } from './components/playlists/deleteplaylist/d
 import { SearchBarPageComponent } from './shared/search-bar-page/search-bar-page.component';
 import { SearchUserCardComponent } from './shared/search-user-card/search-user-card.component';
 import { ChangePasswordComponent } from './components/users/change-password/change-password.component';
+import { MainComponent } from './pages/main/main.component';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN);
@@ -98,6 +99,7 @@ export function tokenGetter() {
     SearchBarPageComponent,
     SearchUserCardComponent,
     ChangePasswordComponent,
+    MainComponent,
   ],
     imports: [
         BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -121,21 +123,22 @@ export function tokenGetter() {
                 ]
             },
             {
-                path: '', component: ApplayoutComponent, canActivate: [AuthGuard], children: [
-                    {path: '', redirectTo: 'mymusic', pathMatch: 'full'},
+                path: '', component: ApplayoutComponent, children: [
+                    {path: '', redirectTo: 'main', pathMatch: 'full'},
+                    {path: 'main', component: MainComponent},
                     {
-                        path: 'mymusic', component: MymusicComponent, children: [
+                        path: 'mymusic', component: MymusicComponent, canActivate: [AuthGuard], children: [
                             {path: '', redirectTo: 'music', pathMatch: 'full'},
                             {path: 'music', component: MusicComponent},
                             {path: 'favorite', component: FavouritemusicsComponent}
                         ]
                     },
                     {path: 'search', component: SearchComponent},
-                    {path: 'playlist', component: PlaylistComponent},
+                    {path: 'playlist', canActivate: [AuthGuard], component: PlaylistComponent},
                     {path: 'musicinfo/:id', component: MusicinfoComponent},
                     {path: 'profile/:id', component: ProfileComponent},
-                    {path: 'profile-editor/:id', component: ProfileEditorComponent},
-                    {path: 'playlist-editor/:id', component: PlaylistEditorComponent},
+                    {path: 'profile-editor/:id', canActivate: [AuthGuard], component: ProfileEditorComponent},
+                    {path: 'playlist-editor/:id', canActivate: [AuthGuard], component: PlaylistEditorComponent},
                     {path: 'playlist-info/:id', component: PlaylistInfoComponent}
                 ]
             }

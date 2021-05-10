@@ -23,6 +23,7 @@ export class CommentCardChildComponent implements OnInit {
   commentText = '';
   commentEditText: string;
   currnetUserRole: UserRole;
+  isUserAuthenticated: boolean;
 
   constructor(
     private authService: AuthService,
@@ -30,12 +31,15 @@ export class CommentCardChildComponent implements OnInit {
     private router: Router,
     private matSnackBar: MatSnackBar
   ) {
+    this.isUserAuthenticated = this.authService.isAuth();
   }
 
   ngOnInit() {
     this.commentEditText = this.data.comment.replace(`${this.data.userLogin}, `,'');
-    this.currentUser = Number(this.authService.getCurrentUserId());
-    this.currnetUserRole = Number(this.authService.getCurrentUserRole());
+    if(this.isUserAuthenticated){
+      this.currentUser = Number(this.authService.getCurrentUserId());
+      this.currnetUserRole = Number(this.authService.getCurrentUserRole());
+    }
   }
 
   getDateTimeString(commentDate: Date) {

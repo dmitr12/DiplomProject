@@ -17,3 +17,7 @@ a.mat-menu-item mat-icon{
   background-color: #9414d9;
   cursor: default
 }
+
+.mg_l_IsNotAuth{
+  margin-left: 16px;
+}

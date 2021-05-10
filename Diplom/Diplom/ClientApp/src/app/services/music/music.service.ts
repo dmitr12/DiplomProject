@@ -5,6 +5,7 @@ import {Observable} from "rxjs";
 import {MusicGenreInfo} from "../../models/musics/musicGenreInfo";
 import {FilterMusicModel} from "../../models/musics/filterMusicModel";
 import {MusicInfo} from "../../models/musics/musicInfo";
+import {MusicStarRating} from "../../models/musics/musicStarRating";
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +52,10 @@ export class MusicService {
 
   deleteMusic(idMusic: number):Observable<any>{
     return this.http.delete(`${environment.url}api/music/DeleteMusic/${idMusic}`)
+  }
+
+  likeMusic(model: MusicStarRating){
+    return this.http.post(`${environment.url}api/music/LikeMusic`, model);
   }
 
   getFileNameByPath(path: string):string {

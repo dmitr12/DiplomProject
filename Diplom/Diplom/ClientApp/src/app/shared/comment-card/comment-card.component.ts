@@ -28,6 +28,7 @@ export class CommentCardComponent implements OnInit {
   isCommentEditAreaOpen = false;
   commentText = '';
   commentEditText: string;
+  isUserAuthenticated: boolean;
 
   constructor(
     private authService: AuthService,
@@ -36,12 +37,15 @@ export class CommentCardComponent implements OnInit {
     private commentsService: CommentsService,
     private signalrService: SignalrService
   ) {
+    this.isUserAuthenticated = this.authService.isAuth();
   }
 
   ngOnInit() {
     this.commentEditText = this.data.comment;
-    this.currentUser = Number(this.authService.getCurrentUserId());
-    this.currnetUserRole = Number(this.authService.getCurrentUserRole());
+    if(this.isUserAuthenticated){
+      this.currentUser = Number(this.authService.getCurrentUserId());
+      this.currnetUserRole = Number(this.authService.getCurrentUserRole());
+    }
     this.childrenArr = this.children;
     this.signalrService.commentMusicSignal.subscribe((signal: MusicCommentResult) => {
       if (signal.result && signal.musicCommentInfo.parentIdComment === this.data.idComment) {

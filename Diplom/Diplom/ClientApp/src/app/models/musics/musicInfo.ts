@@ -12,5 +12,6 @@ export class MusicInfo {
   rating: number;
   dateOfPublication: Date;
   countRatings: number;
+  currentUserLiked: boolean;
   currentUserRating: any;
 }

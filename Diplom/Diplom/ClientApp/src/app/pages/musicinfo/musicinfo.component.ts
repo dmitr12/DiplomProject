@@ -44,6 +44,7 @@ export class MusicinfoComponent implements OnInit, OnDestroy {
   hiddenComments: boolean;
   deletingMusic: boolean;
   imageLoaded: boolean;
+  isUserAuthenticated: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -56,7 +57,9 @@ export class MusicinfoComponent implements OnInit, OnDestroy {
     public audioService: AudioService
   ) {
     this.subscription = activatedRoute.params.subscribe(params => this.musicId = params['id']);
+
     activatedRoute.params.subscribe(val=>{
+      this.isUserAuthenticated = this.authService.isAuth();
       this.loadedMusicInfo = false;
       this.loadedComments = false;
       this.musicCommentsInfo = [];
@@ -73,9 +76,7 @@ export class MusicinfoComponent implements OnInit, OnDestroy {
         this.musicInfo = res;
         this.musicInfo.dateOfPublication = new Date(res.dateOfPublication);
       }, error => {
-        if (error.status == 401) {
-          this.router.navigate(['auth']);
-        } else if (error.status != 0) {
+          if (error.status != 0) {
           this.matSnackBar.open(`При получении информации о музыки возникла ошибка, статусный код ${error.status}`, '', {
             duration: 3000,
             panelClass: 'custom-snack-bar-error'
@@ -90,9 +91,7 @@ export class MusicinfoComponent implements OnInit, OnDestroy {
         this.firstComments = this.musicCommentsInfo.filter(c => c.parentIdComment === null);
         this.secondComments = this.musicCommentsInfo.filter(c => !this.firstComments.includes(c));
       }, error => {
-        if (error.status == 401) {
-          this.router.navigate(['auth']);
-        } else if (error.status != 0) {
+        if (error.status != 0) {
           this.matSnackBar.open(`При получении комментариев возникла ошибка, статусный код ${error.status}`, '', {
             duration: 3000,
             panelClass: 'custom-snack-bar-error'
@@ -105,8 +104,10 @@ export class MusicinfoComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.currentUserId = Number(this.authService.getCurrentUserId());
-    this.currentUserRole = Number(this.authService.getCurrentUserRole());
+    if(this.isUserAuthenticated){
+      this.currentUserId = Number(this.authService.getCurrentUserId());
+      this.currentUserRole = Number(this.authService.getCurrentUserRole());
+    }
 
     this.signarService.commentMusicSignal.subscribe((signal: MusicCommentResult) => {
       if (signal.result && signal.musicCommentInfo.parentIdComment === null) {
@@ -145,7 +146,7 @@ export class MusicinfoComponent implements OnInit, OnDestroy {
 
   onRate(event: { oldValue: number; newValue: number; starRating: StarRatingComponent }) {
     this.ratingComponent.readonly = true;
-    this.signarService.rateMusic(new MusicStarRating(Number(this.musicId), Number(this.authService.getCurrentUserId()), event.newValue))
+    this.signarService.rateMusic(new MusicStarRating(Number(this.authService.getCurrentUserId()), Number(this.musicId), event.newValue))
       .pipe(finalize(() => this.ratingComponent.readonly = false)).subscribe((res: RatedMusicResult) => {
     }, error => {
       if (error.status == 401) {
@@ -239,5 +240,39 @@ export class MusicinfoComponent implements OnInit, OnDestroy {
 
   imgLoaded() {
     this.imageLoaded = true;
+  }
+
+  like() {
+    this.deletingMusic = true;
+    this.musicService.likeMusic(new MusicStarRating(this.currentUserId, this.musicInfo.id, 0, true)).pipe(finalize(()=>this.deletingMusic = false)).subscribe((res:any)=>{
+      this.musicInfo.currentUserLiked = true;
+    },  error => {
+      if(error.status == 401){
+        this.router.navigate(['auth']);
+      }
+      if (error.status != 0) {
+        this.matSnackBar.open(`При добавлении музыки в избранные возникла ошибка, статусный код ${error.status}`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'
+        });
+      } else {
+        this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
+      }
+    });
+  }
+
+  unlike() {
+    this.deletingMusic = true;
+    this.musicService.likeMusic(new MusicStarRating(this.currentUserId, this.musicInfo.id, 0, false)).pipe(finalize(()=>this.deletingMusic = false)).subscribe((res:any)=>{
+      this.musicInfo.currentUserLiked = false;
+    },  error => {
+      if(error.status == 401){
+        this.router.navigate(['auth']);
+      }
+      if (error.status != 0) {
+        this.matSnackBar.open(`При удалении музыки из избранных возникла ошибка, статусный код ${error.status}`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'
+        });
+      } else {
+        this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
+      }
+    });
   }
 }

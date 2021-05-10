@@ -18,7 +18,7 @@ namespace Diplom.Models
         public DbSet<MusicGenre> MusicGenres { get; set; }
         public DbSet<Music> Musics { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
-        public DbSet<MusicStarRating> MusicStarRatings { get; set; }
+        public DbSet<UsersMusic> UsersMusics { get; set; }
         public DbSet<MusicComment> MusicComments { get; set; }
         public DbSet<Playlist> Playlists { get; set; }
         public DbSet<PlaylistsMusic> PlaylistsMusics { get; set; }
@@ -29,7 +29,7 @@ namespace Diplom.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<MusicStarRating>().HasKey(r => new { r.MusicId, r.UserId });
+            modelBuilder.Entity<UsersMusic>().HasKey(r => new { r.UserId, r.MusicId});
             modelBuilder.Entity<PlaylistsMusic>().HasKey(p => new { p.PlaylistId, p.MusicId });
             modelBuilder.Entity<Follower>().HasKey(f => new { f.UserId, f.FollowedUserId });
             modelBuilder.Entity<MusicComment>().HasKey(c => c.IdComment);

@@ -20,6 +20,7 @@ namespace Diplom.Models.MusicModels
         public double Rating { get; set; }
         public int CountRatings { get; set; }
         public int? CurrentUserRating { get; set; }
+        public bool CurrentUserLiked { get; set; }
         public DateTime DateOfPublication { get; set; }
     }
 }

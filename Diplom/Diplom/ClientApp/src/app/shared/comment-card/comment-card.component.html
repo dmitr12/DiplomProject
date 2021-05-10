@@ -10,26 +10,26 @@
     </mat-card-header>
     <div style="font-size: 13px">{{data.comment}}</div>
     <mat-card-content class="d-flex" style="align-items: center">
-      <div class="d-flex">
+      <div class="d-flex align-items-center">
         <div class="d-flex" style="align-items: center">{{getDateTimeString(data.commentDate)}}</div>
-        <div (click)="showAnswerBox()">
+        <div *ngIf="isUserAuthenticated" (click)="showAnswerBox()">
           <a mat-menu-item>
             <mat-icon style="margin-right: 0">add_comment</mat-icon>
           </a>
         </div>
-        <div (click)="showChildren()">
+        <div [ngClass]="{mg_l_IsNotAuth : !isUserAuthenticated}" (click)="showChildren()">
           <a mat-menu-item>
             <mat-icon>mode_comment</mat-icon>
             <span>{{childrenArr.length}}</span>
           </a>
         </div>
-        <div *ngIf="currentUser == data.userId" (click)="showEditBox()">
+        <div *ngIf="isUserAuthenticated && (currentUser == data.userId)" (click)="showEditBox()">
           <a mat-menu-item>
             <mat-icon style="margin-right: 0">edit</mat-icon>
           </a>
         </div>
       </div>
-      <div class="ml-auto" *ngIf="enableDeleteComment()" (click)="deleteComment()">
+      <div class="ml-auto" *ngIf="isUserAuthenticated && enableDeleteComment()" (click)="deleteComment()">
         <a mat-menu-item>
           <mat-icon style="margin-right: 0">delete</mat-icon>
         </a>

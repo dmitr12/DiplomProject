@@ -1,5 +1,5 @@
-<div class="page-container" *ngIf="userInfoLoaded && notificationsLoaded">
-  <header>
+<div class="page-container" *ngIf="!isUserAuthenticated || (userInfoLoaded && notificationsLoaded)">
+  <header class="d-flex align-items-center">
     <div style="display: flex; align-items: center">
       <button mat-button class="menu-button" (click)="sidenav.toggle()">
         <mat-icon>{{isMenuOpen? 'menu_open' : 'menu'}}</mat-icon>
@@ -8,7 +8,7 @@
         <span class="app-title">Menu</span>
       </a>
     </div>
-    <div class="d-flex">
+    <div *ngIf="isUserAuthenticated" class="d-flex">
       <div *ngIf="notifications.length == 0" class="notification d-flex align-items-center mr-3">
         <mat-icon>notifications</mat-icon>
       </div>
@@ -26,8 +26,8 @@
       </mat-card>
       <mat-menu #menu="matMenu">
         <button mat-menu-item (click)="profile()">
-          <mat-icon>person</mat-icon>
-          <span>Profile</span>
+          <mat-icon>settings</mat-icon>
+          <span>Profile settings</span>
         </button>
         <button mat-menu-item (click)="logout()">
           <mat-icon>logout</mat-icon>
@@ -48,31 +48,40 @@
         </div>
       </mat-menu>
     </div>
+    <div *ngIf="!isUserAuthenticated">
+      <p (click)="login()" class="login_link">Войти</p>
+    </div>
   </header>
   <mat-sidenav-container class="sidenav-container">
     <mat-sidenav fixedInViewport #sidenav autoFocus="autofocus" mode="over" [autoFocus]="false" [(opened)]="isMenuOpen" class="sidenav" (click)="onSidenavClick()">
       <mat-toolbar class="toolbr">Menu</mat-toolbar>
-        <div routerLinkActive="active" style="padding-top: 10px">
-          <a mat-menu-item routerLink="/mymusic">
-            <mat-icon>audiotrack</mat-icon>
-            <span>My music</span>
-          </a>
-        </div>
-      <div routerLinkActive="active">
-        <a mat-menu-item routerLink="/playlist">
-          <mat-icon>queue_music</mat-icon>
+      <div routerLinkActive="active" [ngClass]="{pdIsAuth : isUserAuthenticated}">
+        <a mat-menu-item routerLink="/main" class="d-flex align-items-center">
+          <mat-icon style="margin-right: 16px">home</mat-icon>
+          <span>Main</span>
+        </a>
+      </div>
+      <div *ngIf="isUserAuthenticated" routerLinkActive="active">
+        <a mat-menu-item routerLink="/mymusic" class="d-flex align-items-center">
+          <mat-icon style="margin-right: 16px">audiotrack</mat-icon>
+          <span>My music</span>
+        </a>
+      </div>
+      <div *ngIf="isUserAuthenticated" routerLinkActive="active">
+        <a mat-menu-item routerLink="/playlist" class="d-flex align-items-center">
+          <mat-icon style="margin-right: 16px">queue_music</mat-icon>
           <span>My playlists</span>
         </a>
       </div>
       <div routerLinkActive="active">
-        <a mat-menu-item routerLink="/search">
-          <mat-icon>search</mat-icon>
+        <a mat-menu-item routerLink="/search" class="d-flex align-items-center">
+          <mat-icon style="margin-right: 16px">search</mat-icon>
           <span>Search</span>
         </a>
       </div>
-      <div routerLinkActive="active">
-        <a mat-menu-item [routerLink]="['/profile', userId]">
-          <mat-icon>person</mat-icon>
+      <div *ngIf="isUserAuthenticated" routerLinkActive="active">
+        <a mat-menu-item [routerLink]="['/profile', userId]" class="d-flex align-items-center">
+          <mat-icon style="margin-right: 16px">person</mat-icon>
           <span>Profile</span>
         </a>
       </div>

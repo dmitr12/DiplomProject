@@ -1,12 +1,14 @@
 export class MusicStarRating {
 
-  constructor(musicId: number, userId: number, rating: number) {
-    this.musicId = musicId;
+  constructor(userId: number, musicId: number, rating: number, liked = false) {
     this.userId = userId;
+    this.musicId = musicId;
     this.rating = rating;
+    this.liked = liked;
   }
 
-  musicId: number;
   userId: number;
+  musicId: number;
   rating: number;
+  liked: boolean
 }

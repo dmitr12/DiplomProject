@@ -74,15 +74,27 @@ namespace Diplom.Managers
                           }).ToListAsync();
         }
 
-        public async Task<MusicInfo> GetMusic(int musicId, int currentUser)
+        public async Task<MusicInfo> GetMusic(int musicId, int? currentUser = null)
         {
             double sumRating = 0;
             int? userRating = null;
-            var rating = await db.MusicStarRatings.Where(r => r.MusicId == musicId).ToListAsync();
-            if (rating.Exists(r => r.UserId == currentUser))
-                userRating = rating.Find(r => r.UserId == currentUser).Rating;
+            var currentUserLiked = false;
+            var rating = await db.UsersMusics.Where(r => r.MusicId == musicId).ToListAsync();
+            if(currentUser != null)
+            {
+                var currentUserMusic = rating.Find(r => r.UserId == currentUser);
+                if(currentUserMusic != null)
+                {
+                    userRating = currentUserMusic.Rating;
+                    currentUserLiked = currentUserMusic.Liked;
+                }
+            }
             foreach (var entity in rating)
-                sumRating += entity.Rating;
+            {
+                if(entity.Rating > 0)
+                    sumRating += entity.Rating;
+            }
+            var rtCount = rating.Where(um => um.Rating > 0).Count();
             var musicInfo = await db.Musics.Where(m=>m.MusicId == musicId).Join(db.Users, m => m.UserId, u => u.UserId, (m, u) => new MusicInfo
             {
                 Id = m.MusicId,
@@ -95,15 +107,34 @@ namespace Diplom.Managers
                 UserId = u.UserId,
                 UserLogin = u.Login,
                 DateOfPublication = m.DateOfPublication,
-                CountRatings = rating.Count,
-                CurrentUserRating = userRating
+                CountRatings = rtCount,
+                CurrentUserRating = userRating,
+                CurrentUserLiked = currentUserLiked
             }).FirstOrDefaultAsync();
             musicInfo.GenreName = db.MusicGenres.Find(musicInfo.GenreId).GenreName;
             if (sumRating == 0)
                 musicInfo.Rating = sumRating;
             else
-                musicInfo.Rating = Math.Round(sumRating / rating.Count, 1);
+                musicInfo.Rating = Math.Round(sumRating / rtCount, 1);
             return musicInfo;
+        }
+
+        public async Task<IActionResult> LikeMusic(UsersMusic model)
+        {
+            try
+            {
+                var usersmusics = await db.UsersMusics.FindAsync(model.UserId, model.MusicId);
+                if (usersmusics == null)
+                    db.UsersMusics.Add(new UsersMusic { UserId = model.UserId, MusicId = model.MusicId, Rating = 0, Liked = true });
+                else
+                    usersmusics.Liked = model.Liked;
+                await db.SaveChangesAsync();
+                return new OkResult();
+            }
+            catch
+            {
+                return new StatusCodeResult(500);
+            }
         }
 
         public async Task<List<MusicGenre>> GetMusicGenresList()
@@ -253,22 +284,25 @@ namespace Diplom.Managers
             return new NotFoundResult();
         }
 
-        public async Task<RatedMusicResult> RateMusic(MusicStarRating model)
+        public async Task<RatedMusicResult> RateMusic(UsersMusic model)
         {
             RatedMusicResult result = new RatedMusicResult();
             try
             {
-                var entity = await db.MusicStarRatings.FindAsync(model.MusicId, model.UserId);
+                var entity = await db.UsersMusics.FindAsync(model.UserId, model.MusicId);
                 if (entity == null)
-                    db.MusicStarRatings.Add(new MusicStarRating { MusicId = model.MusicId, UserId = model.UserId, Rating = model.Rating });
+                    db.UsersMusics.Add(new UsersMusic { UserId = model.UserId, MusicId = model.MusicId, Rating = model.Rating, Liked = false });
                 else
                     entity.Rating = model.Rating;
                 await db.SaveChangesAsync();
                 double sumRating = 0;
-                var rating = await db.MusicStarRatings.Where(r => r.MusicId == model.MusicId).ToListAsync();
+                var rating = await db.UsersMusics.Where(r => r.MusicId == model.MusicId).ToListAsync();
                 foreach (var r in rating)
-                    sumRating += r.Rating;
-                result.Rating = Math.Round(sumRating / rating.Count, 1);
+                {
+                    if(r.Rating > 0)
+                        sumRating += r.Rating;
+                }
+                result.Rating = Math.Round(sumRating / rating.Where(r=>r.Rating>0).Count(), 1);
                 result.CountRatings = rating.Count;
                 result.RatedMusic = true;
             }

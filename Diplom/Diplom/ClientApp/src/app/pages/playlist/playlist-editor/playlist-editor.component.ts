@@ -11,6 +11,7 @@ import {MusicInfo} from "../../../models/musics/musicInfo";
 import {AudioService} from "../../../services/player/audio.service";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {DeleteplaylistComponent} from "../../../components/playlists/deleteplaylist/deleteplaylist.component";
+import {AuthService} from "../../../services/auth/auth.service";
 
 @Component({
   selector: 'app-playlist-editor',
@@ -50,6 +51,7 @@ export class PlaylistEditorComponent implements OnInit {
     private matSnackBar: MatSnackBar,
     private audioService: AudioService,
     private dialog: MatDialog,
+    private authService: AuthService
   ) {
     this.subscription = activatedRoute.params.subscribe(params => this.playlistId = params['id']);
   }
@@ -58,6 +60,9 @@ export class PlaylistEditorComponent implements OnInit {
     this.formData = new FormData();
     this.playlistService.getPlaylistInfo(this.playlistId).pipe(finalize(()=>this.playlistInfoLoaded = true)).subscribe((res:PlaylistInfo)=>{
       this.playlistInfo = res;
+      if(Number(this.authService.getCurrentUserId()) != res.userId){
+        this.router.navigate(['auth']);
+      }
       this.image = this.playlistInfo.playlistImageUrl;
       this.playlistInfo.createDate = new Date(this.playlistInfo.createDate);
       this.playlistForm = new FormGroup({

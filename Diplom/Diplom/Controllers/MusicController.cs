@@ -70,10 +70,11 @@ namespace Diplom.Controllers
         }
 
         [HttpGet("GetMusic/{musicId}")]
-        [Authorize]
         public MusicInfo GetMusic(int musicId)
         {
-            return musicManager.GetMusic(musicId, UserId).Result;
+            if(User.Identity.IsAuthenticated)
+                return musicManager.GetMusic(musicId, UserId).Result;
+            return musicManager.GetMusic(musicId).Result;
         }
 
         [HttpGet("ListMusicsByUserId")]
@@ -113,7 +114,7 @@ namespace Diplom.Controllers
 
         [HttpPost("RateMusic")]
         [Authorize]
-        public async Task<IActionResult> RateMusic(MusicStarRating model)
+        public async Task<IActionResult> RateMusic(UsersMusic model)
         {
             var ratedResult = musicManager.RateMusic(model).Result;
             if (ratedResult.RatedMusic)
@@ -130,6 +131,13 @@ namespace Diplom.Controllers
             Response.Headers.Add("Content-Length", response.Response.AsFile.Size.ToString());
             Response.Headers.Add("Accept-Ranges", "bytes");
             return new FileStreamResult(await response.GetContentAsStreamAsync(), "audio/mp3");
+        }
+
+        [HttpPost("LikeMusic")]
+        [Authorize]
+        public IActionResult LikeMusic(UsersMusic model)
+        {
+            return musicManager.LikeMusic(model).Result;
         }
     }
 }
