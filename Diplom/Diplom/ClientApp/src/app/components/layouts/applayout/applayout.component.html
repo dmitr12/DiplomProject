@@ -5,7 +5,7 @@
         <mat-icon>{{isMenuOpen? 'menu_open' : 'menu'}}</mat-icon>
       </button>
       <a class="tst" routerLink="/">
-        <span class="app-title">Menu</span>
+        <span class="app-title">Меню</span>
       </a>
     </div>
     <div *ngIf="isUserAuthenticated" class="d-flex">
@@ -27,11 +27,11 @@
       <mat-menu #menu="matMenu">
         <button mat-menu-item (click)="profile()">
           <mat-icon>settings</mat-icon>
-          <span>Profile settings</span>
+          <span>Настройки профиля</span>
         </button>
         <button mat-menu-item (click)="logout()">
           <mat-icon>logout</mat-icon>
-          <span>Logout</span>
+          <span>Выйти</span>
         </button>
       </mat-menu>
       <mat-menu #ntf="matMenu">
@@ -58,31 +58,31 @@
       <div routerLinkActive="active" [ngClass]="{pdIsAuth : isUserAuthenticated}">
         <a mat-menu-item routerLink="/main" class="d-flex align-items-center">
           <mat-icon style="margin-right: 16px">home</mat-icon>
-          <span>Main</span>
+          <span>Главная</span>
         </a>
       </div>
       <div *ngIf="isUserAuthenticated" routerLinkActive="active">
         <a mat-menu-item routerLink="/mymusic" class="d-flex align-items-center">
           <mat-icon style="margin-right: 16px">audiotrack</mat-icon>
-          <span>My music</span>
+          <span>Музыка</span>
         </a>
       </div>
       <div *ngIf="isUserAuthenticated" routerLinkActive="active">
         <a mat-menu-item routerLink="/playlist" class="d-flex align-items-center">
           <mat-icon style="margin-right: 16px">queue_music</mat-icon>
-          <span>My playlists</span>
+          <span>Плейлисты</span>
         </a>
       </div>
       <div routerLinkActive="active">
         <a mat-menu-item routerLink="/search" class="d-flex align-items-center">
           <mat-icon style="margin-right: 16px">search</mat-icon>
-          <span>Search</span>
+          <span>Поиск</span>
         </a>
       </div>
       <div *ngIf="isUserAuthenticated" routerLinkActive="active">
         <a mat-menu-item [routerLink]="['/profile', userId]" class="d-flex align-items-center">
           <mat-icon style="margin-right: 16px">person</mat-icon>
-          <span>Profile</span>
+          <span>Профиль</span>
         </a>
       </div>
     </mat-sidenav>

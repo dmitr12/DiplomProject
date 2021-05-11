@@ -19,7 +19,7 @@
         </span>
       </div>
       <mat-form-field class="input-field" style="width: 100%">
-        <mat-select formControlName="musicGenreId" placeholder="*Genre">
+        <mat-select formControlName="musicGenreId" placeholder="*Жанр">
           <mat-option *ngFor="let genre of genres" [value]="genre.musicGenreId">
             {{genre.genreName}}
           </mat-option>

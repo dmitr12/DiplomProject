@@ -84,6 +84,7 @@ export class ApplayoutComponent implements OnInit {
       });
 
       this.signalrService.notificationSignal.subscribe((signal: NotificationResult) => {
+        console.log(signal)
         if(signal.followers.includes(this.currentUserId))
           alert(`it's for me`)
       })

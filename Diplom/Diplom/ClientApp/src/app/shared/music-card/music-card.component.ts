@@ -14,6 +14,8 @@ import {MusicInfo} from "../../models/musics/musicInfo";
 export class MusicCardComponent implements OnInit {
 
   @Input() data: MusicInfo;
+  @Input() enableOptions: boolean;
+  @Input() clickedPlayer: boolean;
   @Output() onDeleted = new EventEmitter<number>();
   @Output() onEdited = new EventEmitter<MusicInfo>();
   dialogSource: any;
@@ -54,7 +56,7 @@ export class MusicCardComponent implements OnInit {
   }
 
   play(event: any) {
-    if(!event.target.className.includes('edit_menu'))
+    if(!event.target.className.includes('edit_menu') && this.clickedPlayer)
     {
       this.audioService.openFile(this.data.id, this.data.musicFileName, this.data.name)
     }

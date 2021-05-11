@@ -10,4 +10,14 @@
   color: #9414d9;
 }
 
+a.mat-menu-item{
+  color: #9414d9;
+}
+
+a.mat-menu-item mat-icon{
+  color: #9414d9;
+}
+
+
+
 

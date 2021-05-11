@@ -91,6 +91,13 @@ namespace Diplom.Controllers
             return musicManager.GetPartOfMusicsByUserId(UserId, CountMusics, lastIndex).Result;
         }
 
+        [HttpGet("GetLikedMusics")]
+        [Authorize]
+        public List<MusicInfo> GetLiked()
+        {
+            return musicManager.GetLiked(UserId).Result;
+        }
+
         [HttpPost("AddMusic")]
         [Authorize]
         public IActionResult AddMusic([FromForm] AddMusicModel model)

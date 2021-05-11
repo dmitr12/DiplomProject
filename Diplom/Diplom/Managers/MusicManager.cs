@@ -74,6 +74,26 @@ namespace Diplom.Managers
                           }).ToListAsync();
         }
 
+        public async Task<List<MusicInfo>> GetLiked(int userId)
+        {
+            return await (from um in db.UsersMusics
+                          join m in db.Musics on um.MusicId equals m.MusicId
+                          join u in db.Users on m.UserId equals u.UserId
+                          where um.UserId == userId && um.Liked
+                          select new MusicInfo
+                          {
+                              Id = m.MusicId,
+                              Name = m.MusicName,
+                              MusicFileName = m.MusicFileName,
+                              MusicUrl = m.MusicUrl,
+                              MusicImageName = m.MusicImageName,
+                              ImageUrl = m.MusicImageUrl,
+                              GenreId = m.MusicGenreId,
+                              UserId = m.UserId,
+                              UserLogin = u.Login
+                          }).ToListAsync();
+        }
+
         public async Task<MusicInfo> GetMusic(int musicId, int? currentUser = null)
         {
             double sumRating = 0;
@@ -170,7 +190,7 @@ namespace Diplom.Managers
                 ImageUrl = m.MusicImageUrl,
                 GenreId = m.MusicGenreId,
                 UserId = u.UserId,
-                UserLogin = u.Login,
+                UserLogin = u.Login
             }).Take(count).ToListAsync();
         }
 

@@ -9,7 +9,7 @@
     <div class="header">{{data.userLogin}}</div>
     <div class="description" style="word-wrap: break-word;">{{data.name}}</div>
   </div>
-  <button mat-button class="ml-auto p-2 edit_menu" [matMenuTriggerFor]="menu">
+  <button *ngIf="enableOptions" mat-button class="ml-auto p-2 edit_menu" [matMenuTriggerFor]="menu">
     <mat-icon class="edit_menu">more_vert</mat-icon>
   </button>
   <mat-menu #menu="matMenu">

@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import {MusicService} from "../../services/music/music.service";
+import {finalize} from "rxjs/operators";
+import {MusicInfo} from "../../models/musics/musicInfo";
+import {Router} from "@angular/router";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-favouritemusics',
@@ -7,9 +12,34 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FavouritemusicsComponent implements OnInit {
 
-  constructor() { }
+  musicLoaded = false;
+  likedMusic: MusicInfo[] = [];
+
+  constructor(
+    private musicService: MusicService,
+    private router: Router,
+    private matSnackBar: MatSnackBar
+  ) { }
 
   ngOnInit() {
+    this.musicService.getLiked().pipe(finalize(()=>this.musicLoaded = true)).subscribe((res:MusicInfo[])=>{
+      this.likedMusic = res;
+    }, error => {
+      if(error.status == 401){
+        this.router.navigate(['auth']);
+      }
+      if (error.status != 0) {
+        this.matSnackBar.open(`При получении музыки возникла ошибка, статусный код ${error.status}`, '', {
+          duration: 3000,
+          panelClass: 'custom-snack-bar-error'
+        });
+      } else {
+        this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
+      }
+    });
   }
 
+  navigateMusicInfo(id: number) {
+    this.router.navigate(['musicinfo',`${id}`]);
+  }
 }

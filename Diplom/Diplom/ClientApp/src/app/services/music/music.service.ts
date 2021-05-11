@@ -38,6 +38,10 @@ export class MusicService {
     return this.http.get<MusicInfo[]>(`${environment.url}api/music/GetPartOfMusicsPyUserId/${lastIndex}`);
   }
 
+  getLiked():Observable<MusicInfo[]>{
+    return this.http.get<MusicInfo[]>(`${environment.url}api/music/GetLikedMusics`);
+  }
+
   getMusicByPlaylist(playlistId: number): Observable<MusicInfo[]>{
     return this.http.get<MusicInfo[]>(`${environment.url}api/music/GetMusicByPlaylist/${playlistId}`);
   }

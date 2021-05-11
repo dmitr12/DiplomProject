@@ -1,1 +1,14 @@
-<p>favouritemusics works!</p>
+<div class="mat-spinner-container" *ngIf="!musicLoaded">
+  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+</div>
+
+<div *ngIf="musicLoaded && likedMusic.length == 0" style="display: flex; align-items: center; justify-content: center; height: 65vh">
+  Список пуст
+</div>
+
+<div *ngIf="musicLoaded && likedMusic.length > 0" class="mt-2">
+  <div *ngFor="let music of likedMusic">
+    <app-music-card [data]="music" [enableOptions]="false" [clickedPlayer]="false" (click)="navigateMusicInfo(music.id)"></app-music-card>
+  </div>
+</div>
+
