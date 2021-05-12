@@ -10,6 +10,7 @@ import {Router} from "@angular/router";
 export class PlaylistCardComponent implements OnInit {
 
   @Input() playlistCard: PlaylistInfo;
+  @Input() enableUserLogin: boolean;
   loaded = false;
 
   constructor(

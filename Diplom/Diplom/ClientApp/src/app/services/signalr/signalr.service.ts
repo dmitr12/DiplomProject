@@ -7,6 +7,7 @@ import {HttpClient} from "@angular/common/http";
 import {MusicCommentResult} from "../../models/comments/musicCommentResult";
 import {User} from "../../models/users/user";
 import {NotificationResult} from "../../models/notifications/notificationResult";
+import {DeleteNotificationsResult} from "../../models/notifications/deleteNotificationsResult";
 
 @Injectable({
   providedIn: 'root'
@@ -17,11 +18,13 @@ export class SignalrService {
   commentMusicSignal = new EventEmitter<MusicCommentResult>();
   changeUserPasswordSignal = new EventEmitter<User>();
   notificationSignal = new EventEmitter<NotificationResult>();
+  cleanNotificationsSignal = new EventEmitter<DeleteNotificationsResult>()
   private hubConnection: signalr.HubConnection;
   private readonly ratedMusic = 'RatedMusic';
   private readonly commentOnMusic = 'CommentOnMusic';
   private readonly changeUserPassword = "ChangeUserPassword";
   private readonly notification_event = "Notification";
+  private readonly clean_notifications = "CleanNotifications";
 
   constructor(
     private http: HttpClient
@@ -66,6 +69,9 @@ export class SignalrService {
     });
     this.hubConnection.on(this.notification_event, (data: NotificationResult) => {
       this.notificationSignal.emit(data);
+    });
+    this.hubConnection.on(this.clean_notifications, (data: DeleteNotificationsResult) => {
+      this.cleanNotificationsSignal.emit(data);
     });
   }
 }

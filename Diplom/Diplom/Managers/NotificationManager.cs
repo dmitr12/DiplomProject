@@ -1,6 +1,7 @@
 ﻿using Diplom.Models;
 using Diplom.Models.NotificationModels;
 using Diplom.Utils;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -48,11 +49,28 @@ namespace Diplom.Managers
             }
         }
 
+        public async Task<IActionResult> CheckNotification(Notification[] models)
+        {
+            try
+            {
+                var notificationIds = models.Select(n => n.NotificationId);
+                var notifications = await db.Notifications.Where(n => notificationIds.Contains(n.NotificationId)).ToListAsync();
+                foreach (var notification in notifications)
+                    notification.IsChecked = true;
+                await db.SaveChangesAsync();
+                return new OkResult();
+            }
+            catch
+            {
+                return new StatusCodeResult(500);
+            }
+        }
+
         public async Task<List<Notification>> GetNotificationsForUser(int userId)
         {
             return await (from f in db.Followers
                     join n in db.Notifications on f.UserId equals n.UserId
-                    join u in db.Users on n.UserId equals u.UserId where n.IsChecked == false && f.FollowedUserId == userId
+                    join u in db.Users on n.UserId equals u.UserId where f.FollowedUserId == userId
                     select new Notification { 
                         NotificationId = n.NotificationId,
                         UserId = n.UserId,
@@ -61,7 +79,7 @@ namespace Diplom.Managers
                         Message = n.Message,
                         CreateDate = n.CreateDate,
                         IsChecked = n.IsChecked
-                    }).ToListAsync();
+                    }).OrderByDescending(n=>n.CreateDate).ToListAsync();
         }
     }
 }

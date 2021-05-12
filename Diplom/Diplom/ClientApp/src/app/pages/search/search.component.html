@@ -39,7 +39,7 @@
   itemsPerPage: 12,
   currentPage: page,
   totalItems: totalRecords}">
-        <app-playlist-card [playlistCard]="playlist" (click)="navigatePlaylistInfo(playlist.playlistId)"></app-playlist-card>
+        <app-playlist-card [playlistCard]="playlist" [enableUserLogin]="true" (click)="navigatePlaylistInfo(playlist.playlistId)"></app-playlist-card>
       </div>
     </div>
     <div style="text-align:center" *ngIf="playlists.length > 12">

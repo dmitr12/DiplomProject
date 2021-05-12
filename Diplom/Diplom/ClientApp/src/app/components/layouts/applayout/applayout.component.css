@@ -139,3 +139,15 @@
 .login_link:hover{
   text-decoration: underline;
 }
+
+.checker{
+  color: #fa053e;
+  padding-left: 16px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.checker:hover{
+  text-decoration: underline;
+}

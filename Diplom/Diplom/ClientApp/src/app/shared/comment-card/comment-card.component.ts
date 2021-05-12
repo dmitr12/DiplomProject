@@ -67,7 +67,7 @@ export class CommentCardComponent implements OnInit {
   }
 
   getDateTimeString(commentDate: Date) {
-    return (moment(commentDate)).format('DD-MMM-YYYY HH:mm');
+    return (moment(commentDate)).format('DD-MM-YYYY HH:mm');
   }
 
   showChildren() {

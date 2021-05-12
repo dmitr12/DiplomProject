@@ -13,6 +13,9 @@ import {Notification, NotificationType} from "../../../models/notifications/noti
 import {SignalrService} from "../../../services/signalr/signalr.service";
 import {NotificationResult} from "../../../models/notifications/notificationResult";
 import {UsersService} from "../../../services/users/users.service";
+import {not} from "rxjs/internal-compatibility";
+import {DeleteNotificationsResult} from "../../../models/notifications/deleteNotificationsResult";
+import * as moment from "moment";
 
 @Component({
   selector: 'app-applayout',
@@ -28,6 +31,7 @@ export class ApplayoutComponent implements OnInit {
   notifications: Notification[];
   currentUserId: number;
   isUserAuthenticated: boolean;
+  checkedNotifications
 
   constructor(
     public authService: AuthService,
@@ -72,6 +76,7 @@ export class ApplayoutComponent implements OnInit {
       this.notificationService.getNotificationsForCurrentUser().pipe(finalize(()=>this.notificationsLoaded = true)).subscribe((res: Notification[])=>{
         this.notifications = res;
         this.notifications.forEach(n=>{
+          n.createDate = new Date(n.createDate);
           switch (n.notificationType) {
             case NotificationType.AddedMusic:
               n.routeString = '/musicinfo';
@@ -84,10 +89,27 @@ export class ApplayoutComponent implements OnInit {
       });
 
       this.signalrService.notificationSignal.subscribe((signal: NotificationResult) => {
-        console.log(signal)
-        if(signal.followers.includes(this.currentUserId))
-          alert(`it's for me`)
+        if(signal.followers.includes(this.currentUserId)){
+          switch (signal.notification.notificationType) {
+            case NotificationType.AddedMusic:
+              signal.notification.routeString = '/musicinfo';
+              break;
+            case NotificationType.AddedPlaylist:
+              signal.notification.routeString = '/playlist-info';
+              break;
+          }
+          this.notifications.unshift(signal.notification);
+        }
       })
+
+      this.signalrService.cleanNotificationsSignal.subscribe((signal: DeleteNotificationsResult) => {
+        alert('get signal');
+        let notificationsForDelete = this.notifications.filter(n=>signal.deletedNotifications.includes(n.notificationId));
+        notificationsForDelete.forEach(n=>{
+          let index = this.notifications.indexOf(n);
+          this.notifications.splice(index,1);
+        })
+      });
     }
   }
 
@@ -108,16 +130,56 @@ export class ApplayoutComponent implements OnInit {
   }
 
   notificationClick(notification: Notification) {
+    if(!notification.isChecked){
+      this.notificationService.checkNotification([notification]).subscribe((res:any)=>{
+        let index = this.notifications.indexOf(notification);
+        this.notifications[index].isChecked = true;
+      }, error => {
+        if(error.status == 401){
+          this.router.navigate(['auth']);
+        }
+        if(error.status != 0){
+          this.matSnackBar.open(`При изменении статуса уведомления возникла ошибка, статусный код ${error.status}`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
+        }
+        else{
+          this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
+        }
+      })
+    }
     this.router.navigate([`${notification.routeString}`, `${notification.sourceId}`]);
-  }
-
-  checkNotification(event: MouseEvent, notification: Notification) {
-    event.stopPropagation();
-    const index =  this.notifications.indexOf(notification);
-    this.notifications.splice(index, 1);
   }
 
   login() {
     this.router.navigate(['auth']);
+  }
+
+  get uncheckedNotificationsLength() : number{
+    return this.notifications.filter(n=>!n.isChecked).length
+  }
+
+  getDateTimeString(commentDate: Date) {
+    return (moment(commentDate)).format('DD-MM-YYYY HH:mm');
+  }
+
+  checkAllNotifications() {
+    let unChecked = this.notifications.filter(n=>!n.isChecked);
+    if(unChecked.length > 0){
+      this.notificationService.checkNotification(unChecked).subscribe((res:any)=>{
+        unChecked.forEach(n=>{
+          let index = this.notifications.indexOf(n);
+          this.notifications[index].isChecked = true;
+        })
+      }, error => {
+        if(error.status == 401){
+          this.router.navigate(['auth']);
+        }
+        if(error.status != 0){
+          this.matSnackBar.open(`При изменении статуса уведомлений возникла ошибка, статусный код ${error.status}`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
+        }
+        else{
+          this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
+        }
+      })
+    }
   }
 }

@@ -30,5 +30,12 @@ namespace Diplom.Controllers
         {
             return manager.GetNotificationsForUser(UserId).Result;
         }
+
+        [HttpPut("CheckNotification")]
+        [Authorize]
+        public IActionResult CheckNotification(Notification[] notifications)
+        {
+            return manager.CheckNotification(notifications).Result;
+        }
     }
 }

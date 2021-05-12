@@ -9,14 +9,17 @@
       </a>
     </div>
     <div *ngIf="isUserAuthenticated" class="d-flex">
-      <div *ngIf="notifications.length == 0" class="notification d-flex align-items-center mr-3">
+      <div *ngIf="notifications.length > 0 && uncheckedNotificationsLength == 0" class="notification d-flex align-items-center mr-3" [matMenuTriggerFor]="ntf">
         <mat-icon>notifications</mat-icon>
       </div>
-      <div *ngIf="notifications.length > 0" class="notification d-flex align-items-center mr-3" [matMenuTriggerFor]="ntf">
+      <div *ngIf="notifications.length == 0 && uncheckedNotificationsLength == 0" class="notification d-flex align-items-center mr-3">
+        <mat-icon>notifications</mat-icon>
+      </div>
+      <div *ngIf="uncheckedNotificationsLength > 0" class="notification d-flex align-items-center mr-3" [matMenuTriggerFor]="ntf">
         <mat-icon class="mr-1">notifications_active</mat-icon>
         <div class="notification-counter d-flex justify-content-center">
-          <span *ngIf="notifications.length <= 100">{{notifications.length}}</span>
-          <span *ngIf="notifications.length > 100">100+</span>
+          <span *ngIf="uncheckedNotificationsLength <= 100">{{uncheckedNotificationsLength}}</span>
+          <span *ngIf="uncheckedNotificationsLength > 100">100+</span>
         </div>
       </div>
       <mat-card class="profile" [matMenuTriggerFor]="menu">
@@ -35,15 +38,18 @@
         </button>
       </mat-menu>
       <mat-menu #ntf="matMenu">
-        <div class="d-flex align-items-center" mat-menu-item *ngFor="let notification of notifications" style="word-wrap: break-word;
+        <p class="checker" (click)="checkAllNotifications()">Пометить все как проверенные</p>
+        <div (click)="notificationClick(notification)" class="d-flex align-items-center" mat-menu-item *ngFor="let notification of notifications" style="word-wrap: break-word;
     white-space: normal; line-height: 25px; height: 100%; border-bottom: #fa053e 1px solid">
-          <div class="mr-3 p-1" (click)="checkNotification($event, notification)">
-            <mat-icon class="mr-0" style="color: #fa053e">
-              delete
-            </mat-icon>
+          <div *ngIf="notification.isChecked">
+            <mat-icon style="color: #fa053e">check</mat-icon>
           </div>
-          <div (click)="notificationClick(notification)">
-            {{notification.message}}
+          <div *ngIf="!notification.isChecked">
+            <mat-icon style="color: #fa053e">notifications</mat-icon>
+          </div>
+          <div>
+            <p style="margin-bottom: 5px">{{notification.message}}</p>
+            <p style="margin-bottom: 5px">{{getDateTimeString(notification.createDate)}}</p>
           </div>
         </div>
       </mat-menu>

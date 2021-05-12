@@ -5,7 +5,7 @@
       {{playlistCard.playlistName}}
     </div>
   </div>
-  <div *ngIf="playlistCard.userLogin !== null" class="playlist-card-user">
+  <div *ngIf="enableUserLogin && playlistCard.userLogin !== null" class="playlist-card-user">
     <p (click)="navigateProfile()">{{playlistCard.userLogin}}</p>
   </div>
 </div>

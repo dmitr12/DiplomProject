@@ -106,5 +106,5 @@ SourceId int not null,
 NotificationType int not null,
 Message nvarchar(max) not null,
 IsChecked bit,
-CreateDate date not null
+CreateDate datetime not null
 )

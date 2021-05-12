@@ -1,5 +1,6 @@
 ﻿using Diplom.Interfaces;
 using Diplom.Managers;
+using Diplom.Quartz;
 using Diplom.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -23,6 +24,8 @@ namespace Diplom.Utils
             services.AddScoped<NotificationManager>();
             services.AddSingleton<ICloudService, CloudService>();
             services.AddSingleton<IEmailService, EmailService>();
+            services.AddScoped<JobFactory>();
+            services.AddScoped<NotificationCleaner>();
         }
     }
 }
