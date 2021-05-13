@@ -54,6 +54,22 @@ namespace Diplom.Managers
             return res;
         }
 
+        public async Task<List<MusicInfo>> GetNewMusics()
+        {
+            return await db.Musics.OrderByDescending(m => m.DateOfPublication).Take(10).Join(db.Users, m => m.UserId, u => u.UserId, (m, u) => new MusicInfo
+            {
+                Id = m.MusicId,
+                Name = m.MusicName,
+                MusicFileName = m.MusicFileName,
+                MusicUrl = m.MusicUrl,
+                MusicImageName = m.MusicImageName,
+                ImageUrl = m.MusicImageUrl,
+                GenreId = m.MusicGenreId,
+                UserId = u.UserId,
+                UserLogin = u.Login
+            }).ToListAsync();
+        }
+
         public async Task<List<MusicInfo>> GetMusicByPlaylist(int playlistId)
         {
             return await (from pm in db.PlaylistsMusics
@@ -196,8 +212,9 @@ namespace Diplom.Managers
 
         public async Task<IActionResult> AddMusic(AddMusicModel model, int userId)
         {
+            var dtNow = DateTime.Now;
             User user = await db.Users.FindAsync(userId);
-            string dateTimeNow = $"{DateTime.Now.Day}.{DateTime.Now.Month}.{DateTime.Now.Year} {DateTime.Now.Hour}:{DateTime.Now.Minute}:{DateTime.Now.Second}";
+            string dateTimeNow = $"{dtNow.Day}.{dtNow.Month}.{dtNow.Year} {dtNow.Hour}:{dtNow.Minute}:{dtNow.Second}";
             if (await db.Musics.Where(m => m.UserId == user.UserId && m.MusicName == model.MusicName).FirstOrDefaultAsync() != null)
                 return new OkObjectResult(new { msg = $"У вас уже есть запись с названием {model.MusicName}" });
             string musicFileName = $"{user.Login}_{dateTimeNow}_" + model.MusicFile.FileName;
@@ -222,7 +239,7 @@ namespace Diplom.Managers
                     MusicImageName = model.MusicImageFile == null ? $"{options.Value.DefaultMusicImageFile}" : $"{user.Login}_music_{dateTimeNow}_" + model.MusicImageFile.FileName,
                     MusicImageUrl = model.MusicImageFile == null ? $"{options.Value.DefaultMusicImageFileLink}" : sharingLinkImage,
                     UserId = user.UserId,
-                    DateOfPublication = DateTime.Now.Date,
+                    DateOfPublication = dtNow,
                     MusicGenreId = model.MusicGenreId
                 };
                 db.Musics.Add(music);

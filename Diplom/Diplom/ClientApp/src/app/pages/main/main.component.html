@@ -1,1 +1,49 @@
-<p>main works!</p>
+<div class="mat-spinner-container" *ngIf="!newMusicsLoaded || !newPlaylistsLoaded">
+  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+</div>
+<div *ngIf="newMusicsLoaded && newPlaylistsLoaded">
+  <div style="margin-bottom: 50px">
+    <div class="mb-1 title">
+      Новые песни
+    </div>
+    <div *ngFor="let music of musics | paginate: {id: 'listing_new_musics',
+  itemsPerPage: 5,
+  currentPage: new_musics_page,
+  totalItems: totalRecords}">
+      <app-music-card [data]="music" [enableOptions]="false" [clickedPlayer]="false" (click)="navigateMusicInfo(music.id)"></app-music-card>
+    </div>
+    <div style="text-align:center" *ngIf="musics.length > 5">
+      <pagination-controls id="listing_new_musics"
+                           maxSize="8"
+                           directionLinks="true"
+                           previousLabel="Назад"
+                           nextLabel="Далее"
+                           autoHide="true"
+                           (pageChange)="new_musics_page=$event">
+      </pagination-controls>
+    </div>
+  </div>
+  <div>
+    <div class="mb-1 title">
+      Новые плейлисты
+    </div>
+    <div class="row">
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2" *ngFor="let playlist of playlists | paginate: {id: 'listing_new_playlists',
+  itemsPerPage: 6,
+  currentPage: new_playlists_page,
+  totalItems: totalRecords}">
+        <app-playlist-card [playlistCard]="playlist" [enableUserLogin]="true" (click)="navigatePlaylistInfo(playlist.playlistId)"></app-playlist-card>
+      </div>
+    </div>
+    <div style="text-align:center" *ngIf="musics.length > 6">
+      <pagination-controls id="listing_new_playlists"
+                           maxSize="8"
+                           directionLinks="true"
+                           previousLabel="Назад"
+                           nextLabel="Далее"
+                           autoHide="true"
+                           (pageChange)="new_playlists_page=$event">
+      </pagination-controls>
+    </div>
+  </div>
+</div>

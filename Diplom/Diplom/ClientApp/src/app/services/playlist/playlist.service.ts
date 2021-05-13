@@ -44,6 +44,10 @@ export class PlaylistService {
     return this.http.get<PlaylistInfo[]>(`${environment.url}api/playlist/FilterPlaylist`, {params:httpParams});
   }
 
+  getNewPlaylists():Observable<PlaylistInfo[]>{
+    return this.http.get<PlaylistInfo[]>(`${environment.url}api/playlist/GetNewPlaylists`);
+  }
+
   getFileNameByPath(path: string):string {
     var arr = path.split('\\');
     return arr[arr.length - 1];

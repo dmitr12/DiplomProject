@@ -74,6 +74,21 @@ namespace Diplom.Managers
             }
         }
 
+        public async Task<List<PlaylistInfo>> GetNewPlaylists()
+        {
+            return await db.Playlists.OrderByDescending(p=>p.CreateDate).Take(12)
+                           .Join(db.Users, p => p.UserId, u => u.UserId, (p, u) => new PlaylistInfo
+                           {
+                               PlaylistId = p.PlaylistId,
+                               PlaylistName = p.PlaylistName,
+                               PlaylistDescription = p.PlaylistDescription,
+                               PlaylistImageUrl = p.PlaylistImageUrl,
+                               UserId = p.UserId,
+                               UserLogin = u.Login,
+                               CreateDate = p.CreateDate
+                           }).ToListAsync();
+        }
+
         public async Task<IActionResult> EditPlaylist(PlaylistEditor model, int userId)
         {
             var playlist = await db.Playlists.FindAsync(model.PlaylistId);

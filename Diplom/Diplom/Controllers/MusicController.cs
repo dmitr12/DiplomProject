@@ -57,6 +57,12 @@ namespace Diplom.Controllers
             return new List<MusicInfo>();
         }
 
+        [HttpGet("GetNewMusics")]
+        public List<MusicInfo> GetNewMusics()
+        {
+            return musicManager.GetNewMusics().Result;
+        }
+
         [HttpGet("ListMusicGenres")]
         public List<MusicGenre> GetMusicGenres()
         {

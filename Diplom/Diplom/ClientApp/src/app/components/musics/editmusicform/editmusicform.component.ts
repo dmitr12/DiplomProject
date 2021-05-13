@@ -69,15 +69,15 @@ export class EditmusicformComponent implements OnInit {
   editMusic() {
     let fileImageName;
     let fileMusicName;
-    if (this.form.value.musicImageName === null)
+    if (this.form.value.musicImageName == null)
       fileImageName = '';
     else
       fileImageName = this.musicService.getFileNameByPath(this.form.value.musicImageName)
-    if (this.form.value.musicFileName === null)
+    if (this.form.value.musicFileName == null)
       fileMusicName = '';
     else
       fileMusicName = this.musicService.getFileNameByPath(this.form.value.musicFileName)
-    if (fileImageName) {
+    if (fileMusicName) {
       if (!this.musicService.checkFileFormat(fileMusicName, "mp3")) {
         this.matSnackBar.open(`Выбран неверный формат аудиозаписи`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
         return;

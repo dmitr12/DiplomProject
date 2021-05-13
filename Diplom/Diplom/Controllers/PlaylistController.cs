@@ -65,6 +65,12 @@ namespace Diplom.Controllers
             return playlistManager.GetFilteredPlaylists(playlistName).Result;
         }
 
+        [HttpGet("GetNewPlaylists")]
+        public List<PlaylistInfo> GetNewPlaylists()
+        {
+            return playlistManager.GetNewPlaylists().Result;
+        }
+
         [HttpPost("AddMusic")]
         [Authorize]
         public IActionResult AddMusic(PlaylistsMusic model)

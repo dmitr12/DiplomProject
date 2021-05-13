@@ -30,6 +30,10 @@ export class MusicService {
     return this.http.get<MusicInfo[]>(`${environment.url}api/music/ListMusicsByUserId`);
   }
 
+  getNewMusics(): Observable<MusicInfo[]>{
+    return this.http.get<MusicInfo[]>(`${environment.url}api/music/GetNewMusics`);
+  }
+
   getMusic(id: number): Observable<MusicInfo>{
     return this.http.get<MusicInfo>(`${environment.url}api/music/GetMusic/${id}`);
   }

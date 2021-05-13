@@ -49,7 +49,7 @@ MusicUrl nvarchar(max) not null,
 MusicImageName nvarchar(200) not null,
 MusicImageUrl nvarchar(max) not null,
 UserId int references Users(UserId) not null,
-DateOfPublication date not null,
+DateOfPublication datetime not null,
 MusicGenreId int references MusicGenres(MusicGenreId) not null
 )
 go 
@@ -79,7 +79,7 @@ PlaylistDescription nvarchar(max),
 PlaylistImageFile nvarchar(200) not null,
 PlaylistImageUrl nvarchar(max) not null,
 UserId int references Users(UserId) not null,
-CreateDate date not null
+CreateDate datetime not null
 )
 go
 create table PlaylistsMusics(
