@@ -21,6 +21,8 @@ namespace Diplom.Managers
         private readonly IOptions<DropBoxOptions> options;
         private readonly EmailManager emailManager;
         private readonly ICloudService cloudService;
+        private readonly string confirmMailLink = "/auth/login";
+        private readonly string forgotPasswordLink = "/auth/forgot-password-change";
         public UserManager(DataBaseContext db, IGeneratorToken generatorToken, IOptions<DropBoxOptions> options, EmailManager emailManager, ICloudService cloudService)
         {
             this.db = db;
@@ -69,6 +71,7 @@ namespace Diplom.Managers
                 Password = HashClass.GetHash(model.Password),
                 RoleId = 1,
                 IsMailConfirmed = false,
+                VerifyCode = Guid.NewGuid(),
                 Avatar = options.Value.DefaultUserImageLink,
                 AvatarFile = options.Value.DefaultUserImageFile,
                 RegistrationDate = DateTime.Now
@@ -79,7 +82,7 @@ namespace Diplom.Managers
                 await db.SaveChangesAsync();
                 var emailInfo = new EmailInfo();
                 emailInfo.Subject = "Подтверждение почты в приложении MusicApp";
-                emailInfo.Body = $"<div><p>Кликните по ссылке ниже, чтобы подтвердить свою почту</p><a href='{baseUrl}/api/user/ConfirmEmail/{user.UserId}'>Подтвердить почту</a></div>";
+                emailInfo.Body = $"<div><p>Кликните по ссылке ниже, чтобы подтвердить свою почту</p><a href='{baseUrl}{confirmMailLink}?userId={user.UserId}&verifyCode={user.VerifyCode}'>Подтвердить почту</a></div>";
                 emailInfo.ToMails.Add(user.Mail);
                 var emailResult = emailManager.Send(emailInfo);
                 if (!emailResult.Sended)
@@ -150,11 +153,23 @@ namespace Diplom.Managers
             }
         }
 
-        public void ConfrimEmail(int userId)
+        public async Task<IActionResult> ConfirmEmail(int userId, Guid verifyCode)
         {
-            var user = db.Users.Find(userId);
-            user.IsMailConfirmed = true;
-            db.SaveChanges();
+            try
+            {
+                var user = await db.Users.FindAsync(userId);
+                if (user == null)
+                    return new NotFoundObjectResult(new { msg = "Пользователя с указанным id не существует" });
+                if (user.VerifyCode != verifyCode)
+                    return new NotFoundObjectResult(new { msg = "Указан неверный код верификации" });
+                user.IsMailConfirmed = true;
+                await db.SaveChangesAsync();
+                return new OkResult();
+            }
+            catch
+            {
+                return new StatusCodeResult(500);
+            }
         }
 
         public async Task<IActionResult> EditProfile(EditProfile model, int userId)
@@ -194,37 +209,47 @@ namespace Diplom.Managers
             }
         }
 
-        public async Task<IActionResult> SendEmailForgotPassword(ForgotPasswordModel model, string baseUrl)
+        public async Task<IActionResult> SendEmailForgotPassword(EmailForgotPassword model, string baseUrl)
         {
-            var user = await db.Users.Where(u => u.Mail == model.Email).FirstOrDefaultAsync();
-            if (user != null)
+            try
             {
+                var user = await db.Users.Where(u => u.Mail == model.Email).FirstOrDefaultAsync();
+                if (user == null)
+                    return new NotFoundResult();
                 if (!user.IsMailConfirmed)
                     return new OkObjectResult(new { msg = "Почта не подтверждена" });
                 var emailInfo = new EmailInfo();
                 emailInfo.Subject = "Заменя пароля в приложении MusicApp";
-                emailInfo.Body = $"<div><p>Кликните по ссылке ниже, чтобы заменить пароль</p><a href='{baseUrl}/api/user/EmailForgotPassword/{user.UserId}'>Заменить пароль</a></div>";
+                emailInfo.Body = $"<div><p>Кликните по ссылке ниже, чтобы заменить пароль</p><a href='{baseUrl}{forgotPasswordLink}/{user.UserId}/{user.VerifyCode}'>Заменить пароль</a></div>";
                 emailInfo.ToMails.Add(model.Email);
                 var emailResult = emailManager.Send(emailInfo);
                 if (emailResult.Sended)
                     return new OkResult();
                 return new StatusCodeResult(500);
             }
-            return new NotFoundResult();
+            catch
+            {
+                return new StatusCodeResult(500);
+            }
         }
 
-        public async Task<IActionResult> ChangePassword(ForgotPasswordModel model)
+        public async Task<IActionResult> ForgotPasswordChange(ForgotPasswordModel model)
         {
-            var user = await db.Users.Where(u => u.Mail == model.Email).FirstOrDefaultAsync();
-            if (!IsMailConfirmed(user))
-                return new BadRequestResult();
-            if (user != null)
+            try
             {
+                var user = await db.Users.FindAsync(model.UserId);
+                if (user == null)
+                    return new NotFoundObjectResult(new { msg = "Пользователя с указанным id не существует" });
+                if (user.VerifyCode != model.VerifyCode)
+                    return new NotFoundObjectResult(new { msg = "Неверный код верификации" });
                 user.Password = HashClass.GetHash(model.Password);
                 await db.SaveChangesAsync();
                 return new OkResult();
             }
-            return new NotFoundResult();
+            catch
+            {
+                return new StatusCodeResult(500);
+            }
         }
 
         public async Task<UserInfo> GetUserProfile(int userId)

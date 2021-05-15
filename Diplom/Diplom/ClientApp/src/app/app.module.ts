@@ -61,6 +61,7 @@ import { SearchBarPageComponent } from './shared/search-bar-page/search-bar-page
 import { SearchUserCardComponent } from './shared/search-user-card/search-user-card.component';
 import { ChangePasswordComponent } from './components/users/change-password/change-password.component';
 import { MainComponent } from './pages/main/main.component';
+import { ForgotPasswordChangeComponent } from './components/users/forgot-password-change/forgot-password-change.component';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN);
@@ -100,6 +101,7 @@ export function tokenGetter() {
     SearchUserCardComponent,
     ChangePasswordComponent,
     MainComponent,
+    ForgotPasswordChangeComponent,
   ],
     imports: [
         BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -119,7 +121,8 @@ export function tokenGetter() {
                     {path: '', redirectTo: 'login', pathMatch: 'full'},
                     {path: 'login', component: LoginComponent},
                     {path: 'register', component: RegisterComponent},
-                    {path: 'forgot-password', component: ForgotPasswordComponent}
+                    {path: 'forgot-password', component: ForgotPasswordComponent},
+                    {path: 'forgot-password-change/:userId/:verifyCode', component: ForgotPasswordChangeComponent}
                 ]
             },
             {

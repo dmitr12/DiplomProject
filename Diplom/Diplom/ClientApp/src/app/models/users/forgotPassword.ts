@@ -1,10 +1,14 @@
+import {Guid} from "guid-typescript";
+
 export class ForgotPassword {
 
-  constructor(email: string, password: string) {
-    this.email = email;
+  constructor(userId: number, verifyCode: Guid, password: string) {
+    this.userId = userId;
+    this.verifyCode = verifyCode;
     this.password = password;
   }
 
-  email: string;
+  userId: number;
+  verifyCode: Guid;
   password: string;
 }

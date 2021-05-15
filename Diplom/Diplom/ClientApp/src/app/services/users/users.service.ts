@@ -7,6 +7,8 @@ import {UserInfo} from "../../models/users/userInfo";
 import {NotificationResult} from "../../models/notifications/notificationResult";
 import {FilterUserModel} from "../../models/users/filterUserModel";
 import {ChangeUserPassword} from "../../models/users/changeUserPassword";
+import {ConfirmEmail} from "../../models/users/confirmEmail";
+import {EmailForgotPassword} from "../../models/users/emailForgotPassword";
 
 @Injectable({
   providedIn: 'root'
@@ -19,12 +21,12 @@ export class UsersService {
     private httpClient: HttpClient
   ) { }
 
-  emailForgotPassword(forgotPassword: ForgotPassword){
-    return this.httpClient.post(`${environment.url}api/user/EmailForgotPassword`, forgotPassword)
+  emailForgotPassword(emailForgotPassword: EmailForgotPassword){
+    return this.httpClient.post(`${environment.url}api/user/EmailForgotPassword`, emailForgotPassword);
   }
 
-  changePassword(forgotPassword: ForgotPassword){
-    return this.httpClient.post(`${environment.url}api/user/ChangePassword`, forgotPassword)
+  forgotPasswordChange(forgotPassword: ForgotPassword){
+    return this.httpClient.put(`${environment.url}api/user/ForgotPasswordChange`, forgotPassword)
   }
 
   getUserProfile(userId: number): Observable<UserInfo>{
@@ -42,5 +44,9 @@ export class UsersService {
 
   changeUserPassword(model: ChangeUserPassword){
     return this.httpClient.put(`${environment.url}api/user/ChangeUserPassword`, model);
+  }
+
+  confirmEmail(confirmEmail: ConfirmEmail){
+    return this.httpClient.put(`${environment.url}api/user/ConfirmEmail`, confirmEmail);
   }
 }

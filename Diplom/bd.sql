@@ -20,8 +20,9 @@ Surname nvarchar(100),
 Country nvarchar(100),
 City nvarchar(100),
 IsMailConfirmed bit,
+VerifyCode uniqueidentifier not null,
 RegistrationDate date not null
-);
+)
 go
 create table MusicGenres(
 MusicGenreId int primary key identity(1,1),

@@ -5,7 +5,6 @@ import {RatedMusicResult} from "../../models/musics/ratedMusicResult";
 import {MusicStarRating} from "../../models/musics/musicStarRating";
 import {HttpClient} from "@angular/common/http";
 import {MusicCommentResult} from "../../models/comments/musicCommentResult";
-import {User} from "../../models/users/user";
 import {NotificationResult} from "../../models/notifications/notificationResult";
 import {DeleteNotificationsResult} from "../../models/notifications/deleteNotificationsResult";
 
@@ -16,13 +15,11 @@ export class SignalrService {
 
   ratedMusicSignal = new EventEmitter<RatedMusicResult>();
   commentMusicSignal = new EventEmitter<MusicCommentResult>();
-  changeUserPasswordSignal = new EventEmitter<User>();
   notificationSignal = new EventEmitter<NotificationResult>();
   cleanNotificationsSignal = new EventEmitter<DeleteNotificationsResult>()
   private hubConnection: signalr.HubConnection;
   private readonly ratedMusic = 'RatedMusic';
   private readonly commentOnMusic = 'CommentOnMusic';
-  private readonly changeUserPassword = "ChangeUserPassword";
   private readonly notification_event = "Notification";
   private readonly clean_notifications = "CleanNotifications";
 
@@ -63,9 +60,6 @@ export class SignalrService {
     });
     this.hubConnection.on(this.commentOnMusic, (data: MusicCommentResult) => {
       this.commentMusicSignal.emit(data);
-    });
-    this.hubConnection.on(this.changeUserPassword, (data: User) => {
-      this.changeUserPasswordSignal.emit(data);
     });
     this.hubConnection.on(this.notification_event, (data: NotificationResult) => {
       this.notificationSignal.emit(data);

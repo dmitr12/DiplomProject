@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace Diplom.Models.UserModels
 {
-    public class ForgotPasswordModel
+    public class ConfirmEmail
     {
         public int UserId { get; set; }
         public Guid VerifyCode { get; set; }
-        public string Password { get; set; }
     }
 }

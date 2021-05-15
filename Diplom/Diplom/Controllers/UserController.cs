@@ -23,16 +23,11 @@ namespace Diplom.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserManager userManager;
-        private readonly IWebHostEnvironment environment;
-        private readonly IHubContext<SignalHub> hubContext;
-        private readonly string ChangeUserPsw = "ChangeUserPassword";
         private int UserId => int.Parse(User.Claims.Single(cl => cl.Type == ClaimTypes.NameIdentifier).Value);
 
-        public UserController(UserManager userManager, IWebHostEnvironment environment, IHubContext<SignalHub> hubContext)
+        public UserController(UserManager userManager)
         {
             this.userManager = userManager;
-            this.environment = environment;
-            this.hubContext = hubContext;
         }
 
         [HttpPost("Login")]
@@ -71,43 +66,21 @@ namespace Diplom.Controllers
         }
 
         [HttpPost("EmailForgotPassword")]
-        public IActionResult EmailForgotPassword(ForgotPasswordModel model)
+        public IActionResult EmailForgotPassword(EmailForgotPassword model)
         {
             return userManager.SendEmailForgotPassword(model, $"{Request.Scheme}://{Request.Host.Value}").Result;
         }
 
-        [HttpPost("ChangePassword")]
-        public IActionResult ChangePassword(ForgotPasswordModel model)
+        [HttpPut("ForgotPasswordChange")]
+        public IActionResult ForgotPasswordChange(ForgotPasswordModel model)
         {
-            return userManager.ChangePassword(model).Result;
+            return userManager.ForgotPasswordChange(model).Result;
         }
 
-        [HttpGet("EmailForgotPassword/{userId}")]
-        public async Task<IActionResult> EmailForgotPassword(int userId)
+        [HttpPut("ConfirmEmail")]
+        public IActionResult ConfirmEmail(ConfirmEmail model)
         {
-            var user = userManager.GetUser(userId).Result;
-            if (userManager.IsMailConfirmed(user))
-            {
-                await hubContext.Clients.All.SendAsync(ChangeUserPsw, user);
-            }
-            var fileContents = System.IO.File.ReadAllText($@"{environment.WebRootPath}\EmailForgotPassword.html");
-            return new ContentResult
-            {
-                Content = fileContents,
-                ContentType = "text/html"
-            };
-        }
-
-        [HttpGet("ConfirmEmail/{userId}")]
-        public IActionResult ConfirmEmail(int userId)
-        {
-            userManager.ConfrimEmail(userId);
-            var fileContents = System.IO.File.ReadAllText($@"{environment.WebRootPath}\index.html");
-            return new ContentResult
-            {
-                Content = fileContents,
-                ContentType = "text/html"
-            };
+            return userManager.ConfirmEmail(model.UserId, model.VerifyCode).Result;
         }
 
         [HttpGet("UserProfile/{userId}")]

@@ -58,7 +58,7 @@ export class RegisterComponent implements OnInit {
       if (res && res.msg) {
         this.matSnackBar.open(res.msg, '', {duration: 3000, panelClass: 'custom-snack-bar-error'})
       } else {
-        this.router.navigate(['']);
+        this.router.navigate(['auth']);
         this.matSnackBar.open(`На ${this.formRegister.value.email} отправлено письмо для потверждения почты`, '', {duration: 5000, panelClass: 'custom-snack-bar-success'})
       }
     }, error => {
