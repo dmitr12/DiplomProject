@@ -138,12 +138,6 @@ export class MusicinfoComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
   }
 
-  play() {
-    console.log(this.musicInfo)
-    let date = new Date(this.musicInfo.dateOfPublication);
-    console.log(date);
-  }
-
   onRate(event: { oldValue: number; newValue: number; starRating: StarRatingComponent }) {
     this.ratingComponent.readonly = true;
     this.signarService.rateMusic(new MusicStarRating(Number(this.authService.getCurrentUserId()), Number(this.musicId), event.newValue))
@@ -209,6 +203,7 @@ export class MusicinfoComponent implements OnInit, OnDestroy {
   }
 
   playMusic() {
+    this.audioService.clearMusic();
     this.audioService.openFile(this.musicInfo.id, this.musicInfo.musicFileName, this.musicInfo.name)
   }
 

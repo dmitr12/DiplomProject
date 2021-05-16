@@ -58,6 +58,7 @@ export class MusicCardComponent implements OnInit {
   play(event: any) {
     if(!event.target.className.includes('edit_menu') && this.clickedPlayer)
     {
+      this.audioService.clearMusic();
       this.audioService.openFile(this.data.id, this.data.musicFileName, this.data.name)
     }
   }

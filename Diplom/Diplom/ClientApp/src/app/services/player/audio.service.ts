@@ -85,13 +85,12 @@ export class AudioService {
       var parsed = parseFloat(value);
       this.audioObj.currentTime = parsed;
       this.audioObj.play();
+      this.isPlaying = true;
       this.updateProgress();
     }
   }
 
   updateProgress() {
-      console.log(this.audioObj.currentTime);
-      console.log(this.audioObj.seeking)
       this.currentTime = this.timeFormat(this.audioObj.currentTime);
       if (this.timeFormat(this.audioObj.duration) != 'Invalid date') {
         this.duration = this.timeFormat(this.audioObj.duration);

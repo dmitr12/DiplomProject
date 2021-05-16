@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {AudioService} from "../../../services/player/audio.service";
 
 @Component({
   selector: 'app-authlayout',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AuthlayoutComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private audioService: AudioService
+  ) { }
 
   ngOnInit() {
+    this.audioService.clearMusic();
   }
 
 }

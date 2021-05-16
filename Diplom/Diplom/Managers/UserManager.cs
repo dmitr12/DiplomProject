@@ -270,6 +270,7 @@ namespace Diplom.Managers
             userInfo.RegistrationDate = user.RegistrationDate;
             userInfo.CountMusics = await db.Musics.Where(m => m.UserId == userId).CountAsync();
             userInfo.CountComments = await db.MusicComments.Where(c => c.UserId == userId).CountAsync();
+            userInfo.CountPlaylists = await db.Playlists.Where(p => p.UserId == userId).CountAsync();
             userInfo.SummaryMusicRating = await db.Musics.Where(m => m.UserId == userId).Join(db.UsersMusics, m => m.MusicId, r => r.MusicId, (m, r) => r.Rating).SumAsync();
             return userInfo;
         }

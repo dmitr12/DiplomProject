@@ -8,7 +8,6 @@ import {MusicService} from "../../../services/music/music.service";
 import {UsersService} from "../../../services/users/users.service";
 import {Router} from "@angular/router";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {AddmusicformComponent} from "../../../components/musics/addmusicform/addmusicform.component";
 import {ChangePasswordComponent} from "../../../components/users/change-password/change-password.component";
 
 @Component({
@@ -79,15 +78,28 @@ export class ProfileEditorComponent implements OnInit {
     this.formData.delete("Surname");
     this.formData.delete("Country");
     this.formData.delete("City");
-    this.formData.append("Name", this.profileForm.value.name);
-    this.formData.append("Surname", this.profileForm.value.surname);
-    this.formData.append("Country", this.profileForm.value.country);
-    this.formData.append("City", this.profileForm.value.city);
+    if(this.profileForm.value.name === null)
+      this.formData.append("Name", '');
+    else
+      this.formData.append("Name", this.profileForm.value.name);
+    if(this.profileForm.value.surname === null)
+      this.formData.append("Surname", '');
+    else
+      this.formData.append("Surname", this.profileForm.value.surname);
+    if(this.profileForm.value.country === null)
+      this.formData.append("Country", '');
+    else
+      this.formData.append("Country", this.profileForm.value.country);
+    if(this.profileForm.value.city === null)
+      this.formData.append("City", '');
+    else
+      this.formData.append("City", this.profileForm.value.city);
     this.editing = true;
     this.userService.editProfile(this.formData).pipe(finalize(()=>{this.editing = false; this.formData.delete("Avatar")})).subscribe((response:any)=>{
       if(response && response.avatar){
         this.userService.editedProfile.emit(response.avatar);
         this.matSnackBar.open(`Профиль успешно изменен`, '', {duration: 3000, panelClass: 'custom-snack-bar-success'});
+        this.router.navigate(['profile',`${this.userInfo.userId}`]);
       }
     }, error => {
       if(error.status == 401){

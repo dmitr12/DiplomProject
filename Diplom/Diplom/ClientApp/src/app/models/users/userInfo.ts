@@ -12,5 +12,6 @@ export class UserInfo{
   registrationDate: Date
   countMusics: number;
   countComments: number;
+  countPlaylists: number;
   summaryMusicRating: number;
 }

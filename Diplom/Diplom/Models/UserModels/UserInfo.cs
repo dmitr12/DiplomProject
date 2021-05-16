@@ -20,6 +20,7 @@ namespace Diplom.Models.UserModels
         public DateTime RegistrationDate { get; set; }
         public int CountMusics { get; set; }
         public int CountComments { get; set; }
+        public int CountPlaylists { get; set; }
         public int SummaryMusicRating { get; set; }
     }
 }

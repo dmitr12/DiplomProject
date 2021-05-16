@@ -14,4 +14,8 @@ export class AudioplayerComponent implements OnInit {
 
   ngOnInit() {
   }
+
+  closeMusic() {
+    this.audioService.clearMusic();
+  }
 }
