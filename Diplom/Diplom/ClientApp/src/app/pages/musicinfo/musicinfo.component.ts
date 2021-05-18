@@ -12,12 +12,12 @@ import {RatedMusicResult} from "../../models/musics/ratedMusicResult";
 import {SignalrService} from "../../services/signalr/signalr.service";
 import {CommentsService} from "../../services/comments/comments.service";
 import {MusicCommentInfo} from "../../models/comments/musicCommentInfo";
-import {Guid} from "guid-typescript";
 import {MusicComment} from "../../models/comments/musicComment";
 import {CommentChangedType, MusicCommentResult} from "../../models/comments/musicCommentResult";
 import {AudioService} from "../../services/player/audio.service";
 import {UserRole} from "../../models/users/user";
 import {SearchType} from "../../models/search";
+import {Guid} from "guid-typescript";
 
 @Component({
   selector: 'app-musicinfo',
@@ -35,8 +35,6 @@ export class MusicinfoComponent implements OnInit, OnDestroy {
   public musicId: number;
   private subscription: Subscription;
   isRateReadOnly;
-  firstComments: MusicCommentInfo[];
-  secondComments: MusicCommentInfo[];
   isCommentAreaOpen: boolean;
   commentText: string;
   currentUserId: number;
@@ -64,8 +62,6 @@ export class MusicinfoComponent implements OnInit, OnDestroy {
       this.loadedComments = false;
       this.musicCommentsInfo = [];
       this.isRateReadOnly = false;
-      this.firstComments = [];
-      this.secondComments = [];
       this.isRateReadOnly = false;
       this.commentText = '';
       this.hiddenComments = true;
@@ -88,8 +84,6 @@ export class MusicinfoComponent implements OnInit, OnDestroy {
 
       this.commentsService.getCommentsForMusic(this.musicId).pipe(finalize(() => this.loadedComments = true)).subscribe((res: MusicCommentInfo[]) => {
         this.musicCommentsInfo = res;
-        this.firstComments = this.musicCommentsInfo.filter(c => c.parentIdComment === null);
-        this.secondComments = this.musicCommentsInfo.filter(c => !this.firstComments.includes(c));
       }, error => {
         if (error.status != 0) {
           this.matSnackBar.open(`При получении комментариев возникла ошибка, статусный код ${error.status}`, '', {
@@ -110,18 +104,17 @@ export class MusicinfoComponent implements OnInit, OnDestroy {
     }
 
     this.signarService.commentMusicSignal.subscribe((signal: MusicCommentResult) => {
-      if (signal.result && signal.musicCommentInfo.parentIdComment === null) {
+      if (signal.result) {
         switch (signal.commentChangedType) {
           case CommentChangedType.added:
-            this.firstComments.unshift(signal.musicCommentInfo);
+            this.musicCommentsInfo.push(signal.musicCommentInfo)
             break;
           case CommentChangedType.deleted:
-            const indexForDelete = this.firstComments.findIndex(item => item.idComment == signal.musicCommentInfo.idComment)
-            this.firstComments.splice(indexForDelete, 1);
+            this.deleteSubComments(signal.musicCommentInfo.idComment);
             break;
           case CommentChangedType.edited:
-            const indexForEdit = this.firstComments.findIndex(item => item.idComment == signal.musicCommentInfo.idComment)
-            this.firstComments[indexForEdit].comment = signal.musicCommentInfo.comment;
+            const indexForEdit = this.musicCommentsInfo.findIndex(item => item.idComment == signal.musicCommentInfo.idComment)
+            this.musicCommentsInfo[indexForEdit].comment = signal.musicCommentInfo.comment;
             break;
         }
       }
@@ -165,12 +158,6 @@ export class MusicinfoComponent implements OnInit, OnDestroy {
     });
   }
 
-  getChildrenComments(idComment: Guid) {
-    return this.secondComments.filter(c => c.parentIdComment === idComment).sort(function (a, b) {
-      return new Date(a.commentDate).getTime() - new Date(b.commentDate).getTime();
-    });
-  }
-
   comment() {
     if (this.commentText.trim()) {
       this.commentsService.musicCommentOn(new MusicComment(this.commentText, null,
@@ -197,7 +184,7 @@ export class MusicinfoComponent implements OnInit, OnDestroy {
   }
 
   showComments() {
-    if(this.firstComments.length > 0)
+    if(this.musicCommentsInfo.length > 0)
       this.isCommentAreaOpen = false;
     this.hiddenComments = !this.hiddenComments;
   }
@@ -269,5 +256,24 @@ export class MusicinfoComponent implements OnInit, OnDestroy {
         this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
       }
     });
+  }
+
+  getParentUserLogin(comment: MusicCommentInfo) {
+    if(comment.parentIdComment !== null){
+      const cmnt = this.musicCommentsInfo.find(c=>c.idComment == comment.parentIdComment);
+      if(cmnt !== undefined){
+        return cmnt.userLogin;
+      }
+    }
+    return null;
+  }
+
+  private deleteSubComments(idComment: Guid) {
+    const indexForDelete = this.musicCommentsInfo.findIndex(item => item.idComment == idComment);
+    this.musicCommentsInfo.splice(indexForDelete, 1);
+    const subComments = this.musicCommentsInfo.filter(c=>c.parentIdComment === idComment)
+    for(let i=0; i<subComments.length; i++){
+      this.deleteSubComments(subComments[i].idComment);
+    }
   }
 }

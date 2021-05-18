@@ -56,7 +56,7 @@
     <div [ngClass]="{commentIsNotAuth : !isUserAuthenticated}" (click)="showComments()">
       <a mat-menu-item style="cursor: pointer">
         <mat-icon>mode_comment</mat-icon>
-        <span>{{firstComments.length}}</span>
+        <span>{{musicCommentsInfo.length}}</span>
       </a>
     </div>
   </div>
@@ -72,8 +72,8 @@
     <br>
     <button mat-flat-button (click)="comment()" class="play-button">Оставить комментарий</button>
   </div>
-  <div [hidden]="hiddenComments" *ngFor="let firstComment of firstComments">
-    <app-comment-card [data]="firstComment" [musicId]="this.musicId" [children]="getChildrenComments(firstComment.idComment)"></app-comment-card>
+  <div [hidden]="hiddenComments" *ngFor="let comment of musicCommentsInfo">
+    <app-comment-card [data]="comment" [musicId]="this.musicId" [parentUserLogin]="getParentUserLogin(comment)"></app-comment-card>
   </div>
 </div>
 <div *ngIf="loadedMusicInfo">

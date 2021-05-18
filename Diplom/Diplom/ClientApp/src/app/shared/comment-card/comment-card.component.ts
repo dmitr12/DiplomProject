@@ -3,11 +3,10 @@ import {MusicCommentInfo} from "../../models/comments/musicCommentInfo";
 import * as moment from 'moment';
 import {AuthService} from "../../services/auth/auth.service";
 import {MusicComment} from "../../models/comments/musicComment";
-import {CommentChangedType, MusicCommentResult} from "../../models/comments/musicCommentResult";
+import {MusicCommentResult} from "../../models/comments/musicCommentResult";
 import {CommentsService} from "../../services/comments/comments.service";
 import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {SignalrService} from "../../services/signalr/signalr.service";
 import {UserRole} from "../../models/users/user";
 
 @Component({
@@ -18,8 +17,8 @@ import {UserRole} from "../../models/users/user";
 export class CommentCardComponent implements OnInit {
 
   @Input() data: MusicCommentInfo = null;
-  @Input() children: MusicCommentInfo[] = [];
   @Input() musicId = -1;
+  @Input() parentUserLogin: string = null;
   childrenArr: MusicCommentInfo[] = [];
   hiddenChild = true;
   currentUser: number;
@@ -27,55 +26,27 @@ export class CommentCardComponent implements OnInit {
   isCommentAreaOpen = false;
   isCommentEditAreaOpen = false;
   commentText = '';
-  commentEditText: string;
+  commentEditText = '';
   isUserAuthenticated: boolean;
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private matSnackBar: MatSnackBar,
-    private commentsService: CommentsService,
-    private signalrService: SignalrService
+    private commentsService: CommentsService
   ) {
     this.isUserAuthenticated = this.authService.isAuth();
   }
 
   ngOnInit() {
-    this.commentEditText = this.data.comment;
     if(this.isUserAuthenticated){
       this.currentUser = Number(this.authService.getCurrentUserId());
       this.currnetUserRole = Number(this.authService.getCurrentUserRole());
     }
-    this.childrenArr = this.children;
-    this.signalrService.commentMusicSignal.subscribe((signal: MusicCommentResult) => {
-      if (signal.result && signal.musicCommentInfo.parentIdComment === this.data.idComment) {
-        switch (signal.commentChangedType) {
-          case CommentChangedType.added:
-            this.childrenArr = this.childrenArr.concat(signal.musicCommentInfo);
-            break;
-          case CommentChangedType.deleted:
-            const indexForDelete = this.childrenArr.findIndex(item => item.idComment == signal.musicCommentInfo.idComment)
-            this.childrenArr.splice(indexForDelete, 1);
-            break;
-          case CommentChangedType.edited:
-            const indexForEdit = this.childrenArr.findIndex(item => item.idComment == signal.musicCommentInfo.idComment)
-            this.childrenArr[indexForEdit].comment = signal.musicCommentInfo.comment;
-            break;
-        }
-      }
-    });
   }
 
   getDateTimeString(commentDate: Date) {
     return (moment(commentDate)).format('DD-MM-YYYY HH:mm');
-  }
-
-  showChildren() {
-    if(this.childrenArr.length>0){
-      this.isCommentAreaOpen = false;
-      this.isCommentEditAreaOpen = false;
-    }
-    this.hiddenChild = !this.hiddenChild;
   }
 
   comment() {
@@ -123,7 +94,12 @@ export class CommentCardComponent implements OnInit {
   commentEdit() {
     if(this.commentEditText.trim()) {
       const musicComment = this.data;
-      musicComment.comment = this.commentEditText;
+      if(this.parentUserLogin !== null){
+        musicComment.comment = `${this.parentUserLogin}, ${this.commentEditText}`
+      }
+      else{
+        musicComment.comment = this.commentEditText;
+      }
       this.commentsService.editMusicComment(musicComment).subscribe((res: MusicCommentResult) => {
         this.commentEditText = res.musicCommentInfo.comment;
         this.isCommentEditAreaOpen = false;
@@ -143,7 +119,12 @@ export class CommentCardComponent implements OnInit {
   }
 
   showEditBox() {
-    this.commentEditText = this.data.comment;
+    if(this.parentUserLogin !== null){
+      this.commentEditText = this.data.comment.replace(`${this.parentUserLogin}, `,'');
+    }
+    else{
+      this.commentEditText = this.data.comment;
+    }
     this.isCommentAreaOpen = false
     this.isCommentEditAreaOpen = !this.isCommentEditAreaOpen;
   }

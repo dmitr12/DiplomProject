@@ -32,7 +32,7 @@ namespace Diplom.Managers
                 UserId = c.UserId,
                 UserLogin = u.Login,
                 UserAvatar = u.Avatar
-            }).OrderBy(mc => mc.ParentIdComment).ThenByDescending(mc => mc.CommentDate).ToListAsync();
+            }).OrderBy(mc => mc.CommentDate).ToListAsync();
         }
 
         public async Task<MusicCommentResult> CommentOn(MusicComment model)
@@ -96,11 +96,8 @@ namespace Diplom.Managers
             {
                 var comment = await db.MusicComments.FindAsync(musicCommentId);
                 db.MusicComments.Remove(comment);
-                if(comment.ParentIdComment == null)
-                {
-                    var subComments = await db.MusicComments.Where(c => c.ParentIdComment == comment.IdComment).ToListAsync();
-                    db.MusicComments.RemoveRange(subComments);
-                }
+                var subComments = await FindSubComments(comment.IdComment.Value);
+                db.MusicComments.RemoveRange(subComments);
                 await db.SaveChangesAsync();
                 var user = await db.Users.FindAsync(comment.UserId);
                 result.MusicCommentInfo.IdComment = comment.IdComment;
@@ -109,7 +106,7 @@ namespace Diplom.Managers
                 result.MusicCommentInfo.MusicId = comment.MusicId;
                 result.MusicCommentInfo.ParentIdComment = comment.ParentIdComment;
                 result.MusicCommentInfo.UserId = comment.UserId;
-                result.MusicCommentInfo.UserLogin = user.Login; 
+                result.MusicCommentInfo.UserLogin = user.Login;
                 result.MusicCommentInfo.UserAvatar = user.Avatar;
                 result.Result = true;
                 result.CommentChangedType = CommentChangedType.Deleted;
@@ -119,6 +116,16 @@ namespace Diplom.Managers
                 result.Result = false;
             }
             return result;
+        }
+
+        private async Task<List<MusicComment>> FindSubComments(Guid commentId)
+        {
+            var subComments = await db.MusicComments.Where(c => c.ParentIdComment == commentId).ToListAsync();
+            for(int i = 0; i < subComments.Count; i++)
+            {
+                subComments.AddRange(await FindSubComments(subComments[i].IdComment.Value));
+            }
+            return subComments;
         }
     }
 }

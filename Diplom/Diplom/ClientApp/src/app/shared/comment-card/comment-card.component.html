@@ -17,12 +17,6 @@
             <mat-icon style="margin-right: 0">add_comment</mat-icon>
           </a>
         </div>
-        <div [ngClass]="{mg_l_IsNotAuth : !isUserAuthenticated}" (click)="showChildren()">
-          <a mat-menu-item style="cursor: pointer">
-            <mat-icon>mode_comment</mat-icon>
-            <span>{{childrenArr.length}}</span>
-          </a>
-        </div>
         <div *ngIf="isUserAuthenticated && (currentUser == data.userId)" (click)="showEditBox()">
           <a mat-menu-item style="cursor: pointer">
             <mat-icon style="margin-right: 0">edit</mat-icon>

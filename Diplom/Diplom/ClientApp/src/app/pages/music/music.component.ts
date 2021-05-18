@@ -3,7 +3,6 @@ import {AudioService} from "../../services/player/audio.service";
 import {MusicService} from "../../services/music/music.service";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {AddmusicformComponent} from "../../components/musics/addmusicform/addmusicform.component";
-import {Music} from "../../models/musics/music";
 import {finalize} from "rxjs/operators";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MusicInfo} from "../../models/musics/musicInfo";
@@ -28,7 +27,6 @@ export class MusicComponent implements OnInit {
   notScrolly = true;
 
   constructor(
-    public audioService: AudioService,
     private musicService: MusicService,
     private matSnackBar: MatSnackBar,
     private router: Router,
@@ -67,8 +65,8 @@ export class MusicComponent implements OnInit {
     this.dialogSource = this.dialog.open(AddmusicformComponent, dialogConfig);
     this.dialogSource.afterClosed().subscribe(result => {
       if (result !== 'false'){
+        this.loaded = false;
         this.musicService.getMusic(result).pipe(finalize(()=> this.loaded = true)).subscribe((res:MusicInfo)=>{
-          this.loaded = false;
           this.musics = this.musics.concat(res);
         }, error => {
           if(error.status == 401){
