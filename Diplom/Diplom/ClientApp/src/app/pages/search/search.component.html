@@ -2,7 +2,6 @@
   <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
 </div>
 <div *ngIf="loadedPage">
-<!--  <app-searchbar [genreId]="genreId" [musicGenreList]="genres" (onSearch)="search($event)"></app-searchbar>-->
   <app-search-bar-page [searchType]="searchType" [genreId]="genreId" [musicGenreList]="genres" (onSearch)="search($event)" (onChangeSearchType)="changedSearchType($event)"></app-search-bar-page>
   <div class="mat-spinner-container" *ngIf="!loadedSearch">
     <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
@@ -11,15 +10,15 @@
     <div *ngIf="musics.length == 0" style="display: flex; align-items: center; justify-content: center">
       Список пуст
     </div>
-    <div class="row" *ngIf="loadedSearch">
-      <div class="col-6 col-md-4 col-lg-3" *ngFor="let music of musics | paginate: {id: 'listing_musics',
-  itemsPerPage: 20,
+    <div class="row" *ngIf="loadedSearch" style="margin-right: 50px">
+      <div class="col-12 col-sm-6 col-lg-4" *ngFor="let music of musics | paginate: {id: 'listing_musics',
+  itemsPerPage: 15,
   currentPage: page,
   totalItems: totalRecords}">
         <app-search-music-card [data]="music" (click)="getMusicInfo(music.id)"></app-search-music-card>
       </div>
     </div>
-    <div style="text-align:center" *ngIf="musics.length > 20">
+    <div style="text-align:center" *ngIf="musics.length > 15">
       <pagination-controls id="listing_musics"
                            maxSize="8"
                            directionLinks="true"

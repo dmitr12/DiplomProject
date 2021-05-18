@@ -2,14 +2,16 @@
   <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
 </div>
 
-<div class="mt-2 mb-2 ml-2">
-  <button (click)="addMusic()" mat-mini-fab class="add-button">
-    <mat-icon>add</mat-icon>
+<div class="m-2" style="cursor: default">
+  <button (click)="addMusic()" mat-mini-fab class="add-button" style="cursor: pointer">
+    <mat-icon style="cursor: pointer">add</mat-icon>
   </button>
+  Добавить музыку
 </div>
 
-<div *ngIf="loaded && musics.length == 0" style="display: flex; align-items: center; justify-content: center; height: 65vh">
-  Список пуст
+<div *ngIf="loaded && musics.length == 0" style="display: flex; align-items: center;
+justify-content: center; height: 65vh; cursor: default">
+  У вас пока нет песен
 </div>
 
   <div *ngIf="loaded && musics.length > 0">

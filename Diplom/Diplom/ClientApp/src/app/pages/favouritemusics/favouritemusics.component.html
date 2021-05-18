@@ -2,13 +2,15 @@
   <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
 </div>
 
-<div *ngIf="musicLoaded && likedMusic.length == 0" style="display: flex; align-items: center; justify-content: center; height: 65vh">
-  Список пуст
+<div *ngIf="musicLoaded && likedMusic.length == 0" style="display: flex; align-items: center; justify-content:
+ center; height: 65vh; cursor: default">
+  У вас пока нет избранных песен
 </div>
 
 <div *ngIf="musicLoaded && likedMusic.length > 0" class="mt-2">
   <div *ngFor="let music of likedMusic">
-    <app-music-card [data]="music" [enableOptions]="false" [clickedPlayer]="false" (click)="navigateMusicInfo(music.id)"></app-music-card>
+    <app-music-card [data]="music" [enableOptions]="false" [clickedPlayer]="false"
+                    (click)="navigateMusicInfo(music.id)" style="cursor: pointer"></app-music-card>
   </div>
 </div>
 

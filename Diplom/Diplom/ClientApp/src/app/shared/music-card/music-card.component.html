@@ -5,21 +5,21 @@
   <div class="d-flex justify-content-center align-items-center ml-2 mb-2 mt-2" style="width: 40px; height: 40px" *ngIf="imgHidden">
     <mat-progress-spinner diameter="30" mode="indeterminate"></mat-progress-spinner>
   </div>
-  <div class="pb-2 pt-2 pr-2 content-container" style="white-space: pre-wrap;">
+  <div class="pb-2 pt-2 pr-2 content-container" style="white-space: pre-wrap; cursor: default">
     <div class="header">{{data.userLogin}}</div>
     <div class="description" style="word-wrap: break-word;">{{data.name}}</div>
   </div>
-  <button *ngIf="enableOptions" mat-button class="ml-auto p-2 edit_menu" [matMenuTriggerFor]="menu">
-    <mat-icon class="edit_menu">more_vert</mat-icon>
+  <button *ngIf="enableOptions" mat-button class="ml-auto p-2 edit_menu" [matMenuTriggerFor]="menu" style="cursor: pointer">
+    <mat-icon class="edit_menu" style="cursor: pointer">more_vert</mat-icon>
   </button>
   <mat-menu #menu="matMenu">
-    <button class="edit_item_menu" mat-menu-item (click)="edit()">
-      <mat-icon>edit</mat-icon>
-      <span>Edit</span>
+    <button class="edit_item_menu" mat-menu-item (click)="edit()" style="cursor: pointer">
+      <mat-icon style="cursor: pointer">edit</mat-icon>
+      <span style="cursor: pointer">Изменить</span>
     </button>
-    <button class="delete_item_menu" mat-menu-item (click)="delete()">
-      <mat-icon>delete</mat-icon>
-      <span>Delete</span>
+    <button class="delete_item_menu" mat-menu-item (click)="delete()" style="cursor: pointer">
+      <mat-icon style="cursor: pointer">delete</mat-icon>
+      <span style="cursor: pointer">Удалить</span>
     </button>
   </mat-menu>
 </div>

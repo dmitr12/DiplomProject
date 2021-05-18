@@ -44,6 +44,7 @@
 
 .page-container header .app-title{
   padding: 0 3px;
+  cursor: default;
 }
 
 .sidenav-container {

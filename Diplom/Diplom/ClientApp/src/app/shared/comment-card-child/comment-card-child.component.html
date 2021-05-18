@@ -1,28 +1,28 @@
 <div *ngIf="data !== null">
   <mat-card class="mb-2">
     <mat-card-header class="pb-3">
-      <img mat-card-avatar src="{{data.userAvatar}}">
+      <img class="imgL" mat-card-avatar src="{{data.userAvatar}}" (click)="navigateProfile(data.userId)">
       <mat-card-title>
-        <div>{{data.userLogin}}</div>
+        <div class="userL" (click)="navigateProfile(data.userId)">{{data.userLogin}}</div>
       </mat-card-title>
     </mat-card-header>
-    <div style="font-size: 13px">{{data.comment}}</div>
+    <div style="font-size: 13px; cursor: default">{{data.comment}}</div>
     <mat-card-content class="d-flex">
       <div class="d-flex">
-        <div class="d-flex" style="align-items: center">{{getDateTimeString(data.commentDate)}}</div>
+        <div class="d-flex" style="align-items: center; cursor: default">{{getDateTimeString(data.commentDate)}}</div>
         <div *ngIf="isUserAuthenticated" (click)="showAnswerBox()">
-          <a mat-menu-item>
-            <mat-icon style="margin-right: 0">add_comment</mat-icon>
+          <a mat-menu-item style="cursor: pointer">
+            <mat-icon style="margin-right: 0;">add_comment</mat-icon>
           </a>
         </div>
         <div *ngIf="isUserAuthenticated && (currentUser == data.userId)" (click)="showEditBox()">
-          <a mat-menu-item>
-            <mat-icon style="margin-right: 0">edit</mat-icon>
+          <a mat-menu-item style="cursor: pointer">
+            <mat-icon style="margin-right: 0;">edit</mat-icon>
           </a>
         </div>
       </div>
       <div class="ml-auto" *ngIf="isUserAuthenticated && enableDeleteComment()" (click)="deleteComment()">
-        <a mat-menu-item>
+        <a mat-menu-item style="cursor: pointer">
           <mat-icon style="margin-right: 0">delete</mat-icon>
         </a>
       </div>
@@ -38,7 +38,7 @@
                 cdkAutosizeMaxRows="5"></textarea>
     </mat-form-field>
     <br>
-    <button mat-flat-button (click)="comment()" class="comment-button">Ответить</button>
+    <button mat-flat-button (click)="comment()" class="comment-button" style="cursor: pointer">Ответить</button>
   </div>
   <div *ngIf="isCommentEditAreaOpen">
     <mat-form-field style="width: 100%;">
@@ -50,6 +50,6 @@
                 cdkAutosizeMaxRows="5"></textarea>
     </mat-form-field>
     <br>
-    <button mat-flat-button (click)="commentEdit()" class="comment-button">Изменить</button>
+    <button mat-flat-button (click)="commentEdit()" class="comment-button" style="cursor: pointer">Изменить</button>
   </div>
 </div>

@@ -35,6 +35,7 @@ export class ForgotPasswordComponent implements OnInit {
         this.matSnackBar.open(res['msg'], '', {duration: 5000, panelClass: 'custom-snack-bar-error'});
       else{
         this.matSnackBar.open('Письмо для замены пароля успешно отправлено', '', {duration: 5000, panelClass: 'custom-snack-bar-success'});
+        this.router.navigate(['auth']);
       }
     }, error => {
       if (error.status == 404)

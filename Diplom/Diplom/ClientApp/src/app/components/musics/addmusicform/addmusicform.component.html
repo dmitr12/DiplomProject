@@ -7,37 +7,48 @@
 </div>
 
 <div *ngIf="loaded">
-  <h4 mat-dialog-title class="center-align">Добавление музыки</h4>
+  <div class="d-flex justify-content-center">
+    <h1 mat-dialog-title>Добавление музыки</h1>
+  </div>
   <mat-dialog-content>
     <form [formGroup]="form" (ngSubmit)="addMusic()">
-      <div class="input-field">
-        <input id="musicName" type="text" required formControlName="musicName">
-        <label for="musicName">*Название музыки</label>
-        <span class="helper-text red-text" *ngIf="form.get('musicName').invalid && form.get('musicName').dirty">
-          <span *ngIf="form.get('musicName').errors['required']">поле необходимо заполнить</span>
-          <span *ngIf="form.get('musicName').errors['maxlength'] && form.get('musicName').errors['maxlength']['requiredLength']">Максимум {{form.get('musicName').errors['maxlength']['requiredLength']}} символов</span>
-        </span>
+      <div>
+        <mat-form-field>
+          <mat-label>Название музыки</mat-label>
+          <input matInput type="text" required formControlName="musicName">
+          <mat-error *ngIf="form.get('musicName').invalid && form.get('musicName').dirty
+        && form.get('musicName').errors['required']">
+            Поле необходимо заполнить
+          </mat-error>
+          <mat-error *ngIf="form.get('musicName').invalid && form.get('musicName').dirty
+         && form.get('musicName').errors['maxlength']
+         && form.get('musicName').errors['maxlength']['requiredLength']">
+            Максимум {{form.get('musicName').errors['maxlength']['requiredLength']}} символов
+          </mat-error>
+        </mat-form-field>
       </div>
-      <mat-form-field class="input-field" style="width: 100%">
-        <mat-select formControlName="musicGenreId" placeholder="*Жанр">
-          <mat-option *ngFor="let genre of genres" [value]="genre.musicGenreId">
-            {{genre.genreName}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <div class="input-field">
+      <div>
+        <mat-form-field class="input-field">
+          <mat-select required formControlName="musicGenreId" placeholder="Жанр">
+            <mat-option *ngFor="let genre of genres" [value]="genre.musicGenreId">
+              {{genre.genreName}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
         <div>
-          <span>*Выберите файл записи (формат .mp3)</span>
+          <span>Выберите файл записи (формат .mp3)*</span>
         </div>
         <input id="musicFileName" required type="file" accept=".mp3" formControlName="musicFileName" (change)="changeMusicFile($event)">
       </div>
-      <div class="input-field" style="margin-bottom: 30px">
+      <div style="margin-bottom: 15px; margin-top: 15px">
         <div>
           <span>Выберите картинку для записи (формат .jpg, .png)</span>
         </div>
         <input id="musicImageName" type="file" accept=".jpg, .png" formControlName="musicImageName" (change)="changeImageFile($event)">
       </div>
-      <div class="center-align">
+      <div class="d-flex justify-content-center">
         <button class="btn waves-effect waves-light" [disabled]='form?.invalid || postingQuery' style="background-color: #11d62b; margin-right: 20px;">Добавить</button>
         <button mat-dialog-close="false" class="btn waves-effect waves-light" [disabled]="postingQuery" style="background-color: #fa053e;">Отмена</button>
       </div>

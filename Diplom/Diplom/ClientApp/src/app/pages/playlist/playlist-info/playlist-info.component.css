@@ -17,3 +17,11 @@ p{
 p:hover{
   text-decoration: underline;
 }
+
+.pl-ttl{
+  cursor: default;
+}
+
+.pl-ttl:hover{
+  text-decoration: none;
+}

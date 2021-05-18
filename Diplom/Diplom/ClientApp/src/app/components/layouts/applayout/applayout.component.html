@@ -1,28 +1,29 @@
 <div class="page-container" *ngIf="!isUserAuthenticated || (userInfoLoaded && notificationsLoaded)">
   <header class="d-flex align-items-center">
-    <div style="display: flex; align-items: center">
-      <button mat-button class="menu-button" (click)="sidenav.toggle()">
-        <mat-icon>{{isMenuOpen? 'menu_open' : 'menu'}}</mat-icon>
+    <div style="display: flex; align-items: center;">
+      <button mat-button class="menu-button" (click)="sidenav.toggle()" style="cursor: pointer">
+        <mat-icon style="cursor: pointer">{{isMenuOpen? 'menu_open' : 'menu'}}</mat-icon>
       </button>
-      <a class="tst" routerLink="/">
-        <span class="app-title">Меню</span>
-      </a>
+      <span class="app-title">Меню</span>
     </div>
     <div *ngIf="isUserAuthenticated" class="d-flex">
-      <div *ngIf="notifications.length > 0 && uncheckedNotificationsLength == 0" class="notification d-flex align-items-center mr-3" [matMenuTriggerFor]="ntf">
+      <div *ngIf="notifications.length > 0 && uncheckedNotificationsLength == 0" class="notification d-flex align-items-center mr-3"
+           [matMenuTriggerFor]="ntf" style="cursor: pointer">
         <mat-icon>notifications</mat-icon>
       </div>
-      <div *ngIf="notifications.length == 0 && uncheckedNotificationsLength == 0" class="notification d-flex align-items-center mr-3">
+      <div *ngIf="notifications.length == 0 && uncheckedNotificationsLength == 0"
+           class="notification d-flex align-items-center mr-3" style="cursor: pointer">
         <mat-icon>notifications</mat-icon>
       </div>
-      <div *ngIf="uncheckedNotificationsLength > 0" class="notification d-flex align-items-center mr-3" [matMenuTriggerFor]="ntf">
+      <div *ngIf="uncheckedNotificationsLength > 0" class="notification d-flex align-items-center mr-3"
+           [matMenuTriggerFor]="ntf" style="cursor: pointer">
         <mat-icon class="mr-1">notifications_active</mat-icon>
         <div class="notification-counter d-flex justify-content-center">
           <span *ngIf="uncheckedNotificationsLength <= 100">{{uncheckedNotificationsLength}}</span>
           <span *ngIf="uncheckedNotificationsLength > 100">100+</span>
         </div>
       </div>
-      <mat-card class="profile" [matMenuTriggerFor]="menu">
+      <mat-card class="profile" [matMenuTriggerFor]="menu" style="cursor: pointer">
         <span style="margin-right: 10px">{{userInfo.login}}</span>
         <img mat-card-avatar src="{{userInfo.avatar}}">
         <mat-icon>arrow_drop_down</mat-icon>
@@ -62,31 +63,31 @@
     <mat-sidenav fixedInViewport #sidenav autoFocus="autofocus" mode="over" [autoFocus]="false" [(opened)]="isMenuOpen" class="sidenav" (click)="onSidenavClick()">
       <mat-toolbar class="toolbr">Menu</mat-toolbar>
       <div routerLinkActive="active" [ngClass]="{pdIsAuth : isUserAuthenticated}">
-        <a mat-menu-item routerLink="/main" class="d-flex align-items-center">
+        <a mat-menu-item routerLink="/main" class="d-flex align-items-center" style="cursor: pointer">
           <mat-icon style="margin-right: 16px">home</mat-icon>
           <span>Главная</span>
         </a>
       </div>
       <div *ngIf="isUserAuthenticated" routerLinkActive="active">
-        <a mat-menu-item routerLink="/mymusic" class="d-flex align-items-center">
+        <a mat-menu-item routerLink="/mymusic" class="d-flex align-items-center" style="cursor: pointer">
           <mat-icon style="margin-right: 16px">audiotrack</mat-icon>
           <span>Музыка</span>
         </a>
       </div>
       <div *ngIf="isUserAuthenticated" routerLinkActive="active">
-        <a mat-menu-item routerLink="/playlist" class="d-flex align-items-center">
+        <a mat-menu-item routerLink="/playlist" class="d-flex align-items-center" style="cursor: pointer">
           <mat-icon style="margin-right: 16px">queue_music</mat-icon>
           <span>Плейлисты</span>
         </a>
       </div>
       <div routerLinkActive="active">
-        <a mat-menu-item routerLink="/search" class="d-flex align-items-center">
+        <a mat-menu-item routerLink="/search" class="d-flex align-items-center" style="cursor: pointer">
           <mat-icon style="margin-right: 16px">search</mat-icon>
           <span>Поиск</span>
         </a>
       </div>
       <div *ngIf="isUserAuthenticated" routerLinkActive="active">
-        <a mat-menu-item [routerLink]="['/profile', userId]" class="d-flex align-items-center">
+        <a mat-menu-item [routerLink]="['/profile', userId]" class="d-flex align-items-center" style="cursor: pointer">
           <mat-icon style="margin-right: 16px">person</mat-icon>
           <span>Профиль</span>
         </a>

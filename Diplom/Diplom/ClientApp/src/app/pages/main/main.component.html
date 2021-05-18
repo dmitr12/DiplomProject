@@ -10,7 +10,8 @@
   itemsPerPage: 5,
   currentPage: new_musics_page,
   totalItems: totalRecords}">
-      <app-music-card [data]="music" [enableOptions]="false" [clickedPlayer]="false" (click)="navigateMusicInfo(music.id)"></app-music-card>
+      <app-music-card [data]="music" [enableOptions]="false" style="cursor: pointer"
+                      [clickedPlayer]="false" (click)="navigateMusicInfo(music.id)"></app-music-card>
     </div>
     <div style="text-align:center" *ngIf="musics.length > 5">
       <pagination-controls id="listing_new_musics"

@@ -21,3 +21,21 @@ a.mat-menu-item mat-icon{
 .mg_l_IsNotAuth{
   margin-left: 16px;
 }
+
+.userL{
+  cursor: pointer;
+  transition: all .3s;
+}
+
+.userL:hover{
+  color: #9414d9;
+}
+
+.imgL{
+  cursor: pointer;
+  transition: all .3s;
+}
+
+.imgL:hover{
+  box-shadow: 0 0 15px rgb(148, 20, 217);
+}

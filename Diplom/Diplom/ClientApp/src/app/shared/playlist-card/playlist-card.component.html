@@ -1,5 +1,5 @@
 <img src="{{playlistCard.playlistImageUrl}}" hidden alt="" (load)="imageLoaded()">
-<div *ngIf="loaded">
+<div *ngIf="loaded" style="cursor: pointer">
   <div class="playlist-card d-flex align-items-end" [ngStyle]="{'background-image':'url('+playlistCard.playlistImageUrl+')'}">
     <div class="playlist-card-title">
       {{playlistCard.playlistName}}

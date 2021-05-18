@@ -10,12 +10,12 @@
             <mat-icon>play_arrow</mat-icon>
           </button>
         </div>
-        <div class="pl-2">
+        <div class="pl-2" style="cursor: default">
           <div>{{musicInfo.userLogin}}</div>
           <div>{{musicInfo.name}}</div>
         </div>
       </div>
-      <div class="mt-auto pl-3">
+      <div class="mt-auto pl-3" style="cursor: default">
         <div class="d-flex" style="align-items: center">
           <div>Оценка пользователей: {{musicInfo.rating}}</div>
           <star-rating [value]="1" [readonly]="true" [totalstars]="1" checkedcolor="#fa053e" size="18px"></star-rating>
@@ -30,7 +30,7 @@
         </div>
       </div>
     </div>
-    <div class="ml-auto pr-3 pt-3 d-flex flex-column">
+    <div class="ml-auto pr-3 pt-3 d-flex flex-column" style="cursor: default">
         <div style="text-align: end">
           {{musicInfo.dateOfPublication.toLocaleDateString()}}
         </div>
@@ -49,12 +49,12 @@
   </div>
   <div class="row" style="margin-left: 1px" >
     <div *ngIf="isUserAuthenticated" (click)="openCommentArea()">
-      <a mat-menu-item>
+      <a mat-menu-item style="cursor: pointer">
         <mat-icon style="margin-right: 0">add_comment</mat-icon>
       </a>
     </div>
     <div [ngClass]="{commentIsNotAuth : !isUserAuthenticated}" (click)="showComments()">
-      <a mat-menu-item>
+      <a mat-menu-item style="cursor: pointer">
         <mat-icon>mode_comment</mat-icon>
         <span>{{firstComments.length}}</span>
       </a>

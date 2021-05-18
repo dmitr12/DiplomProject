@@ -21,7 +21,7 @@
         </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-      <div class="general-information">
+      <div class="general-information" style="cursor: default">
         <div class="title">
           ОБЩАЯ ИНФОРМАЦИЯ
         </div>
@@ -29,42 +29,42 @@
           <div class="item col-6 col-lg-4">
             <mat-form-field>
               <mat-label>Логин</mat-label>
-              <input matInput [readonly]="true" type="text" value="{{userInfo.login}}">
+              <input matInput [readonly]="true" type="text" value="{{userInfo.login}}" style="cursor: default">
             </mat-form-field>
           </div>
           <div class="item col-6 col-lg-4">
             <mat-form-field>
               <mat-label>Дата регистрации</mat-label>
-              <input matInput [readonly]="true" type="text" value="{{userInfo.registrationDate.toLocaleDateString()}}">
+              <input matInput [readonly]="true" type="text" value="{{userInfo.registrationDate.toLocaleDateString()}}" style="cursor: default">
             </mat-form-field>
           </div>
           <div class="item col-6 col-lg-4" *ngIf="userInfo.name">
             <mat-form-field>
               <mat-label>Имя</mat-label>
-              <input matInput [readonly]="true" type="text" value="{{userInfo.name}}">
+              <input matInput [readonly]="true" type="text" value="{{userInfo.name}}" style="cursor: default">
             </mat-form-field>
           </div>
           <div class="item col-6 col-lg-4" *ngIf="userInfo.surname">
             <mat-form-field>
               <mat-label>Фамилия</mat-label>
-              <input matInput [readonly]="true" type="text" value="{{userInfo.surname}}">
+              <input matInput [readonly]="true" type="text" value="{{userInfo.surname}}" style="cursor: default">
             </mat-form-field>
           </div>
           <div class="item col-6 col-lg-4" *ngIf="userInfo.country">
             <mat-form-field>
               <mat-label>Страна</mat-label>
-              <input matInput [readonly]="true" type="text" value="{{userInfo.country}}">
+              <input matInput [readonly]="true" type="text" value="{{userInfo.country}}" style="cursor: default">
             </mat-form-field>
           </div>
           <div class="item col-6 col-lg-4" *ngIf="userInfo.city">
             <mat-form-field>
               <mat-label>Город</mat-label>
-              <input matInput [readonly]="true" type="text" value="{{userInfo.city}}">
+              <input matInput [readonly]="true" type="text" value="{{userInfo.city}}" style="cursor: default">
             </mat-form-field>
           </div>
         </div>
       </div>
-      <div class="statistics">
+      <div class="statistics" style="cursor: default">
         <div class="title">
           СТАТИСТИКА
         </div>

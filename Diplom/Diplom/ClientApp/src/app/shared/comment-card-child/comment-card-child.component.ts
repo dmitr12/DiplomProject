@@ -119,4 +119,8 @@ export class CommentCardChildComponent implements OnInit {
   enableDeleteComment(): boolean{
     return this.currentUser == this.data.userId || this.currnetUserRole == UserRole.Admin;
   }
+
+  navigateProfile(userId: number) {
+    this.router.navigate(['profile',`${userId}`]);
+  }
 }
