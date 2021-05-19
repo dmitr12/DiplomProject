@@ -32,7 +32,8 @@ namespace Diplom.Quartz
                 try
                 {
                     var dateTimeNow = DateTime.Now;
-                    var notificationsForDelete = await db.Notifications.Where(n => n.IsChecked && n.CreateDate.AddDays(1) < dateTimeNow).ToListAsync();
+                    var notificationsForDelete = await db.Notifications.Where(n => db.UsersNotifications.Where(un=>un.NotificationId == n.NotificationId).All(un=>un.IsChecked)
+                    && n.CreateDate.AddDays(1) < dateTimeNow).ToListAsync();
                     db.Notifications.RemoveRange(notificationsForDelete);
 
                     await db.SaveChangesAsync();

@@ -13,9 +13,9 @@ import {Notification, NotificationType} from "../../../models/notifications/noti
 import {SignalrService} from "../../../services/signalr/signalr.service";
 import {NotificationResult} from "../../../models/notifications/notificationResult";
 import {UsersService} from "../../../services/users/users.service";
-import {not} from "rxjs/internal-compatibility";
 import {DeleteNotificationsResult} from "../../../models/notifications/deleteNotificationsResult";
 import * as moment from "moment";
+import {NotificationInfo} from "../../../models/notifications/notificationInfo";
 
 @Component({
   selector: 'app-applayout',
@@ -28,10 +28,9 @@ export class ApplayoutComponent implements OnInit {
   userInfoLoaded = false;
   notificationsLoaded = false;
   userInfo: UserInfo;
-  notifications: Notification[];
+  notifications: NotificationInfo[];
   currentUserId: number;
   isUserAuthenticated: boolean;
-  checkedNotifications
 
   constructor(
     public authService: AuthService,
@@ -73,7 +72,7 @@ export class ApplayoutComponent implements OnInit {
         }
       });
 
-      this.notificationService.getNotificationsForCurrentUser().pipe(finalize(()=>this.notificationsLoaded = true)).subscribe((res: Notification[])=>{
+      this.notificationService.getNotificationsForCurrentUser().pipe(finalize(()=>this.notificationsLoaded = true)).subscribe((res: NotificationInfo[])=>{
         this.notifications = res;
         this.notifications.forEach(n=>{
           n.createDate = new Date(n.createDate);
@@ -98,12 +97,13 @@ export class ApplayoutComponent implements OnInit {
               signal.notification.routeString = '/playlist-info';
               break;
           }
-          this.notifications.unshift(signal.notification);
+          this.notifications.unshift(new NotificationInfo(signal.notification.notificationId, signal.notification.userId,
+            signal.notification.sourceId, signal.notification.notificationType, signal.notification.message,
+            false, signal.notification.createDate, signal.notification.routeString));
         }
       })
 
       this.signalrService.cleanNotificationsSignal.subscribe((signal: DeleteNotificationsResult) => {
-        alert('get signal');
         let notificationsForDelete = this.notifications.filter(n=>signal.deletedNotifications.includes(n.notificationId));
         notificationsForDelete.forEach(n=>{
           let index = this.notifications.indexOf(n);
@@ -129,7 +129,7 @@ export class ApplayoutComponent implements OnInit {
     this.router.navigate(['/profile-editor', `${this.userInfo.userId}`]);
   }
 
-  notificationClick(notification: Notification) {
+  notificationClick(notification: NotificationInfo) {
     if(!notification.isChecked){
       this.notificationService.checkNotification([notification]).subscribe((res:any)=>{
         let index = this.notifications.indexOf(notification);

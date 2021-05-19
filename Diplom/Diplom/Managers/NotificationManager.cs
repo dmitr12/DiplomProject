@@ -1,5 +1,6 @@
 ﻿using Diplom.Models;
 using Diplom.Models.NotificationModels;
+using Diplom.Models.UsersNotifications;
 using Diplom.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -33,12 +34,14 @@ namespace Diplom.Managers
                     SourceId = model.SourceId,
                     NotificationType = model.NotificationType,
                     Message = model.Message,
-                    IsChecked = false,
                     CreateDate = DateTime.Now
                 };
                 db.Notifications.Add(notification);
                 await db.SaveChangesAsync();
                 var followers = await db.Followers.Where(f => f.UserId == notification.UserId).Select(f => f.FollowedUserId).ToListAsync();
+                foreach (var followerId in followers)
+                    db.UsersNotifications.Add(new UsersNotification { UserId = followerId, NotificationId = notification.NotificationId, IsChecked = false });
+                await db.SaveChangesAsync();
                 var notificationResult = new NotificationResult { Notification = notification, Followers = followers, OperationCompleted = true };
                 await hubContext.Clients.All.SendAsync(Notification, notificationResult);
                 return notificationResult;
@@ -49,12 +52,12 @@ namespace Diplom.Managers
             }
         }
 
-        public async Task<IActionResult> CheckNotification(Notification[] models)
+        public async Task<IActionResult> CheckNotification(NotificationInfo[] models, int currentUserId)
         {
             try
             {
                 var notificationIds = models.Select(n => n.NotificationId);
-                var notifications = await db.Notifications.Where(n => notificationIds.Contains(n.NotificationId)).ToListAsync();
+                var notifications = await db.UsersNotifications.Where(n => notificationIds.Contains(n.NotificationId) && n.UserId == currentUserId).ToListAsync();
                 foreach (var notification in notifications)
                     notification.IsChecked = true;
                 await db.SaveChangesAsync();
@@ -66,20 +69,21 @@ namespace Diplom.Managers
             }
         }
 
-        public async Task<List<Notification>> GetNotificationsForUser(int userId)
+        public async Task<List<NotificationInfo>> GetNotificationsForUser(int userId)
         {
             return await (from f in db.Followers
-                    join n in db.Notifications on f.UserId equals n.UserId
-                    join u in db.Users on n.UserId equals u.UserId where f.FollowedUserId == userId
-                    select new Notification { 
-                        NotificationId = n.NotificationId,
-                        UserId = n.UserId,
-                        SourceId = n.SourceId,
-                        NotificationType = n.NotificationType,
-                        Message = n.Message,
-                        CreateDate = n.CreateDate,
-                        IsChecked = n.IsChecked
-                    }).OrderByDescending(n=>n.CreateDate).ToListAsync();
+                          join n in db.Notifications on f.UserId equals n.UserId
+                          join un in db.UsersNotifications on f.FollowedUserId equals un.UserId where f.FollowedUserId == userId && n.NotificationId == un.NotificationId
+                          select new NotificationInfo
+                          {
+                              NotificationId = n.NotificationId,
+                              UserId = n.UserId,
+                              SourceId = n.SourceId,
+                              NotificationType = n.NotificationType,
+                              Message = n.Message,
+                              CreateDate = n.CreateDate,
+                              IsChecked = un.IsChecked
+                          }).OrderByDescending(n => n.CreateDate).ToListAsync();
         }
     }
 }

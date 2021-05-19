@@ -26,16 +26,16 @@ namespace Diplom.Controllers
 
         [HttpGet("GetForCurrentUser")]
         [Authorize]
-        public List<Notification> GetNotificationsForCurrentUser()
+        public List<NotificationInfo> GetNotificationsForCurrentUser()
         {
             return manager.GetNotificationsForUser(UserId).Result;
         }
 
         [HttpPut("CheckNotification")]
         [Authorize]
-        public IActionResult CheckNotification(Notification[] notifications)
+        public IActionResult CheckNotification(NotificationInfo[] notifications)
         {
-            return manager.CheckNotification(notifications).Result;
+            return manager.CheckNotification(notifications, UserId).Result;
         }
     }
 }

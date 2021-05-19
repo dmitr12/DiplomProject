@@ -9,7 +9,6 @@ export class Notification {
   sourceId: number;
   notificationType: NotificationType;
   message: string;
-  isChecked: boolean;
   createDate: Date;
   routeString: string;
 }

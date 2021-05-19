@@ -1,6 +1,8 @@
 ﻿using Diplom.Models;
 using Diplom.Models.FollowerModels;
+using Diplom.Models.UsersNotifications;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,6 +52,16 @@ namespace Diplom.Managers
                 if (subscription == null)
                     return new NotFoundResult();
                 db.Followers.Remove(subscription);
+                var notifications = await (from un in db.UsersNotifications
+                                           join n in db.Notifications on un.NotificationId equals n.NotificationId
+                                           where n.UserId == userToFollowId && un.UserId == currentUserId
+                                           select new UsersNotification
+                                           {
+                                               UserId = un.UserId,
+                                               NotificationId = un.NotificationId,
+                                               IsChecked = un.IsChecked
+                                           }).ToListAsync();
+                db.UsersNotifications.RemoveRange(notifications);
                 await db.SaveChangesAsync();
                 return new OkResult();
             }

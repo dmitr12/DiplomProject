@@ -106,6 +106,14 @@ UserId int not null references Users(UserId),
 SourceId int not null,
 NotificationType int not null,
 Message nvarchar(max) not null,
-IsChecked bit,
 CreateDate datetime not null
+)
+go
+create table UsersNotifications(
+UserId int,
+NotificationId int,
+IsChecked bit,
+primary key (UserId, NotificationId),
+foreign key (UserId) references Users(UserId) on delete cascade,
+foreign key (NotificationId) references Notifications(NotificationId) on delete cascade
 )

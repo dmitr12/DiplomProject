@@ -5,13 +5,7 @@ using System.Threading.Tasks;
 
 namespace Diplom.Models.NotificationModels
 {
-    public enum NotificationType
-    {
-        AddedMusic = 1,
-        AddedPlaylist = 2
-    }
-
-    public class Notification
+    public class NotificationInfo
     {
         public int NotificationId { get; set; }
         public int UserId { get; set; }
@@ -19,5 +13,6 @@ namespace Diplom.Models.NotificationModels
         public NotificationType NotificationType { get; set; }
         public string Message { get; set; }
         public DateTime CreateDate { get; set; }
+        public bool IsChecked { get; set; }
     }
 }

@@ -8,6 +8,7 @@ using Diplom.Models.PlaylistsMusicsModels;
 using Diplom.Models.RatingModels;
 using Diplom.Models.RoleModels;
 using Diplom.Models.UserModels;
+using Diplom.Models.UsersNotifications;
 using Microsoft.EntityFrameworkCore;
 
 namespace Diplom.Models
@@ -24,6 +25,7 @@ namespace Diplom.Models
         public DbSet<PlaylistsMusic> PlaylistsMusics { get; set; }
         public DbSet<Follower> Followers { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<UsersNotification> UsersNotifications { get; set; }
 
         public DataBaseContext(DbContextOptions<DataBaseContext> options) : base(options) { }
 
@@ -33,6 +35,7 @@ namespace Diplom.Models
             modelBuilder.Entity<PlaylistsMusic>().HasKey(p => new { p.PlaylistId, p.MusicId });
             modelBuilder.Entity<Follower>().HasKey(f => new { f.UserId, f.FollowedUserId });
             modelBuilder.Entity<MusicComment>().HasKey(c => c.IdComment);
+            modelBuilder.Entity<UsersNotification>().HasKey(un => new { un.UserId, un.NotificationId });
         }
     }
 }
