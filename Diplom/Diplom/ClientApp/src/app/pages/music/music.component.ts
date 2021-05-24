@@ -1,5 +1,4 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {AudioService} from "../../services/player/audio.service";
 import {MusicService} from "../../services/music/music.service";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {AddmusicformComponent} from "../../components/musics/addmusicform/addmusicform.component";
@@ -20,11 +19,13 @@ export class MusicComponent implements OnInit {
 
   dialogSource: any;
   musics: MusicInfo[] = [];
+  filteredMusics: MusicInfo[] = [];
   loaded = false;
   scrollLoaded = false;
   lastIndex = -1;
   notEmptyMusic = true;
   notScrolly = true;
+  filterString = '';
 
   constructor(
     private musicService: MusicService,
@@ -41,6 +42,7 @@ export class MusicComponent implements OnInit {
     })).subscribe(
       (res: MusicInfo[]) => {
         this.musics = res;
+        this.filteredMusics = this.musics;
         if(res.length>0){
           this.lastIndex = res[res.length - 1].id;
         }
@@ -68,6 +70,7 @@ export class MusicComponent implements OnInit {
         this.loaded = false;
         this.musicService.getMusic(result).pipe(finalize(()=> this.loaded = true)).subscribe((res:MusicInfo)=>{
           this.musics = this.musics.concat(res);
+          this.search(this.filterString);
         }, error => {
           if(error.status == 401){
             this.router.navigate(['auth']);
@@ -122,6 +125,7 @@ export class MusicComponent implements OnInit {
     this.loaded = false;
     const index = this.musics.indexOf(this.musics.filter(m=>m.id == id)[0]);
     this.musics.splice(index, 1);
+    this.search(this.filterString);
     this.loaded = true;
   }
 
@@ -130,6 +134,7 @@ export class MusicComponent implements OnInit {
       this.loaded = false;
       const index = this.musics.indexOf(this.musics.filter(m=>m.id == music.id)[0]);
       this.musics[index] = res;
+      this.search(this.filterString);
     }, error => {
       if (error.status != 0) {
         this.matSnackBar.open(`При получении музыки возникла ошибка, статусный код ${error.status}`, '', {
@@ -140,5 +145,12 @@ export class MusicComponent implements OnInit {
         this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
       }
     })
+  }
+
+  search(data: string) {
+    this.loaded = false;
+    this.filterString = data;
+    this.filteredMusics = this.musics.filter(m=>m.name.toLowerCase().includes(data.toLowerCase()));
+    this.loaded = true;
   }
 }

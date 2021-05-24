@@ -14,6 +14,7 @@ export class FavouritemusicsComponent implements OnInit {
 
   musicLoaded = false;
   likedMusic: MusicInfo[] = [];
+  filteredMusics: MusicInfo[] = [];
 
   constructor(
     private musicService: MusicService,
@@ -24,6 +25,7 @@ export class FavouritemusicsComponent implements OnInit {
   ngOnInit() {
     this.musicService.getLiked().pipe(finalize(()=>this.musicLoaded = true)).subscribe((res:MusicInfo[])=>{
       this.likedMusic = res;
+      this.filteredMusics = this.likedMusic;
     }, error => {
       if(error.status == 401){
         this.router.navigate(['auth']);
@@ -41,5 +43,11 @@ export class FavouritemusicsComponent implements OnInit {
 
   navigateMusicInfo(id: number) {
     this.router.navigate(['musicinfo',`${id}`]);
+  }
+
+  search(data: string) {
+    this.musicLoaded = false;
+    this.filteredMusics = this.likedMusic.filter(m=>m.name.toLowerCase().includes(data.toLowerCase()));
+    this.musicLoaded = true;
   }
 }

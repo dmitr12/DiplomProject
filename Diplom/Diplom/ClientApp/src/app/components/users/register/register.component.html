@@ -18,7 +18,7 @@
         <input id="login" required type="text" formControlName="userName" [ngClass]="{invalid: formRegister?.get('userName')?.invalid && formRegister?.get('userName')?.dirty}">
         <label for="login">Логин:</label>
         <span class="helper-text red-text" *ngIf="formRegister?.get('userName')?.invalid && formRegister?.get('userName')?.dirty">
-          <span *ngIf="formRegister?.get('userName')?.errors?.required">Заполните поле Логин</span>
+          <span *ngIf="formRegister?.get('userName')?.errors?.required">Заполните поле</span>
           <span *ngIf="formRegister?.get('userName')?.errors?.maxlength && formRegister?.get('userName')?.errors?.maxlength?.requiredLength">Максимум {{formRegister?.get('userName')?.errors?.maxlength?.requiredLength}} символов</span><br>
           <span *ngIf="formRegister?.get('userName')?.errors?.minlength && formRegister?.get('userName')?.errors?.minlength?.requiredLength">Минимум {{formRegister?.get('userName')?.errors?.minlength?.requiredLength}} символов</span><br>
           <span *ngIf="formRegister?.get('userName')?.errors?.custom">{{formRegister?.get('userName')?.errors?.custom}}</span>

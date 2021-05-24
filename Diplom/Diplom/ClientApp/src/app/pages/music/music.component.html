@@ -2,26 +2,28 @@
   <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
 </div>
 
-<div class="m-2" style="cursor: default">
-  <button (click)="addMusic()" mat-mini-fab class="add-button" style="cursor: pointer">
-    <mat-icon style="cursor: pointer">add</mat-icon>
-  </button>
-  Добавить музыку
+<div class="mt-3 mb-3 d-flex align-items-center" style="cursor: default">
+  <div class="mr-2">
+    <button mat-flat-button class="add-button" (click)="addMusic()">Добавить музыку</button>
+  </div>
+  <div class="ml-2" style="width: 100%">
+    <app-filterbar placeholder="Введите название музыки" (searchEvent)="search($event)"></app-filterbar>
+  </div>
 </div>
 
-<div *ngIf="loaded && musics.length == 0" style="display: flex; align-items: center;
-justify-content: center; height: 65vh; cursor: default">
-  У вас пока нет песен
+<div *ngIf="loaded && filteredMusics.length == 0" style="display: flex; align-items: center;
+justify-content: center; height: 55vh; cursor: default">
+  Список пуст
 </div>
 
-  <div *ngIf="loaded && musics.length > 0">
+  <div *ngIf="loaded && filteredMusics.length > 0">
     <div  class="search-results"
           infiniteScroll
           [infiniteScrollDistance]="2"
           [infiniteScrollThrottle]="50"
           [scrollWindow]="false"
           (scrolled)="onScroll($event)" style="overflow-y: hidden; overflow: auto">
-      <div *ngFor="let music of musics">
+      <div *ngFor="let music of filteredMusics">
         <app-music-card [data]="music" [enableOptions]="true" [clickedPlayer]="true" (onDeleted)="onMusicDeleted($event)" (onEdited)="onMusicEdited($event)"></app-music-card>
       </div>
       <div style="width: 100%;" *ngIf="!scrollLoaded">

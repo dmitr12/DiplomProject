@@ -17,6 +17,8 @@ export class PlaylistComponent implements OnInit {
   loadedPage = false;
   dialogSource: any;
   playlistsInfo: PlaylistInfo[];
+  filteredPlaylists: PlaylistInfo[];
+  filterString = '';
 
   constructor(
     private router: Router,
@@ -29,6 +31,7 @@ export class PlaylistComponent implements OnInit {
     this.playlistService.getUserPlaylists().pipe(finalize(()=>this.loadedPage=true)).subscribe((res:PlaylistInfo[])=>{
       this.playlistsInfo = res;
       this.playlistsInfo.forEach(p=>p.createDate = new Date(p.createDate));
+      this.filteredPlaylists = this.playlistsInfo;
     }, error => {
       if (error.status == 401) {
         this.router.navigate(['auth']);
@@ -51,6 +54,7 @@ export class PlaylistComponent implements OnInit {
         this.loadedPage = false;
         this.playlistService.getPlaylistInfo(result).pipe(finalize(()=> this.loadedPage = true)).subscribe((res: PlaylistInfo)=>{
           this.playlistsInfo = this.playlistsInfo.concat(res);
+          this.search(this.filterString);
         }, error => {
           if(error.status == 401){
             this.router.navigate(['auth']);
@@ -70,5 +74,12 @@ export class PlaylistComponent implements OnInit {
 
   getPlaylistEditor(playlistId: number) {
     this.router.navigate(['playlist-editor', `${playlistId}`]);
+  }
+
+  search(data: string) {
+    this.loadedPage = false;
+    this.filterString = data;
+    this.filteredPlaylists = this.playlistsInfo.filter(p=>p.playlistName.toLowerCase().includes(data.toLowerCase()));
+    this.loadedPage = true;
   }
 }

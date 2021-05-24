@@ -62,6 +62,7 @@ import { SearchUserCardComponent } from './shared/search-user-card/search-user-c
 import { ChangePasswordComponent } from './components/users/change-password/change-password.component';
 import { MainComponent } from './pages/main/main.component';
 import { ForgotPasswordChangeComponent } from './components/users/forgot-password-change/forgot-password-change.component';
+import { FilterbarComponent } from './shared/filterbar/filterbar.component';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN);
@@ -102,6 +103,7 @@ export function tokenGetter() {
     ChangePasswordComponent,
     MainComponent,
     ForgotPasswordChangeComponent,
+    FilterbarComponent,
   ],
     imports: [
         BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -116,25 +118,22 @@ export function tokenGetter() {
             }
         }),
         RouterModule.forRoot([
-            {
-                path: 'auth', component: AuthlayoutComponent, children: [
+            {path: 'auth', component: AuthlayoutComponent, children: [
                     {path: '', redirectTo: 'login', pathMatch: 'full'},
                     {path: 'login', component: LoginComponent},
                     {path: 'register', component: RegisterComponent},
                     {path: 'forgot-password', component: ForgotPasswordComponent},
-                    {path: 'forgot-password-change/:userId/:verifyCode', component: ForgotPasswordChangeComponent}
-                ]
+                    {path: 'forgot-password-change/:userId/:verifyCode', component: ForgotPasswordChangeComponent}]
             },
-            {
-                path: '', component: ApplayoutComponent, children: [
+            {path: '', component: ApplayoutComponent, children: [
                     {path: '', redirectTo: 'main', pathMatch: 'full'},
                     {path: 'main', component: MainComponent},
-                    {
-                        path: 'mymusic', component: MymusicComponent, canActivate: [AuthGuard], children: [
+                    {path: 'mymusic', component: MymusicComponent, canActivate: [AuthGuard], children:
+                        [
                             {path: '', redirectTo: 'music', pathMatch: 'full'},
                             {path: 'music', component: MusicComponent},
                             {path: 'favorite', component: FavouritemusicsComponent}
-                        ]
+                            ]
                     },
                     {path: 'search', component: SearchComponent},
                     {path: 'playlist', canActivate: [AuthGuard], component: PlaylistComponent},
@@ -142,9 +141,7 @@ export function tokenGetter() {
                     {path: 'profile/:id', component: ProfileComponent},
                     {path: 'profile-editor/:id', canActivate: [AuthGuard], component: ProfileEditorComponent},
                     {path: 'playlist-editor/:id', canActivate: [AuthGuard], component: PlaylistEditorComponent},
-                    {path: 'playlist-info/:id', component: PlaylistInfoComponent}
-                ]
-            }
+                    {path: 'playlist-info/:id', component: PlaylistInfoComponent}]}
         ]),
         BrowserAnimationsModule,
         MatProgressSpinnerModule,
