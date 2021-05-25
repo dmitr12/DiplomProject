@@ -51,6 +51,16 @@ export class SearchBarPageComponent implements OnInit {
   searchTypeChanged(event: MatSelectChange) {
     this.searchType = event.value;
     this.onChangeSearchType.emit(this.searchType);
+    if(this.isMusicType()){
+      this.genreId = 0;
+      this.onSearch.emit(new SearchModel(SearchType.Music, new FilterMusicModel('', -1)))
+    }
+    else if(this.isPlaylistType()){
+      this.onSearch.emit(new SearchModel(SearchType.Playlist, new FilterPlaylistModel('')))
+    }
+    else if(this.isUserType()){
+      this.onSearch.emit(new SearchModel(SearchType.User, new FilterUserModel('')))
+    }
   }
 
   search() {

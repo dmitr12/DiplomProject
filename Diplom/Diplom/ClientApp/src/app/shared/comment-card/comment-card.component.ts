@@ -59,7 +59,7 @@ export class CommentCardComponent implements OnInit {
         if (error.status == 401) {
           this.router.navigate(['auth']);
         } else if (error.status != 0) {
-          this.matSnackBar.open(`При добавлении комментария возникла ошибка, статусный код ${error.status}`, '', {
+          this.matSnackBar.open(`При добавлении комментария возникла ошибка`, '', {
             duration: 3000,
             panelClass: 'custom-snack-bar-error'
           });
@@ -81,7 +81,7 @@ export class CommentCardComponent implements OnInit {
       if (error.status == 401) {
         this.router.navigate(['auth']);
       } else if (error.status != 0) {
-        this.matSnackBar.open(`При удалении комментария возникла ошибка, статусный код ${error.status}`, '', {
+        this.matSnackBar.open(`При удалении комментария возникла ошибка`, '', {
           duration: 3000,
           panelClass: 'custom-snack-bar-error'
         });
@@ -107,7 +107,7 @@ export class CommentCardComponent implements OnInit {
         if (error.status == 401) {
           this.router.navigate(['auth']);
         } else if (error.status != 0) {
-          this.matSnackBar.open(`При изменении комментария возникла ошибка, статусный код ${error.status}`, '', {
+          this.matSnackBar.open(`При изменении комментария возникла ошибка`, '', {
             duration: 3000,
             panelClass: 'custom-snack-bar-error'
           });

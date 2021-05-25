@@ -25,6 +25,8 @@ export class PlaylistInfoComponent implements OnInit {
   itemsPage: number;
   page: number;
   totalRecords: string;
+  notFound: boolean;
+  notFoundMessage = 'Информация о плейлисте не найдена. Возможно ресурс был удален';
 
   constructor(
     private playlistService: PlaylistService,
@@ -41,11 +43,17 @@ export class PlaylistInfoComponent implements OnInit {
       this.imgLoaded = false;
       this.itemsPage = 8;
       this.page = 1;
+      this.notFound = false;
 
       this.playlistService.getPlaylistInfo(this.playlistId).pipe(finalize(()=>this.playlistInfoLoaded = true)).subscribe((res:PlaylistInfo)=>{
-        this.playlistInfo = res;
-        this.image = this.playlistInfo.playlistImageUrl;
-        this.playlistInfo.createDate = new Date(this.playlistInfo.createDate);
+        if(res === null){
+          this.notFound = true;
+        }
+        else{
+          this.playlistInfo = res;
+          this.image = this.playlistInfo.playlistImageUrl;
+          this.playlistInfo.createDate = new Date(this.playlistInfo.createDate);
+        }
       }, error => {
         if (error.status != 0) {
           this.matSnackBar.open(`При получении информации о плейлисте возникла ошибка, статусный код ${error.status}`, '', {

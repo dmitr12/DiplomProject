@@ -34,6 +34,7 @@ export class PlaylistEditorComponent implements OnInit {
   totalRecords: string;
   formData: FormData;
   dialogSource: any;
+  notFound = false;
 
   @ViewChild("inputSearch", {static: false})
   inputSearch: ElementRef;
@@ -42,6 +43,7 @@ export class PlaylistEditorComponent implements OnInit {
 
   public playlistForm: FormGroup;
   isEditing = false;
+  notFoundMessage = 'Информация о плейлисте не найдена. Возможно ресурс был удален';
 
   constructor(
     private playlistService: PlaylistService,
@@ -59,19 +61,24 @@ export class PlaylistEditorComponent implements OnInit {
   ngOnInit() {
     this.formData = new FormData();
     this.playlistService.getPlaylistInfo(this.playlistId).pipe(finalize(()=>this.playlistInfoLoaded = true)).subscribe((res:PlaylistInfo)=>{
-      this.playlistInfo = res;
-      if(Number(this.authService.getCurrentUserId()) != res.userId){
-        this.router.navigate(['auth']);
+      if(res === null){
+        this.notFound = true;
       }
-      this.image = this.playlistInfo.playlistImageUrl;
-      this.playlistInfo.createDate = new Date(this.playlistInfo.createDate);
-      this.playlistForm = new FormGroup({
-        id: new FormControl(this.playlistId),
-        name: new FormControl(res.playlistName, [Validators.required, Validators.maxLength(200)]),
-        description: new FormControl(res.playlistDescription),
-        poster: new FormControl(null),
-        musics: new FormControl(res.musics)
-      });
+      else{
+        if(Number(this.authService.getCurrentUserId()) != res.userId){
+          this.router.navigate(['auth']);
+        }
+        this.playlistInfo = res;
+        this.image = this.playlistInfo.playlistImageUrl;
+        this.playlistInfo.createDate = new Date(this.playlistInfo.createDate);
+        this.playlistForm = new FormGroup({
+          id: new FormControl(this.playlistId),
+          name: new FormControl(res.playlistName, [Validators.required, Validators.maxLength(200)]),
+          description: new FormControl(res.playlistDescription),
+          poster: new FormControl(null),
+          musics: new FormControl(res.musics)
+        });
+      }
     }, error => {
       if (error.status == 401) {
         this.router.navigate(['auth']);
@@ -94,7 +101,7 @@ export class PlaylistEditorComponent implements OnInit {
         this.router.navigate(['auth']);
       }
       if (error.status != 0) {
-        this.matSnackBar.open(`При получении музыки пользователя возникла ошибка, статусный код ${error.status}`, '', {
+        this.matSnackBar.open(`При получении музыки пользователя возникла ошибка`, '', {
           duration: 3000,
           panelClass: 'custom-snack-bar-error'
         });
@@ -157,7 +164,7 @@ export class PlaylistEditorComponent implements OnInit {
           this.matSnackBar.open(error.error.msg, '', {duration: 5000, panelClass: 'custom-snack-bar-error'});
         }
         else if(error.status != 0){
-          this.matSnackBar.open(`При обновлении плейлиста возникла ошибка, статусный код ${error.status}`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
+          this.matSnackBar.open(`При обновлении плейлиста возникла ошибка`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
         }
         else{
           this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});

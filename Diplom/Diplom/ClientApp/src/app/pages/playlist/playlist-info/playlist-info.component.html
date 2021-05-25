@@ -1,70 +1,75 @@
-<div class="mat-spinner-container" *ngIf="!playlistInfoLoaded || !musicLoaded || !imgLoaded">
-  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-</div>
-
-<div *ngIf="playlistInfoLoaded">
-  <img src="{{playlistInfo.playlistImageUrl}}" (load)="posterLoaded()" hidden>
-</div>
-
-<div *ngIf="playlistInfoLoaded && musicLoaded && imgLoaded">
-  <div class="d-flex">
-    <div class="mr-3">
-      <div class="playlist-poster" [ngStyle]="{'background-image':'url('+image+')'}">
-      </div>
-    </div>
-    <div class="row" style="width: 100%">
-      <div class="col-12 col-lg-7 mb-3" style="cursor: default">
-        <div>
-          <mat-label style="font-size: 12px; color: #8f8c8c">Название</mat-label>
-          <input matInput [readonly]="true" type="text" value="{{playlistInfo.playlistName}}" style="cursor: default">
-        </div>
-        <div>
-          <mat-label style="font-size: 12px; color: #8f8c8c">Дата создания</mat-label>
-          <input matInput [readonly]="true" type="text" value="{{playlistInfo.createDate.toLocaleDateString()}}" style="cursor: default">
-        </div>
-        <div>
-          <mat-label style="font-size: 12px; color: #8f8c8c">Пользователь</mat-label>
-          <br>
-          <p (click)="userProfile(playlistInfo.userId)">{{playlistInfo.userLogin}}</p>
-        </div>
-        <div class="mt-2" [hidden]="playlistInfo.playlistDescription === null">
-          <mat-form-field style="width: 100%;">
-            <mat-label>Описание</mat-label>
-            <textarea matInput
-                      value="{{playlistInfo.playlistDescription}}"
-                      [readonly]="true"
-                      cdkTextareaAutosize
-                      cdkAutosizeMinRows="1"
-                      cdkAutosizeMaxRows="5" style="cursor: default"></textarea>
-          </mat-form-field>
-        </div>
-      </div>
-    </div>
+<div *ngIf="!notFound">
+  <div class="mat-spinner-container" *ngIf="!playlistInfoLoaded || !musicLoaded || !imgLoaded">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
   </div>
-  <div>
-    <div class="mt-3">
-      <p class="title pb-1 pl-2 pl-ttl">ПЕСНИ ПЛЕЙЛИСТА ({{musicsPlaylist.length}}):</p>
+
+  <div *ngIf="playlistInfoLoaded">
+    <img src="{{playlistInfo.playlistImageUrl}}" (load)="posterLoaded()" hidden>
+  </div>
+
+  <div *ngIf="playlistInfoLoaded && musicLoaded && imgLoaded">
+    <div class="d-flex">
+      <div class="mr-3">
+        <div class="playlist-poster" [ngStyle]="{'background-image':'url('+image+')'}">
+        </div>
+      </div>
+      <div class="row" style="width: 100%">
+        <div class="col-12 col-lg-7 mb-3" style="cursor: default">
+          <div>
+            <mat-label style="font-size: 12px; color: #8f8c8c">Название</mat-label>
+            <input matInput [readonly]="true" type="text" value="{{playlistInfo.playlistName}}" style="cursor: default">
+          </div>
+          <div>
+            <mat-label style="font-size: 12px; color: #8f8c8c">Дата создания</mat-label>
+            <input matInput [readonly]="true" type="text" value="{{playlistInfo.createDate.toLocaleDateString()}}" style="cursor: default">
+          </div>
+          <div>
+            <mat-label style="font-size: 12px; color: #8f8c8c">Пользователь</mat-label>
+            <br>
+            <p (click)="userProfile(playlistInfo.userId)">{{playlistInfo.userLogin}}</p>
+          </div>
+          <div class="mt-2" [hidden]="playlistInfo.playlistDescription === null">
+            <mat-form-field style="width: 100%;">
+              <mat-label>Описание</mat-label>
+              <textarea matInput
+                        value="{{playlistInfo.playlistDescription}}"
+                        [readonly]="true"
+                        cdkTextareaAutosize
+                        cdkAutosizeMinRows="1"
+                        cdkAutosizeMaxRows="5" style="cursor: default"></textarea>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
     </div>
-    <div *ngIf="playlistInfo.musics.length  == 0" style="display: flex; align-items: center;
+    <div>
+      <div class="mt-3">
+        <p class="title pb-1 pl-2 pl-ttl">ПЕСНИ ПЛЕЙЛИСТА ({{musicsPlaylist.length}}):</p>
+      </div>
+      <div *ngIf="playlistInfo.musics.length  == 0" style="display: flex; align-items: center;
 justify-content: center; height: 25vh; cursor: default">
-      Плейлист пока не содержит песен
-    </div>
-    <div class="row">
-      <div class="col-12 col-sm-6 col-md-4 col-lg-3" *ngFor="let musicInfo of musicsPlaylist | paginate: {id: 'listing_musics',
+        Плейлист пока не содержит песен
+      </div>
+      <div class="row">
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3" *ngFor="let musicInfo of musicsPlaylist | paginate: {id: 'listing_musics',
   itemsPerPage: itemsPage,
   currentPage: page,
   totalItems: totalRecords}">
-        <app-search-music-card [data]="musicInfo" (click)="navigateMusicInfo(musicInfo.id)"></app-search-music-card>
+          <app-search-music-card [data]="musicInfo" (click)="navigateMusicInfo(musicInfo.id)"></app-search-music-card>
+        </div>
+      </div>
+      <div style="text-align:center" *ngIf="playlistInfo.musics.length > 0">
+        <pagination-controls id="listing_musics"
+                             maxSize="8"
+                             directionLinks="true"
+                             previousLabel="Назад"
+                             nextLabel="Далее"
+                             (pageChange)="page=$event">
+        </pagination-controls>
       </div>
     </div>
-    <div style="text-align:center" *ngIf="playlistInfo.musics.length > 0">
-      <pagination-controls id="listing_musics"
-                           maxSize="8"
-                           directionLinks="true"
-                           previousLabel="Назад"
-                           nextLabel="Далее"
-                           (pageChange)="page=$event">
-      </pagination-controls>
-    </div>
   </div>
+</div>
+<div *ngIf="notFound" class="not-found">
+  <app-notfound [message]="notFoundMessage"></app-notfound>
 </div>

@@ -2,7 +2,6 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {MusicService} from "../../../services/music/music.service";
 import {finalize} from "rxjs/operators";
-import {Music} from "../../../models/musics/music";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {LoaderService} from "../../../services/loader/loader.service";
 import {Router} from "@angular/router";
@@ -42,7 +41,7 @@ export class DeletemusicformComponent implements OnInit {
           this.router.navigate(['auth']);
         }
         if (error.status != 0) {
-          this.matSnackBar.open(`При удалении музыки возникла ошибка, статусный код ${error.status}`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'
+          this.matSnackBar.open(`При удалении музыки возникла ошибка`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'
           });
         } else {
           this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});

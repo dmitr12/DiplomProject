@@ -39,3 +39,7 @@ a.mat-menu-item mat-icon{
 .imgL:hover{
   box-shadow: 0 0 15px rgb(148, 20, 217);
 }
+
+.userNotAuthenticated{
+  padding: 16px 0;
+}

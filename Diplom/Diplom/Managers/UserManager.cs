@@ -256,6 +256,8 @@ namespace Diplom.Managers
         {
             var userInfo = new UserInfo();
             var user = await db.Users.FindAsync(userId);
+            if (user == null)
+                return null;
             userInfo.UserId = user.UserId;
             userInfo.RoleId = user.RoleId;
             userInfo.Mail = user.Mail;

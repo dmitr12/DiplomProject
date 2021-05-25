@@ -151,6 +151,8 @@ namespace Diplom.Managers
                 UserLogin = u.Login,
                 CreateDate = p.CreateDate
             }).FirstOrDefaultAsync();
+            if (playlistInfo == null)
+                return null;
             var musics = await db.PlaylistsMusics.Where(pm => pm.PlaylistId == playlistInfo.PlaylistId).Select(pm=>pm.MusicId).ToListAsync();
             playlistInfo.Musics = musics;
             return playlistInfo;

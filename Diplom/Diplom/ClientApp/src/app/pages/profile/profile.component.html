@@ -1,7 +1,10 @@
 <div class="mat-spinner-container" *ngIf="!pageLoaded || followerProccessing">
   <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
 </div>
-<div *ngIf="pageLoaded">
+<div *ngIf="notFound" class="not-found">
+  <app-notfound [message]="notFoundMessage"></app-notfound>
+</div>
+<div *ngIf="pageLoaded && !notFound">
   <mat-card style="word-wrap: break-word">
     <mat-card-header style="align-items: center">
       <mat-card-title>
@@ -91,7 +94,6 @@
           </div>
         </div>
       </div>
-
     </mat-card-content>
   </mat-card>
 </div>

@@ -1,36 +1,37 @@
-<div class="mat-spinner-container" *ngIf="!loadedComments || !loadedMusicInfo || !imageLoaded">
-  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-</div>
-<div *ngIf="loadedComments && loadedMusicInfo && imageLoaded">
-  <div class="row" style="display: flex;">
-    <div class="d-flex flex-column">
-      <div class="pl-3 pt-3 row">
-        <div (click)="playMusic()">
-          <button mat-mini-fab class="play-button">
-            <mat-icon>play_arrow</mat-icon>
-          </button>
+<div *ngIf="!notFound">
+  <div class="mat-spinner-container" *ngIf="!loadedComments || !loadedMusicInfo || !imageLoaded">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+  <div *ngIf="loadedComments && loadedMusicInfo && imageLoaded">
+    <div class="row" style="display: flex;">
+      <div class="d-flex flex-column">
+        <div class="pl-3 pt-3 row">
+          <div (click)="playMusic()">
+            <button mat-mini-fab class="play-button">
+              <mat-icon>play_arrow</mat-icon>
+            </button>
+          </div>
+          <div class="pl-2" style="cursor: default">
+            <div>{{musicInfo.userLogin}}</div>
+            <div>{{musicInfo.name}}</div>
+          </div>
         </div>
-        <div class="pl-2" style="cursor: default">
-          <div>{{musicInfo.userLogin}}</div>
-          <div>{{musicInfo.name}}</div>
+        <div class="mt-auto pl-3" style="cursor: default">
+          <div class="d-flex" style="align-items: center">
+            <div>Оценка пользователей: {{musicInfo.rating}}</div>
+            <star-rating [value]="1" [readonly]="true" [totalstars]="1" checkedcolor="#fa053e" size="18px"></star-rating>
+          </div>
+          <div>
+            <div>Оценили: {{musicInfo.countRatings}}</div>
+          </div>
+          <div *ngIf="isUserAuthenticated" class="d-flex" style="align-items: center">
+            <div>Ваша оценка:</div>
+            <star-rating #ratingComponent class="pl-1" [value]=musicInfo.currentUserRating [totalstars]="5" [readonly]="isRateReadOnly" checkedcolor="#fa053e" uncheckedcolor="black" size="18px"
+                         (rate)="onRate($event)"></star-rating>
+          </div>
         </div>
       </div>
-      <div class="mt-auto pl-3" style="cursor: default">
-        <div class="d-flex" style="align-items: center">
-          <div>Оценка пользователей: {{musicInfo.rating}}</div>
-          <star-rating [value]="1" [readonly]="true" [totalstars]="1" checkedcolor="#fa053e" size="18px"></star-rating>
-        </div>
-        <div>
-          <div>Оценили: {{musicInfo.countRatings}}</div>
-        </div>
-        <div *ngIf="isUserAuthenticated" class="d-flex" style="align-items: center">
-          <div>Ваша оценка:</div>
-          <star-rating #ratingComponent class="pl-1" [value]=musicInfo.currentUserRating [totalstars]="5" [readonly]="isRateReadOnly" checkedcolor="#fa053e" uncheckedcolor="black" size="18px"
-                       (rate)="onRate($event)"></star-rating>
-        </div>
-      </div>
-    </div>
-    <div class="ml-auto pr-3 pt-3 d-flex flex-column" style="cursor: default">
+      <div class="ml-auto pr-3 pt-3 d-flex flex-column" style="cursor: default">
         <div style="text-align: end">
           {{musicInfo.dateOfPublication.toLocaleDateString()}}
         </div>
@@ -42,40 +43,44 @@
           <button *ngIf="(musicInfo.userId != currentUserId) && musicInfo.currentUserLiked" [disabled]="deletingMusic" mat-flat-button class="play-button mr-1" (click)="unlike()">Удалить из избранных</button>
           <button *ngIf="enableDeleteMusic()" (click)="deleteMusic()" mat-flat-button class="delete-button" [disabled]="deletingMusic">Удалить запись</button>
         </div>
+      </div>
+      <div class="pr-2">
+        <img src="{{musicInfo.imageUrl}}" class="img-title">
+      </div>
     </div>
-    <div class="pr-2">
-      <img src="{{musicInfo.imageUrl}}" class="img-title">
+    <div class="row" style="margin-left: 1px" >
+      <div *ngIf="isUserAuthenticated" (click)="openCommentArea()">
+        <a mat-menu-item style="cursor: pointer">
+          <mat-icon style="margin-right: 0">add_comment</mat-icon>
+        </a>
+      </div>
+      <div [ngClass]="{commentIsNotAuth : !isUserAuthenticated}" (click)="showComments()">
+        <a mat-menu-item style="cursor: pointer">
+          <mat-icon>mode_comment</mat-icon>
+          <span>{{musicCommentsInfo.length}}</span>
+        </a>
+      </div>
+    </div>
+    <div *ngIf="isCommentAreaOpen">
+      <mat-form-field style="width: 100%;">
+        <mat-label>Комментарий</mat-label>
+        <textarea matInput
+                  [(ngModel)]="commentText"
+                  cdkTextareaAutosize
+                  cdkAutosizeMinRows="1"
+                  cdkAutosizeMaxRows="5"></textarea>
+      </mat-form-field>
+      <br>
+      <button mat-flat-button (click)="comment()" class="play-button">Оставить комментарий</button>
+    </div>
+    <div [hidden]="hiddenComments" *ngFor="let comment of musicCommentsInfo">
+      <app-comment-card [data]="comment" [musicId]="this.musicId" [parentUserLogin]="getParentUserLogin(comment)"></app-comment-card>
     </div>
   </div>
-  <div class="row" style="margin-left: 1px" >
-    <div *ngIf="isUserAuthenticated" (click)="openCommentArea()">
-      <a mat-menu-item style="cursor: pointer">
-        <mat-icon style="margin-right: 0">add_comment</mat-icon>
-      </a>
-    </div>
-    <div [ngClass]="{commentIsNotAuth : !isUserAuthenticated}" (click)="showComments()">
-      <a mat-menu-item style="cursor: pointer">
-        <mat-icon>mode_comment</mat-icon>
-        <span>{{musicCommentsInfo.length}}</span>
-      </a>
-    </div>
-  </div>
-  <div *ngIf="isCommentAreaOpen">
-    <mat-form-field style="width: 100%;">
-      <mat-label>Комментарий</mat-label>
-      <textarea matInput
-                [(ngModel)]="commentText"
-                cdkTextareaAutosize
-                cdkAutosizeMinRows="1"
-                cdkAutosizeMaxRows="5"></textarea>
-    </mat-form-field>
-    <br>
-    <button mat-flat-button (click)="comment()" class="play-button">Оставить комментарий</button>
-  </div>
-  <div [hidden]="hiddenComments" *ngFor="let comment of musicCommentsInfo">
-    <app-comment-card [data]="comment" [musicId]="this.musicId" [parentUserLogin]="getParentUserLogin(comment)"></app-comment-card>
+  <div *ngIf="loadedMusicInfo">
+    <img src="{{musicInfo.imageUrl}}" hidden (load)="imgLoaded()" alt="">
   </div>
 </div>
-<div *ngIf="loadedMusicInfo">
-  <img src="{{musicInfo.imageUrl}}" hidden (load)="imgLoaded()">
+<div *ngIf="notFound" class="not-found">
+  <app-notfound [message]="notFoundMessage"></app-notfound>
 </div>

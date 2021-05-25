@@ -50,6 +50,9 @@ export class SearchComponent implements OnInit {
         this.genreId = Number(params['genreId']);
         this.search(new SearchModel(SearchType.Music, new FilterMusicModel('', params['genreId'])));
       }
+      else if(!params['searchType']){
+        this.search(new SearchModel(SearchType.Music, new FilterMusicModel('',-1)));
+      }
     })
   }
 

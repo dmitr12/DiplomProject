@@ -147,6 +147,8 @@ namespace Diplom.Managers
                 CurrentUserRating = userRating,
                 CurrentUserLiked = currentUserLiked
             }).FirstOrDefaultAsync();
+            if (musicInfo == null)
+                return null;
             musicInfo.GenreName = db.MusicGenres.Find(musicInfo.GenreId).GenreName;
             if (sumRating == 0)
                 musicInfo.Rating = sumRating;
@@ -215,8 +217,6 @@ namespace Diplom.Managers
             var dtNow = DateTime.Now;
             User user = await db.Users.FindAsync(userId);
             string dateTimeNow = $"{dtNow.Day}.{dtNow.Month}.{dtNow.Year} {dtNow.Hour}:{dtNow.Minute}:{dtNow.Second}";
-            if (await db.Musics.Where(m => m.UserId == user.UserId && m.MusicName == model.MusicName).FirstOrDefaultAsync() != null)
-                return new OkObjectResult(new { msg = $"У вас уже есть запись с названием {model.MusicName}" });
             string musicFileName = $"{user.Login}_{dateTimeNow}_" + model.MusicFile.FileName;
             string sharingLinkMusic = "";
             string sharingLinkImage = "";

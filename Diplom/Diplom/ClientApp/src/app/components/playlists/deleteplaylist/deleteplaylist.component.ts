@@ -48,7 +48,7 @@ export class DeleteplaylistComponent implements OnInit {
           this.matSnackBar.open(error.error.msg, '', {duration: 5000, panelClass: 'custom-snack-bar-error'});
         }
         else if (error.status != 0) {
-          this.matSnackBar.open(`При удалении плейлиста возникла ошибка, статусный код ${error.status}`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'
+          this.matSnackBar.open(`При удалении плейлиста возникла ошибка`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'
           });
         } else {
           this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});

@@ -26,6 +26,8 @@ export class ProfileComponent implements OnInit {
   followerProccessing = false;
   isFollowerExists: boolean;
   isUserAuthenticated: boolean;
+  notFound: boolean;
+  notFoundMessage = 'Страница профиля не найдена';
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -37,6 +39,7 @@ export class ProfileComponent implements OnInit {
   ) {
     this.subscription = activatedRoute.params.subscribe(params => this.userId = Number(params['id']));
     this.isUserAuthenticated = this.authService.isAuth();
+    this.notFound = false;
   }
 
   ngOnInit() {
@@ -61,8 +64,13 @@ export class ProfileComponent implements OnInit {
     }
 
     this.userService.getUserProfile(this.userId).pipe(finalize(()=>this.pageLoaded=true)).subscribe((res:UserInfo)=>{
-      this.userInfo = res;
-      this.userInfo.registrationDate = new Date(res.registrationDate);
+      if(res === null){
+        this.notFound = true;
+      }
+      else{
+        this.userInfo = res;
+        this.userInfo.registrationDate = new Date(res.registrationDate);
+      }
     }, error => {
       if (error.status != 0) {
         this.matSnackBar.open(`При получении профиля возникла ошибка, статусный код ${error.status}`, '', {

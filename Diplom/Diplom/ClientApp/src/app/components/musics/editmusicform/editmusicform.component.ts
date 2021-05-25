@@ -110,7 +110,7 @@ export class EditmusicformComponent implements OnInit {
           this.router.navigate(['auth']);
         }
         if(error.status != 0){
-          this.matSnackBar.open(`При отправке запроса возникла ошибка, статусный код ${error.status}`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
+          this.matSnackBar.open(`При изменении музыки возникла ошибка`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
         }
         else{
           this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});

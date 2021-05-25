@@ -63,6 +63,7 @@ import { ChangePasswordComponent } from './components/users/change-password/chan
 import { MainComponent } from './pages/main/main.component';
 import { ForgotPasswordChangeComponent } from './components/users/forgot-password-change/forgot-password-change.component';
 import { FilterbarComponent } from './shared/filterbar/filterbar.component';
+import { NotfoundComponent } from './shared/notfound/notfound.component';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN);
@@ -104,6 +105,7 @@ export function tokenGetter() {
     MainComponent,
     ForgotPasswordChangeComponent,
     FilterbarComponent,
+    NotfoundComponent,
   ],
     imports: [
         BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),

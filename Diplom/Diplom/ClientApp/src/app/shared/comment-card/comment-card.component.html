@@ -11,7 +11,7 @@
     <div style="font-size: 13px; cursor: default">{{data.comment}}</div>
     <mat-card-content class="d-flex" style="align-items: center">
       <div class="d-flex align-items-center">
-        <div class="d-flex" style="align-items: center; cursor: default">{{getDateTimeString(data.commentDate)}}</div>
+        <div class="d-flex" [ngClass]="{userNotAuthenticated: !isUserAuthenticated}" style="align-items: center; cursor: default">{{getDateTimeString(data.commentDate)}}</div>
         <div *ngIf="isUserAuthenticated" (click)="showAnswerBox()">
           <a mat-menu-item style="cursor: pointer">
             <mat-icon style="margin-right: 0">add_comment</mat-icon>

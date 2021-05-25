@@ -43,6 +43,8 @@ export class MusicinfoComponent implements OnInit, OnDestroy {
   deletingMusic: boolean;
   imageLoaded: boolean;
   isUserAuthenticated: boolean;
+  notFound: boolean;
+  notFoundMessage = 'Информация о музыке не найдена. Возможно ресурс был удален';
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -67,10 +69,16 @@ export class MusicinfoComponent implements OnInit, OnDestroy {
       this.hiddenComments = true;
       this.deletingMusic = false;
       this.imageLoaded = false;
+      this.notFound = false;
 
       this.musicService.getMusic(this.musicId).pipe(finalize(() => this.loadedMusicInfo = true)).subscribe((res: MusicInfo) => {
-        this.musicInfo = res;
-        this.musicInfo.dateOfPublication = new Date(res.dateOfPublication);
+        if(res === null){
+          this.notFound = true;
+        }
+        else{
+          this.musicInfo = res;
+          this.musicInfo.dateOfPublication = new Date(res.dateOfPublication);
+        }
       }, error => {
           if (error.status != 0) {
           this.matSnackBar.open(`При получении информации о музыки возникла ошибка, статусный код ${error.status}`, '', {
@@ -139,7 +147,7 @@ export class MusicinfoComponent implements OnInit, OnDestroy {
       if (error.status == 401) {
         this.router.navigate(['auth']);
       } else if (error.status != 0) {
-        this.matSnackBar.open(`При оценивании музыки возникла ошибка, статусный код ${error.status}`, '', {
+        this.matSnackBar.open(`При оценивании музыки возникла ошибка`, '', {
           duration: 3000,
           panelClass: 'custom-snack-bar-error'
         });
@@ -168,7 +176,7 @@ export class MusicinfoComponent implements OnInit, OnDestroy {
         if (error.status == 401) {
           this.router.navigate(['auth']);
         } else if (error.status != 0) {
-          this.matSnackBar.open(`При добавлении комментария возникла ошибка, статусный код ${error.status}`, '', {
+          this.matSnackBar.open(`При добавлении комментария возникла ошибка`, '', {
             duration: 3000,
             panelClass: 'custom-snack-bar-error'
           });
