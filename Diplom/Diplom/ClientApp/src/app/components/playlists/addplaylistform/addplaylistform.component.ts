@@ -80,7 +80,7 @@ export class AddplaylistformComponent implements OnInit {
         else if(error.status == 404){
           this.matSnackBar.open(error.error.msg, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
         }
-        if(error.status != 0){
+        else if(error.status != 0){
           this.matSnackBar.open(`При отправке запроса возникла ошибка, статусный код ${error.status}`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
         }
         else{

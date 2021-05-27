@@ -1,0 +1,16 @@
+<div class="row">
+  <div routerLinkActive="active" class="ml-3">
+    <a mat-menu-item routerLink="new" style="padding-left: 0; cursor: pointer">
+      <mat-icon>visibility_off</mat-icon>
+      <span>Непроверенные жалобы</span>
+    </a>
+  </div>
+  <div routerLinkActive="active">
+    <a mat-menu-item routerLink="checked" style="cursor: pointer">
+      <mat-icon>visibility</mat-icon>
+      <span>Проверенные жалобы</span>
+    </a>
+  </div>
+</div>
+<router-outlet style="overflow-y: hidden;"></router-outlet>
+

@@ -16,6 +16,7 @@ import {UsersService} from "../../../services/users/users.service";
 import {DeleteNotificationsResult} from "../../../models/notifications/deleteNotificationsResult";
 import * as moment from "moment";
 import {NotificationInfo} from "../../../models/notifications/notificationInfo";
+import {UserRole} from "../../../models/users/user";
 
 @Component({
   selector: 'app-applayout',
@@ -31,6 +32,7 @@ export class ApplayoutComponent implements OnInit {
   notifications: NotificationInfo[];
   currentUserId: number;
   isUserAuthenticated: boolean;
+  isCurrentUserAdmin = false;
 
   constructor(
     public authService: AuthService,
@@ -44,6 +46,9 @@ export class ApplayoutComponent implements OnInit {
     private userService: UsersService
   ) {
     this.isUserAuthenticated = this.authService.isAuth();
+    if(this.isUserAuthenticated && Number(this.authService.getCurrentUserRole()) === UserRole.Admin){
+      this.isCurrentUserAdmin = true;
+    }
   }
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)

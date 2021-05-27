@@ -18,6 +18,9 @@ import {AudioService} from "../../services/player/audio.service";
 import {UserRole} from "../../models/users/user";
 import {SearchType} from "../../models/search";
 import {Guid} from "guid-typescript";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {AddcomplaintformComponent} from "../../components/complaints/addcomplaintform/addcomplaintform.component";
+import {ComplaintService} from "../../services/complaints/complaint.service";
 
 @Component({
   selector: 'app-musicinfo',
@@ -45,6 +48,8 @@ export class MusicinfoComponent implements OnInit, OnDestroy {
   isUserAuthenticated: boolean;
   notFound: boolean;
   notFoundMessage = 'Информация о музыке не найдена. Возможно ресурс был удален';
+  dialogSource: any;
+  isCurrentUserComplained: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -54,7 +59,9 @@ export class MusicinfoComponent implements OnInit, OnDestroy {
     private signarService: SignalrService,
     private commentsService: CommentsService,
     private musicService: MusicService,
-    public audioService: AudioService
+    public audioService: AudioService,
+    private dialog: MatDialog,
+    private complaintService: ComplaintService
   ) {
     this.subscription = activatedRoute.params.subscribe(params => this.musicId = params['id']);
 
@@ -109,6 +116,18 @@ export class MusicinfoComponent implements OnInit, OnDestroy {
     if(this.isUserAuthenticated){
       this.currentUserId = Number(this.authService.getCurrentUserId());
       this.currentUserRole = Number(this.authService.getCurrentUserRole());
+      this.complaintService.isUserComplained(this.currentUserId, Number(this.musicId)).subscribe((res:boolean)=>{
+        this.isCurrentUserComplained = res;
+      }, error => {
+        if (error.status != 0) {
+          this.matSnackBar.open(`При получении информации о жалобах возникла ошибка`, '', {
+            duration: 3000,
+            panelClass: 'custom-snack-bar-error'
+          });
+        } else {
+          this.matSnackBar.open(`Сервер отключен`, '', {duration: 3000, panelClass: 'custom-snack-bar-error'});
+        }
+      })
     }
 
     this.signarService.commentMusicSignal.subscribe((signal: MusicCommentResult) => {
@@ -283,5 +302,20 @@ export class MusicinfoComponent implements OnInit, OnDestroy {
     for(let i=0; i<subComments.length; i++){
       this.deleteSubComments(subComments[i].idComment);
     }
+  }
+
+  addComplaint() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = this.musicId;
+    this.dialogSource = this.dialog.open(AddcomplaintformComponent, dialogConfig);
+    this.dialogSource.afterClosed().subscribe(result=>{
+      if(result === true){
+        this.isCurrentUserComplained = true;
+      }
+    });
+  }
+
+  navigateProfile(userId: number) {
+    this.router.navigate(['/profile',`${userId}`]);
   }
 }

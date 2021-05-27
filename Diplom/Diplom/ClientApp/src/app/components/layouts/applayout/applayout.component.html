@@ -92,6 +92,12 @@
           <span>Профиль</span>
         </a>
       </div>
+      <div *ngIf="isUserAuthenticated && isCurrentUserAdmin" routerLinkActive="active">
+        <a mat-menu-item routerLink="/complaints" class="d-flex align-items-center" style="cursor: pointer">
+          <mat-icon style="margin-right: 16px">report</mat-icon>
+          <span>Жалобы</span>
+        </a>
+      </div>
     </mat-sidenav>
     <mat-sidenav-content>
       <main [ngClass]="{

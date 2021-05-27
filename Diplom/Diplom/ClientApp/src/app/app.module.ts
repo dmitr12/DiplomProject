@@ -64,6 +64,12 @@ import { MainComponent } from './pages/main/main.component';
 import { ForgotPasswordChangeComponent } from './components/users/forgot-password-change/forgot-password-change.component';
 import { FilterbarComponent } from './shared/filterbar/filterbar.component';
 import { NotfoundComponent } from './shared/notfound/notfound.component';
+import { AddcomplaintformComponent } from './components/complaints/addcomplaintform/addcomplaintform.component';
+import { ComplaintsComponent } from './pages/complaints/complaints.component';
+import {AdminGuard} from "./guards/admin-guard";
+import { NewcomplaintsComponent } from './pages/newcomplaints/newcomplaints.component';
+import { CheckedcomplaintsComponent } from './pages/checkedcomplaints/checkedcomplaints.component';
+import { ComplaintCardComponent } from './shared/complaint-card/complaint-card.component';
 
 export function tokenGetter() {
   return localStorage.getItem(ACCESS_TOKEN);
@@ -106,6 +112,11 @@ export function tokenGetter() {
     ForgotPasswordChangeComponent,
     FilterbarComponent,
     NotfoundComponent,
+    AddcomplaintformComponent,
+    ComplaintsComponent,
+    NewcomplaintsComponent,
+    CheckedcomplaintsComponent,
+    ComplaintCardComponent,
   ],
     imports: [
         BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -136,6 +147,13 @@ export function tokenGetter() {
                             {path: 'music', component: MusicComponent},
                             {path: 'favorite', component: FavouritemusicsComponent}
                             ]
+                    },
+                    {path: 'complaints', component: ComplaintsComponent, canActivate: [AdminGuard], children:
+                      [
+                        {path: '', redirectTo: 'new', pathMatch: 'full' },
+                        {path: 'new', component: NewcomplaintsComponent},
+                        {path: 'checked', component: CheckedcomplaintsComponent}
+                      ]
                     },
                     {path: 'search', component: SearchComponent},
                     {path: 'playlist', canActivate: [AuthGuard], component: PlaylistComponent},
@@ -169,7 +187,7 @@ export function tokenGetter() {
   ],
   bootstrap: [AppComponent],
   entryComponents: [AddmusicformComponent, DeletemusicformComponent, EditmusicformComponent,
-  AddplaylistformComponent, DeleteplaylistComponent, ChangePasswordComponent]
+  AddplaylistformComponent, DeleteplaylistComponent, ChangePasswordComponent, AddcomplaintformComponent]
 })
 export class AppModule {
 }

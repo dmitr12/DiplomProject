@@ -117,3 +117,15 @@ primary key (UserId, NotificationId),
 foreign key (UserId) references Users(UserId) on delete cascade,
 foreign key (NotificationId) references Notifications(NotificationId) on delete cascade
 )
+go
+create table Complaints(
+ComplaintId int primary key identity(1,1),
+ComplaintType int,
+UserId int not null,
+MusicId int not null,
+Message nvarchar(max),
+IsChecked bit,
+CreateDate datetime,
+foreign key (UserId) references Users(UserId) on delete cascade,
+foreign key (MusicId) references Musics(MusicId) on delete cascade
+)

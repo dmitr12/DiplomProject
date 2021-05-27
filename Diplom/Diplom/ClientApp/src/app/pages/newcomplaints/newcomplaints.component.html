@@ -1,0 +1,28 @@
+<div class="mat-spinner-container" *ngIf="!complaintsLoaded">
+  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+</div>
+
+<div *ngIf="complaintsLoaded">
+  <div class="mt-2">
+    <mat-form-field class="input-field">
+      <mat-select value="0" placeholder="Тип жалобы" (selectionChange)="changeComplaintType($event)">
+        <mat-option value="0">Все</mat-option>
+        <mat-option value="1">Нарушение авторских прав</mat-option>
+        <mat-option value="3">Жалоба на комментарий</mat-option>
+        <mat-option value="2">Другая причина</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div *ngIf="filterComplaints.length == 0" style="display: flex; align-items: center;
+  justify-content: center; height: 65vh; cursor: default">
+    Жалоб нет
+  </div>
+  <div>
+    <div class="row">
+      <div *ngFor="let c of filterComplaints" style="margin-bottom: 20px" class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <app-complaint-card [complaint]="c" buttonName="Проверить" (checkEvent)="check($event)"></app-complaint-card>
+      </div>
+    </div>
+  </div>
+</div>
+

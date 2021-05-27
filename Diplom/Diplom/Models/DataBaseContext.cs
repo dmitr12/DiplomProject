@@ -1,4 +1,5 @@
 ﻿using Diplom.Models.CommentModels;
+using Diplom.Models.ComplaintModels;
 using Diplom.Models.FollowerModels;
 using Diplom.Models.GenreModels;
 using Diplom.Models.MusicModels;
@@ -26,6 +27,7 @@ namespace Diplom.Models
         public DbSet<Follower> Followers { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<UsersNotification> UsersNotifications { get; set; }
+        public DbSet<Complaint> Complaints { get; set; }
 
         public DataBaseContext(DbContextOptions<DataBaseContext> options) : base(options) { }
 
