@@ -1,10 +1,10 @@
 ﻿using Diplom.Interfaces;
 using Diplom.Models.Email;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using MimeKit;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace Diplom.Services
@@ -13,6 +13,7 @@ namespace Diplom.Services
     {
         private readonly string fromEmail = "appemail9999@gmail.com";
         private readonly string fromEmailPassword = "walking78351";
+        private readonly string fromName = "MusicApp";
 
         public async Task<EmailResult> Send(EmailInfo emailInfo)
         {
@@ -20,20 +21,21 @@ namespace Diplom.Services
             result.EmailInfo = emailInfo;
             try
             {
-                using(var mailMessage = new MailMessage())
+                var emailMessage = new MimeMessage();
+                emailMessage.From.Add(new MailboxAddress(fromName, fromEmail));
+                emailInfo.ToMails.ForEach(m => emailMessage.To.Add(new MailboxAddress(m)));
+                emailMessage.Subject = emailInfo.Subject;
+                emailMessage.Body = new BodyBuilder()
                 {
-                    mailMessage.From = new MailAddress(fromEmail);
-                    emailInfo.ToMails.ForEach(m => mailMessage.To.Add(m));
-                    mailMessage.Subject = emailInfo.Subject;
-                    mailMessage.Body = emailInfo.Body;
-                    mailMessage.IsBodyHtml = emailInfo.IsBodyHtml;
-                    using (var smtp = new SmtpClient("smtp.gmail.com", 587))
-                    {
-                        smtp.Credentials = new NetworkCredential(fromEmail, fromEmailPassword);
-                        smtp.EnableSsl = true;
-                        await smtp.SendMailAsync(mailMessage);
-                        result.Sended = true;
-                    }
+                    HtmlBody = emailInfo.Body
+                }.ToMessageBody();
+                using(var client = new SmtpClient())
+                {
+                    client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+                    client.Authenticate(fromEmail, fromEmailPassword);
+                    await client.SendAsync(emailMessage);
+                    await client.DisconnectAsync(true);
+                    result.Sended = true;
                 }
             }
             catch(Exception ex)
