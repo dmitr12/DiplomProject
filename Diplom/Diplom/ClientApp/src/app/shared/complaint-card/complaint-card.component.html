@@ -1,7 +1,7 @@
 <div class="crd">
   <mat-card class="mat-elevation-z4">
     <img mat-card-image src="{{imageMapper.get(complaint.complaintType)}}" alt="Загрузка...">
-    <mat-card-content class="d-flex flex-column">
+    <mat-card-content class="d-flex flex-column content">
       <div>
         <mat-label style="font-size: 12px; color: #8f8c8c">Тип жалобы</mat-label>
         <p>{{typeMapper.get(complaint.complaintType)}}</p>
@@ -17,9 +17,12 @@
                     cdkAutosizeMaxRows="5" style="cursor: default"></textarea>
         </mat-form-field>
       </div>
-      <div class="d-flex justify-content-center">
-        <button mat-flat-button class="check-btn" (click)="clickCheck()">{{buttonName}}</button>
+      <div *ngIf="!complaint.message">
+        <p>Комментарий отсутсвует</p>
       </div>
     </mat-card-content>
+    <div class="d-flex justify-content-center">
+      <button mat-flat-button class="check-btn" (click)="clickCheck()">{{buttonName}}</button>
+    </div>
   </mat-card>
 </div>
